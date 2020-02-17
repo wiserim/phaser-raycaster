@@ -104,19 +104,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
-* @author       Richard Davey <rich@photonstorm.com>
-* @copyright    2018 Photon Storm Ltd.
-* @license      {@link https://github.com/photonstorm/phaser3-plugin-template/blob/master/LICENSE|MIT License}
+* @author       Marcin Walczak <mail@marcinwalczak.pl>
+* @copyright    2020 Marcin Walczak
+* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 var PhaserRaycaster = function PhaserRaycaster(scene) {
-  //  The Scene that owns this plugin
+  //The Scene that owns this plugin
   this.scene = scene;
   this.systems = scene.sys;
 
   if (!scene.sys.settings.isBooted) {
     scene.sys.events.once('boot', this.boot, this);
   }
-}; //  Static function called by the PluginFile Loader.
+}; //Static function called by the PluginFile Loader.
 
 
 PhaserRaycaster.register = function (PluginManager) {
@@ -146,34 +146,34 @@ PhaserRaycaster.prototype = {
     eventEmitter.on('shutdown', this.shutdown, this);
     eventEmitter.on('destroy', this.destroy, this);
   },
-  //  A test method.
+  //A test method.
   test: function test(name) {
-    console.log('BasePlugin says hello ' + name + '!');
+    console.log('RaycasterPlugin says hello ' + name + '!');
   },
-  //  Called when a Scene is started by the SceneManager. The Scene is now active, visible and running.
+  //Called when a Scene is started by the SceneManager. The Scene is now active, visible and running.
   start: function start() {},
-  //  Called every Scene step - phase 1
+  //Called every Scene step - phase 1
   preUpdate: function preUpdate(time, delta) {},
-  //  Called every Scene step - phase 2
+  //Called every Scene step - phase 2
   update: function update(time, delta) {},
-  //  Called every Scene step - phase 3
+  //Called every Scene step - phase 3
   postUpdate: function postUpdate(time, delta) {},
-  //  Called when a Scene is paused. A paused scene doesn't have its Step run, but still renders.
+  //Called when a Scene is paused. A paused scene doesn't have its Step run, but still renders.
   pause: function pause() {},
-  //  Called when a Scene is resumed from a paused state.
+  //Called when a Scene is resumed from a paused state.
   resume: function resume() {},
-  //  Called when a Scene is put to sleep. A sleeping scene doesn't update or render, but isn't destroyed or shutdown. preUpdate events still fire.
+  //Called when a Scene is put to sleep. A sleeping scene doesn't update or render, but isn't destroyed or shutdown. preUpdate events still fire.
   sleep: function sleep() {},
-  //  Called when a Scene is woken from a sleeping state.
+  //Called when a Scene is woken from a sleeping state.
   wake: function wake() {},
-  //  Called when a Scene shuts down, it may then come back again later (which will invoke the 'start' event) but should be considered dormant.
+  //Called when a Scene shuts down, it may then come back again later (which will invoke the 'start' event) but should be considered dormant.
   shutdown: function shutdown() {},
-  //  Called when a Scene is destroyed by the Scene Manager. There is no coming back from a destroyed Scene, so clear up all resources here.
+  //Called when a Scene is destroyed by the Scene Manager. There is no coming back from a destroyed Scene, so clear up all resources here.
   destroy: function destroy() {
     this.shutdown();
     this.scene = undefined;
   },
-  // Create Raycaster object
+  //Create Raycaster object
   createRaycaster: function createRaycaster() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     options.scene = this.scene;
@@ -181,7 +181,7 @@ PhaserRaycaster.prototype = {
   }
 };
 PhaserRaycaster.prototype.constructor = PhaserRaycaster;
-PhaserRaycaster.prototype._Raycaster = __webpack_require__(/*! ./raycaster-core.js */ "./src/raycaster-core.js").Raycaster; //  Make sure you export the plugin for webpack to expose
+PhaserRaycaster.prototype._Raycaster = __webpack_require__(/*! ./raycaster-core.js */ "./src/raycaster-core.js").Raycaster; //Make sure you export the plugin for webpack to expose
 
 module.exports = PhaserRaycaster;
 
