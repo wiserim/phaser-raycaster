@@ -1,0 +1,31 @@
+{
+  "name": "phaser-raycaster",
+  "version": "0.6.0",
+  "description": "Raycasting plugin for Phaser 3.",
+  "main": "dist/phaser-raycaster.min.js",
+  "scripts": {
+    "dev": "webpack --mode development --config webpack.config.dev.js --watch",
+    "build": "webpack --mode development --config webpack.config.dev.js && webpack --mode production"
+  },
+  "browserslist": [
+    "last 1 version",
+    "> 1%"
+  ],
+  "keywords": [
+    "phaser",
+    "phaser3",
+    "phaser-plugin"
+    "plugin",
+    "raycast"
+  ],
+  "author": "Marcin Walczak",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/register": "^7.8.3",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  }
+}
