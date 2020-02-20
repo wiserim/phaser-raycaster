@@ -7,7 +7,12 @@ Raycasting plugin for Phaser 3.
 Plugin is functional, but still work in progress. Require further improvements.
 
 **TODO:**
+* documentation and examples
 * raycasting optimization
 * casting ray in a cone
 * implementing Matter.js support
 * raycasting for tilemaps
+
+
+Phaser Raycaster is a [Phaser 3](https://github.com/photonstorm/phaser) plugin which provide raycasting for geometric game objects and sprites.
+It doesn't require Matter.js (but it's support is planned) and can be used with arcade physics.
