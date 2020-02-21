@@ -36,3 +36,93 @@ npm install phaser-raycaster
 ***CDN***
 
 [https://www.jsdelivr.com/package/npm/phaser-raycaster](https://www.jsdelivr.com/package/npm/phaser-raycaster)
+
+## Getting started
+### 1. Include plugin in your project:
+```html
+<!--CDN-->
+<script type="text/javascript" src="https://github.com/jdotrjs/phaser3-nineslice/releases/download/v0.5.0/nineslice.min.js"></script>
+```
+```
+# NPM
+npm install phaser-raycaster
+```
+### 2. Enable plugin in your Game config:
+```javascript
+let config = {
+    type: Phaser.Auto,
+    parent: 'game',
+    width: 800,
+    height: 600,
+    backgroundColor: "black",
+    scene: [
+        Scene1
+    ],
+    plugins: {
+        scene: [
+            {
+                key: 'PhaserRaycaster',
+                plugin: PhaserRaycaster,
+                mapping: 'raycasterPlugin'
+            }
+        ]
+    }
+}
+
+new Phaser.Game(config);
+```
+### 3. Create new raycaster in your scene:
+```javascript
+create() {
+  this.raycaster = this.raycasterPlugin.createRaycaster({
+    boundingBox: {
+      x: 0,
+      y: 0,
+      width: 800,
+      height: 600
+    },
+    // additional options
+  });
+  
+  // additional code
+}
+```
+### 4. Create new ray
+```javascript
+create() {
+  // additional code
+  
+  this.ray = this.raycaster.createRay({
+    // additional options
+  });
+  
+  // additional code
+}
+```
+### 5. Map game objects which will be tested by rays
+```javascript
+//create game object
+this.rectangle = this.add.rectangle(100, 100, 50, 50)
+  .setStrokeStyle(1, 0xff0000);
+
+//map game object
+this.raycaster.mapGameObjects(this.rectangle);
+
+//create group
+this.group = this.add.group();
+
+//map game objects actually in group
+this.raycaster.mapGameObjects(this.group.getChildren());
+```
+### 6. Cast ray
+```javascript
+//set ray position
+this.ray.setOrigin(400, 300);
+//set ray direction (in radians)
+this.ray.setAngle(2);
+//cast single ray and get closets intersection with mapped objects
+let intersection = this.ray.cast();
+
+//cast rays toward all mapped objects vertices / points
+let intersections = this.ray.castall();
+```
