@@ -41,7 +41,7 @@ npm install phaser-raycaster
 ### 1. Include plugin in your project:
 ```html
 <!--CDN-->
-<script type="text/javascript" src="https://github.com/jdotrjs/phaser3-nineslice/releases/download/v0.5.0/nineslice.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.6.0/dist/phaser-raycaster.min.js"></script>
 ```
 ```
 # NPM
