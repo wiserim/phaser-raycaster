@@ -16,6 +16,8 @@ Plugin is functional, but still work in progress. Require further improvements.
 Phaser Raycaster is a [Phaser 3](https://github.com/photonstorm/phaser) plugin which provide raycasting for geometric game objects and sprites.
 It doesn't require Matter.js (but it's support is planned) and can be used with arcade physics.
 
+Code examples are available on CodePen: [LINK](https://codepen.io/collection/AOOQWr)
+
 **Features:**
 * works with arcade physics,
 * cast rays in a single direction or 360 degrees,
@@ -122,6 +124,6 @@ this.ray.setAngle(2);
 //cast single ray and get closets intersection with mapped objects
 let intersection = this.ray.cast();
 
-//cast rays toward all mapped objects vertices / points
-let intersections = this.ray.castall();
+//cast rays in zll directions (toward all mapped objects vertices / points)
+let intersections = this.ray.castCll();
 ```
