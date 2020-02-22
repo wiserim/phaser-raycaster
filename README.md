@@ -75,15 +75,7 @@ new Phaser.Game(config);
 ### 3. Create new raycaster in your scene:
 ```javascript
 create() {
-  this.raycaster = this.raycasterPlugin.createRaycaster({
-    boundingBox: {
-      x: 0,
-      y: 0,
-      width: 800,
-      height: 600
-    },
-    // additional options
-  });
+  this.raycaster = this.raycasterPlugin.createRaycaster();
   
   // additional code
 }
@@ -93,9 +85,7 @@ create() {
 create() {
   // additional code
   
-  this.ray = this.raycaster.createRay({
-    // additional options
-  });
+  this.ray = this.raycaster.createRay();
   
   // additional code
 }
@@ -125,5 +115,5 @@ this.ray.setAngle(2);
 let intersection = this.ray.cast();
 
 //cast rays in all directions (toward all mapped objects vertices / points)
-let intersections = this.ray.castAll();
+let intersections = this.ray.castCircle();
 ```

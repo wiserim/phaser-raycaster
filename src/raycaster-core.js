@@ -1,4 +1,5 @@
 export function Raycaster(options) {
+    this.version = '0.6.1';
     this.scene;
     this.graphics;
     this.boundingBox = false;
@@ -6,8 +7,12 @@ export function Raycaster(options) {
     this.sortedPoints = [];
     this.mapSegmentCount = 0;   //quantity of segments of map of circle
 
-    if(options !== undefined)
+    if(options !== undefined) {
+        if(options.boundingBox === undefined && options.scene !== undefined)
+            options.boundingBox = options.scene.physics.world.bounds;
+
         this.setOptions(options);
+    }
 
     //update event
         this.scene.events.on('update', function() {
@@ -133,7 +138,7 @@ Raycaster.prototype = {
     },
 
     //ray factory
-    createRay: function(options) {
+    createRay: function(options = {}) {
         return new this.Ray(options, this);
     }
 }

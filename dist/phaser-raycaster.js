@@ -675,7 +675,9 @@ Ray.prototype = {
   config: function config(options) {
     this.object = options.object; //origin
 
-    if (options.origin) this.origin.setTo(options.origin.x, options.origin.y); //range (0 = max)
+    if (options.origin) this.origin.setTo(options.origin.x, options.origin.y); //angle
+
+    if (options.angle) this.angle = angle; //range (0 = max)
 
     if (options.range) this.range = options.range; //detection range (0 = max)
 
@@ -709,10 +711,17 @@ Ray.prototype = {
     Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
     return this;
   },
-  //set angle
+  //set angle (rad)
   setAngle: function setAngle() {
     var angle = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
     this.angle = angle;
+    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+    return this;
+  },
+  //set angle (deg)
+  setAngleDeg: function setAngleDeg() {
+    var angle = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    this.angle = Phaser.Math.DegToRad(angle);
     Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
     return this;
   },
@@ -951,7 +960,7 @@ Ray.prototype = {
     return new Phaser.Geom.Point(closestIntersection.x, closestIntersection.y);
   },
   //cast ray in all directions
-  castAll: function castAll() {
+  castCircle: function castCircle() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var intersections = [];
     var maps = [];
@@ -1164,7 +1173,11 @@ function Raycaster(options) {
   this.sortedPoints = [];
   this.mapSegmentCount = 0; //quantity of segments of map of circle
 
-  if (options !== undefined) this.setOptions(options); //update event
+  if (options !== undefined) {
+    if (options.boundingBox === undefined && options.scene !== undefined) options.boundingBox = options.scene.physics.world.bounds;
+    this.setOptions(options);
+  } //update event
+
 
   this.scene.events.on('update', function () {
     this.update();
@@ -1329,7 +1342,8 @@ Raycaster.prototype = {
     }
   },
   //ray factory
-  createRay: function createRay(options) {
+  createRay: function createRay() {
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     return new this.Ray(options, this);
   }
 };

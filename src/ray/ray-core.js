@@ -20,6 +20,10 @@ Ray.prototype = {
         if(options.origin)
             this.origin.setTo(options.origin.x, options.origin.y);
 
+        //angle
+        if(options.angle)
+            this.angle = angle;
+
         //range (0 = max)
         if(options.range)
             this.range = options.range;
@@ -63,9 +67,16 @@ Ray.prototype = {
         return this;
     },
 
-    //set angle
+    //set angle (rad)
     setAngle: function(angle = 0) {
         this.angle = angle;
+        Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+        return this;
+    },
+
+    //set angle (deg)
+    setAngleDeg(angle = 0) {
+        this.angle = Phaser.Math.DegToRad(angle);
         Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
         return this;
     },
@@ -229,7 +240,7 @@ Ray.prototype = {
     },
 
     //cast ray in all directions
-    castAll: function(options = {}) {
+    castCircle: function(options = {}) {
         let intersections = [];
         let maps = [];
         let rayTargets = [];
