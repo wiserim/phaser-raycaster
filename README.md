@@ -124,6 +124,6 @@ this.ray.setAngle(2);
 //cast single ray and get closets intersection with mapped objects
 let intersection = this.ray.cast();
 
-//cast rays in zll directions (toward all mapped objects vertices / points)
-let intersections = this.ray.castCll();
+//cast rays in all directions (toward all mapped objects vertices / points)
+let intersections = this.ray.castAll();
 ```
