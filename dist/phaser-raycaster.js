@@ -1166,6 +1166,7 @@ Ray.prototype = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Raycaster", function() { return Raycaster; });
 function Raycaster(options) {
+  this.version = '0.6.3';
   this.scene;
   this.graphics;
   this.boundingBox = false;
@@ -1174,7 +1175,7 @@ function Raycaster(options) {
   this.mapSegmentCount = 0; //quantity of segments of map of circle
 
   if (options !== undefined) {
-    if (options.boundingBox === undefined && options.scene !== undefined) options.boundingBox = options.scene.physics.world.bounds;
+    if (options.boundingBox === undefined && options.scene !== undefined && options.scene.physics !== undefined) options.boundingBox = options.scene.physics.world.bounds;
     this.setOptions(options);
   } //update event
 

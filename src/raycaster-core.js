@@ -1,5 +1,5 @@
 export function Raycaster(options) {
-    this.version = '0.6.1';
+    this.version = '0.6.3';
     this.scene;
     this.graphics;
     this.boundingBox = false;
@@ -8,7 +8,7 @@ export function Raycaster(options) {
     this.mapSegmentCount = 0;   //quantity of segments of map of circle
 
     if(options !== undefined) {
-        if(options.boundingBox === undefined && options.scene !== undefined)
+        if(options.boundingBox === undefined && options.scene !== undefined && options.scene.physics !== undefined)
             options.boundingBox = options.scene.physics.world.bounds;
 
         this.setOptions(options);
