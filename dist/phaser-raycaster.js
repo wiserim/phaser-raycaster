@@ -677,7 +677,7 @@ Ray.prototype = {
 
     if (options.origin) this.origin.setTo(options.origin.x, options.origin.y); //angle
 
-    if (options.angle) this.angle = angle; //range (0 = max)
+    if (options.angle) this.angle = Phaser.Math.Angle.Normalize(angle); //range (0 = max)
 
     if (options.range) this.range = options.range; //detection range (0 = max)
 
@@ -691,7 +691,7 @@ Ray.prototype = {
   setRay: function setRay(x, y, angle) {
     var range = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Phaser.Math.MAX_SAFE_INTEGER;
     this.origin.setTo(x, y);
-    this.angle = angle;
+    this.angle = Phaser.Math.Angle.Normalize(angle);
     this.range = range;
     Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
     this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
@@ -714,14 +714,14 @@ Ray.prototype = {
   //set angle (rad)
   setAngle: function setAngle() {
     var angle = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    this.angle = angle;
+    this.angle = Phaser.Math.Angle.Normalize(angle);
     Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
     return this;
   },
   //set angle (deg)
   setAngleDeg: function setAngleDeg() {
     var angle = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-    this.angle = Phaser.Math.DegToRad(angle);
+    this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(angle));
     Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
     return this;
   },
@@ -1166,7 +1166,7 @@ Ray.prototype = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Raycaster", function() { return Raycaster; });
 function Raycaster(options) {
-  this.version = '0.6.3';
+  this.version = '0.6.4';
   this.scene;
   this.graphics;
   this.boundingBox = false;

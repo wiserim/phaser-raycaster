@@ -1,5 +1,5 @@
 export function Raycaster(options) {
-    this.version = '0.6.3';
+    this.version = '0.6.4';
     this.scene;
     this.graphics;
     this.boundingBox = false;

@@ -22,7 +22,7 @@ Ray.prototype = {
 
         //angle
         if(options.angle)
-            this.angle = angle;
+            this.angle = Phaser.Math.Angle.Normalize(angle);
 
         //range (0 = max)
         if(options.range)
@@ -44,7 +44,7 @@ Ray.prototype = {
     //set ray
     setRay: function(x, y, angle, range = Phaser.Math.MAX_SAFE_INTEGER) {
         this.origin.setTo(x, y);
-        this.angle = angle;
+        this.angle = Phaser.Math.Angle.Normalize(angle);
         this.range = range;
 
         Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
@@ -69,14 +69,14 @@ Ray.prototype = {
 
     //set angle (rad)
     setAngle: function(angle = 0) {
-        this.angle = angle;
+        this.angle = Phaser.Math.Angle.Normalize(angle);
         Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
         return this;
     },
 
     //set angle (deg)
     setAngleDeg(angle = 0) {
-        this.angle = Phaser.Math.DegToRad(angle);
+        this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(angle));
         Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
         return this;
     },
