@@ -1,5 +1,11 @@
+/**
+* @author       Marcin Walczak <mail@marcinwalczak.pl>
+* @copyright    2020 Marcin Walczak
+* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
+*/
+
 export function Raycaster(options) {
-    this.version = '0.6.4';
+    this.version = '0.7.0';
     this.scene;
     this.graphics;
     this.boundingBox = false;
@@ -15,9 +21,7 @@ export function Raycaster(options) {
     }
 
     //update event
-        this.scene.events.on('update', function() {
-            this.update();
-        }.bind(this));
+    this.scene.events.on('update', this.update.bind(this));
 
     return this;
 }
@@ -131,6 +135,9 @@ Raycaster.prototype = {
         //update dynamic maps
         if(this.mappedObjects.length > 0)
             for(let mapppedObject of this.mappedObjects) {
+                if(mapppedObject.data === undefined)
+                    continue;
+
                 let map = mapppedObject.data.get('raycasterMap')
                 if(map.dynamic)
                     map.updateMap();
