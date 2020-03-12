@@ -1,9 +1,3 @@
-/**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
-
 var PhaserRaycaster = function (scene)
 {
     //The Scene that owns this plugin

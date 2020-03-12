@@ -103,11 +103,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-/**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
 var PhaserRaycaster = function PhaserRaycaster(scene) {
   //The Scene that owns this plugin
   this.scene = scene;
@@ -262,12 +257,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
-/**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
-
 /*Map methods for circles*/
 
 /**
@@ -440,11 +429,19 @@ function updateMap() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Map", function() { return Map; });
 /**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
-function Map(options, scene) {
+ * @classdesc
+ *
+ * Map class responible for mapping game objects.
+ *
+ * @class Map
+ * @memberof Raycaster
+ * @constructor
+ * @since 6.0.0
+ *
+ * @param {object} options - Map specific configuration settings.
+ * @param {Raycaster} [raycaster] - Parent raycaster object.
+ */
+function Map(options) {
   this.type;
   this.active;
   this.dynamic;
@@ -504,12 +501,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
-/**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
-
 /*Map methods for lines*/
 
 /**
@@ -604,12 +595,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
-/**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
-
 /*Map methods for polygons*/
 
 /**
@@ -746,12 +731,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
-/**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
-
 /*Map methods for rectangles*/
 
 /**
@@ -1804,10 +1783,18 @@ function boundsInRange(object) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Ray", function() { return Ray; });
 /**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
+ * @classdesc
+ *
+ * Ray class responible for casting ray's and testing their collisions with mapped objects.
+ *
+ * @class Ray
+ * @memberof Raycaster
+ * @constructor
+ * @since 6.0.0
+ *
+ * @param {object} options - Ray specific configuration settings.
+ * @param {Raycaster} [raycaster] - Parent raycaster object.
+ */
 function Ray(options, raycaster) {
   this.origin = new Phaser.Geom.Point();
   this._ray = new Phaser.Geom.Line();
@@ -1851,11 +1838,18 @@ Ray.prototype = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRay", function() { return setRay; });
 /**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
-//set ray
+ * Set ray's position, direction (angle) and range.
+ *
+ * @function Ray.setAngle
+ * @since 0.6.0
+ *
+ * @param {integer} x - X coordinate.
+ * @param {integer} y - Y coordinate.
+ * @param {float} [angle] - Ray's angle in radians.
+ * @param {integer} [range] = Phaser.Math.MAX_SAFE_INTEGER - Ray's range.
+ *
+ * @return {object} Ray object.
+ */
 function setRay(x, y, angle) {
   var range = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Phaser.Math.MAX_SAFE_INTEGER;
   this.origin.setTo(x, y);
@@ -1883,6 +1877,18 @@ __webpack_require__.r(__webpack_exports__);
 * @copyright    2020 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
+
+/**
+ * @classdesc
+ *
+ * Raycaster class responible for creating ray objects and managing mapped objects.
+ *
+ * @class Raycaster
+ * @constructor
+ * @since 6.0.0
+ *
+ * @param {object} options - Ray specific configuration settings.
+ */
 function Raycaster(options) {
   this.version = '0.7.0';
   this.scene;
@@ -1949,7 +1955,7 @@ Raycaster.prototype = {
         object: objects,
         dynamic: dynamic,
         segmentCount: segmentCount
-      }, this.scene);
+      });
       objects.data.set('raycasterMap', map);
       this.mappedObjects.push(objects);
       return this;
