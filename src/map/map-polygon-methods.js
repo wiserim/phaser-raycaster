@@ -5,17 +5,42 @@
 */
 
 /*Map methods for polygons*/
-//get points
+/**
+ * Get array of polygon's points.
+ *
+ * @function Map._getPolygonPoints
+ * @since 0.6.0
+ *
+ * @param {object} [ray] - Ray object.
+ *
+ * @return {array} Array of points.
+ */
 export function getPoints(ray = false) {
     return this._points;
 };
 
-//get segments
+/**
+ * Get array of segments representing polygon.
+ *
+ * @function Map._getPolygonSegments
+ * @since 0.6.0
+ *
+ *
+ * @return {array} Array of Phaser.Geom.Line objects.
+ */
 export function getSegments() {
     return this._segments;
 };
 
-//map update
+/**
+ * Update polygon's map of points and segments.
+ *
+ * @function Map._updatePolygonMap
+ * @since 0.6.0
+ *
+ *
+ * @return {object} Map object.
+ */
 export function updateMap() {
     let points = [];
     let segments = [];

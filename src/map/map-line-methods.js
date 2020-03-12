@@ -5,17 +5,42 @@
 */
 
 /*Map methods for lines*/
-//get points
+/**
+ * Get array of points for line.
+ *
+ * @function Map._getLinePoints
+ * @since 0.6.0
+ *
+ * @param {object} [ray] - Ray object.
+ *
+ * @return {array} Array of points.
+ */
 export function getPoints(ray = false) {
     return this._points;
 };
 
-//get segments
+/**
+ * Get array of segments representing line.
+ *
+ * @function Map._getLineSegments
+ * @since 0.6.0
+ *
+ *
+ * @return {array} Array of Phaser.Geom.Line objects.
+ */
 export function getSegments() {
     return this._segments;
 };
 
-//map update
+/**
+ * Update line's map of points and segments.
+ *
+ * @function Map._updateLineMap
+ * @since 0.6.0
+ *
+ *
+ * @return {object} Map object.
+ */
 export function updateMap() {
     let points = [];
     let segments = [];

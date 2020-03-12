@@ -5,7 +5,16 @@
 */
 
 /*Map methods for circles*/
-//get points
+/**
+ * Get array of points on circle.
+ *
+ * @function Map._getArcPoints
+ * @since 0.6.0
+ *
+ * @param {object} [ray] - Ray object. Used to generate points of rays tangent to circle, from ray origin.
+ *
+ * @return {array} Array of Phaser.GeomLine objects.
+ */
 export function getPoints(ray = false) {
     if(this._points.length > 0)
         return this._points;
@@ -49,12 +58,28 @@ export function getPoints(ray = false) {
     return points;
 };
 
-//get segments
+/**
+ * Get array of segments representing circle.
+ *
+ * @function Map._getArcSegments
+ * @since 0.6.0
+ *
+ *
+ * @return {array} Array of Phaser.Geom.Line objects.
+ */
 export function getSegments() {
     return this._segments;
 };
 
-//map update
+/**
+ * Update circle's map of points and segments. If segmentCount == 0. Map is generated dynamically by calculating points of rays tangent to circle, from ray origin.
+ *
+ * @function Map._updateArcMap
+ * @since 0.6.0
+ *
+ *
+ * @return {object} Map object.
+ */
 export function updateMap() {
     if(!this.segmentCount) {
         this._points = [];

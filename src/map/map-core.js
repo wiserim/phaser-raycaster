@@ -22,71 +22,28 @@ export function Map(options, scene) {
     return this;
 };
 
-//config
-Map.prototype = {
-    config: function(options) {
-        this.object = options.object;
-        //object type
-        if(options.type === undefined)
-            options.type = options.object.type;
-        this.type = options.type;
-
-        switch(options.type) {
-            case 'Polygon':
-                this.getPoints = this._getPolygonPoints;
-                this.getSegments = this._getPolygonSegments;
-                this.updateMap = this._updatePolygonMap;
-                break;
-            case 'Arc':
-                this.getPoints = this._getArcPoints;
-                this.getSegments = this._getArcSegments;
-                this.updateMap = this._updateArcMap;
-                break;
-            case 'Line':
-                this.getPoints = this._getLinePoints;
-                this.getSegments = this._getLineSegments;
-                this.updateMap = this._updateLineMap;
-                break;
-            default:
-                this.getPoints = this._getRectanglePoints;
-                this.getSegments = this._getRectangleSegments;
-                this.updateMap = this._updateRectangleMap;
-        }
-
-        //dynamic map
-        this.dynamic = (options.dynamic == true) ? true : false;
-        this.segmentCount = (options.segmentCount) ? options.segmentCount : 0;
-
-        return this;
-    },
-
-    //set segments count for circle map
-    setSegmentCount: function(count) {
-        this.segmentCount = count;
-        this.updateMap();
-        return this;
-    }
-};
-//add methods for rectangle maps
 let rectangle = require('./map-rectangle-methods.js');
-Map.prototype._getRectanglePoints = rectangle.getPoints;
-Map.prototype._getRectangleSegments = rectangle.getSegments;
-Map.prototype._updateRectangleMap = rectangle.updateMap;
-
-//add methods for line maps
 let line = require('./map-line-methods.js');
-Map.prototype._getLinePoints = line.getPoints;
-Map.prototype._getLineSegments = line.getSegments;
-Map.prototype._updateLineMap = line.updateMap;
-
-//add methods for polygon maps
 let polygon = require('./map-polygon-methods.js');
-Map.prototype._getPolygonPoints = polygon.getPoints;
-Map.prototype._getPolygonSegments = polygon.getSegments;
-Map.prototype._updatePolygonMap = polygon.updateMap;
-
-//add methods for circle maps
 let arc = require('./map-circle-methods.js');
-Map.prototype._getArcPoints = arc.getPoints;
-Map.prototype._getArcSegments = arc.getSegments;
-Map.prototype._updateArcMap = arc.updateMap;
+
+Map.prototype = {
+    config: require('./config.js').config,
+    setSegmentCount: require('./segmentsCount.js').setSegmentCount,
+    //methods for rectangle maps
+    _getRectanglePoints: rectangle.getPoints,
+    _getRectangleSegments: rectangle.getSegments,
+    _updateRectangleMap: rectangle.updateMap,
+    //methods for line maps
+    _getLinePoints: line.getPoints,
+    _getLineSegments: line.getSegments,
+    _updateLineMap: line.updateMap,
+    //methods for polygon maps
+    _getPolygonPoints: polygon.getPoints,
+    _getPolygonSegments: polygon.getSegments,
+    _updatePolygonMap: polygon.updateMap,
+    //methods for circle maps
+    _getArcPoints: arc.getPoints,
+    _getArcSegments: arc.getSegments,
+    _updateArcMap: arc.updateMap
+};

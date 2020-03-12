@@ -187,6 +187,69 @@ module.exports = PhaserRaycaster;
 
 /***/ }),
 
+/***/ "./src/map/config.js":
+/*!***************************!*\
+  !*** ./src/map/config.js ***!
+  \***************************/
+/*! exports provided: config */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "config", function() { return config; });
+/**
+ * Configure map on creation.
+ *
+ * @function Map.config
+ * @since 0.6.0
+ *
+ * @param {object} [options] - Ray's congfiguration options. May include:
+ * - {object} object - Mapped game object
+ * - {string} [type] - Map type. If not defined, will be determined from object
+ * - {boolean} [dynamic] = false - If set true, map will be dynamic (updated on scene update event).
+ * - {integer} [segmentCount] = 0 - Circle map's segment count. If set to 0, map won't be generating segments and relay only on generated tangent point to actually testing ray.
+ *
+ * @return {object} Map object.
+ */
+function config(options) {
+  this.object = options.object; //object type
+
+  if (options.type === undefined) options.type = options.object.type;
+  this.type = options.type;
+
+  switch (options.type) {
+    case 'Polygon':
+      this.getPoints = this._getPolygonPoints;
+      this.getSegments = this._getPolygonSegments;
+      this.updateMap = this._updatePolygonMap;
+      break;
+
+    case 'Arc':
+      this.getPoints = this._getArcPoints;
+      this.getSegments = this._getArcSegments;
+      this.updateMap = this._updateArcMap;
+      break;
+
+    case 'Line':
+      this.getPoints = this._getLinePoints;
+      this.getSegments = this._getLineSegments;
+      this.updateMap = this._updateLineMap;
+      break;
+
+    default:
+      this.getPoints = this._getRectanglePoints;
+      this.getSegments = this._getRectangleSegments;
+      this.updateMap = this._updateRectangleMap;
+  } //dynamic map
+
+
+  this.dynamic = options.dynamic == true ? true : false;
+  this.segmentCount = options.segmentCount ? options.segmentCount : 0;
+  return this;
+}
+
+/***/ }),
+
 /***/ "./src/map/map-circle-methods.js":
 /*!***************************************!*\
   !*** ./src/map/map-circle-methods.js ***!
@@ -206,7 +269,17 @@ __webpack_require__.r(__webpack_exports__);
 */
 
 /*Map methods for circles*/
-//get points
+
+/**
+ * Get array of points on circle.
+ *
+ * @function Map._getArcPoints
+ * @since 0.6.0
+ *
+ * @param {object} [ray] - Ray object. Used to generate points of rays tangent to circle, from ray origin.
+ *
+ * @return {array} Array of Phaser.GeomLine objects.
+ */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   if (this._points.length > 0) return this._points;
@@ -243,12 +316,30 @@ function getPoints() {
 
   return points;
 }
-; //get segments
+;
+/**
+ * Get array of segments representing circle.
+ *
+ * @function Map._getArcSegments
+ * @since 0.6.0
+ *
+ *
+ * @return {array} Array of Phaser.Geom.Line objects.
+ */
 
 function getSegments() {
   return this._segments;
 }
-; //map update
+;
+/**
+ * Update circle's map of points and segments. If segmentCount == 0. Map is generated dynamically by calculating points of rays tangent to circle, from ray origin.
+ *
+ * @function Map._updateArcMap
+ * @since 0.6.0
+ *
+ *
+ * @return {object} Map object.
+ */
 
 function updateMap() {
   if (!this.segmentCount) {
@@ -368,76 +459,36 @@ function Map(options, scene) {
   this.updateMap();
   return this;
 }
-; //config
-
-Map.prototype = {
-  config: function config(options) {
-    this.object = options.object; //object type
-
-    if (options.type === undefined) options.type = options.object.type;
-    this.type = options.type;
-
-    switch (options.type) {
-      case 'Polygon':
-        this.getPoints = this._getPolygonPoints;
-        this.getSegments = this._getPolygonSegments;
-        this.updateMap = this._updatePolygonMap;
-        break;
-
-      case 'Arc':
-        this.getPoints = this._getArcPoints;
-        this.getSegments = this._getArcSegments;
-        this.updateMap = this._updateArcMap;
-        break;
-
-      case 'Line':
-        this.getPoints = this._getLinePoints;
-        this.getSegments = this._getLineSegments;
-        this.updateMap = this._updateLineMap;
-        break;
-
-      default:
-        this.getPoints = this._getRectanglePoints;
-        this.getSegments = this._getRectangleSegments;
-        this.updateMap = this._updateRectangleMap;
-    } //dynamic map
-
-
-    this.dynamic = options.dynamic == true ? true : false;
-    this.segmentCount = options.segmentCount ? options.segmentCount : 0;
-    return this;
-  },
-  //set segments count for circle map
-  setSegmentCount: function setSegmentCount(count) {
-    this.segmentCount = count;
-    this.updateMap();
-    return this;
-  }
-}; //add methods for rectangle maps
+;
 
 var rectangle = __webpack_require__(/*! ./map-rectangle-methods.js */ "./src/map/map-rectangle-methods.js");
 
-Map.prototype._getRectanglePoints = rectangle.getPoints;
-Map.prototype._getRectangleSegments = rectangle.getSegments;
-Map.prototype._updateRectangleMap = rectangle.updateMap; //add methods for line maps
-
 var line = __webpack_require__(/*! ./map-line-methods.js */ "./src/map/map-line-methods.js");
-
-Map.prototype._getLinePoints = line.getPoints;
-Map.prototype._getLineSegments = line.getSegments;
-Map.prototype._updateLineMap = line.updateMap; //add methods for polygon maps
 
 var polygon = __webpack_require__(/*! ./map-polygon-methods.js */ "./src/map/map-polygon-methods.js");
 
-Map.prototype._getPolygonPoints = polygon.getPoints;
-Map.prototype._getPolygonSegments = polygon.getSegments;
-Map.prototype._updatePolygonMap = polygon.updateMap; //add methods for circle maps
-
 var arc = __webpack_require__(/*! ./map-circle-methods.js */ "./src/map/map-circle-methods.js");
 
-Map.prototype._getArcPoints = arc.getPoints;
-Map.prototype._getArcSegments = arc.getSegments;
-Map.prototype._updateArcMap = arc.updateMap;
+Map.prototype = {
+  config: __webpack_require__(/*! ./config.js */ "./src/map/config.js").config,
+  setSegmentCount: __webpack_require__(/*! ./segmentsCount.js */ "./src/map/segmentsCount.js").setSegmentCount,
+  //methods for rectangle maps
+  _getRectanglePoints: rectangle.getPoints,
+  _getRectangleSegments: rectangle.getSegments,
+  _updateRectangleMap: rectangle.updateMap,
+  //methods for line maps
+  _getLinePoints: line.getPoints,
+  _getLineSegments: line.getSegments,
+  _updateLineMap: line.updateMap,
+  //methods for polygon maps
+  _getPolygonPoints: polygon.getPoints,
+  _getPolygonSegments: polygon.getSegments,
+  _updatePolygonMap: polygon.updateMap,
+  //methods for circle maps
+  _getArcPoints: arc.getPoints,
+  _getArcSegments: arc.getSegments,
+  _updateArcMap: arc.updateMap
+};
 
 /***/ }),
 
@@ -460,17 +511,45 @@ __webpack_require__.r(__webpack_exports__);
 */
 
 /*Map methods for lines*/
-//get points
+
+/**
+ * Get array of points for line.
+ *
+ * @function Map._getLinePoints
+ * @since 0.6.0
+ *
+ * @param {object} [ray] - Ray object.
+ *
+ * @return {array} Array of points.
+ */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   return this._points;
 }
-; //get segments
+;
+/**
+ * Get array of segments representing line.
+ *
+ * @function Map._getLineSegments
+ * @since 0.6.0
+ *
+ *
+ * @return {array} Array of Phaser.Geom.Line objects.
+ */
 
 function getSegments() {
   return this._segments;
 }
-; //map update
+;
+/**
+ * Update line's map of points and segments.
+ *
+ * @function Map._updateLineMap
+ * @since 0.6.0
+ *
+ *
+ * @return {object} Map object.
+ */
 
 function updateMap() {
   var points = [];
@@ -532,17 +611,45 @@ __webpack_require__.r(__webpack_exports__);
 */
 
 /*Map methods for polygons*/
-//get points
+
+/**
+ * Get array of polygon's points.
+ *
+ * @function Map._getPolygonPoints
+ * @since 0.6.0
+ *
+ * @param {object} [ray] - Ray object.
+ *
+ * @return {array} Array of points.
+ */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   return this._points;
 }
-; //get segments
+;
+/**
+ * Get array of segments representing polygon.
+ *
+ * @function Map._getPolygonSegments
+ * @since 0.6.0
+ *
+ *
+ * @return {array} Array of Phaser.Geom.Line objects.
+ */
 
 function getSegments() {
   return this._segments;
 }
-; //map update
+;
+/**
+ * Update polygon's map of points and segments.
+ *
+ * @function Map._updatePolygonMap
+ * @since 0.6.0
+ *
+ *
+ * @return {object} Map object.
+ */
 
 function updateMap() {
   var points = [];
@@ -646,17 +753,45 @@ __webpack_require__.r(__webpack_exports__);
 */
 
 /*Map methods for rectangles*/
-//get points
+
+/**
+ * Get array of rectangle's points.
+ *
+ * @function Map._getRectanglePoints
+ * @since 0.6.0
+ *
+ * @param {object} [ray] - Ray object.
+ *
+ * @return {array} Array of points.
+ */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   return this._points;
 }
-; //get segments
+;
+/**
+ * Get array of segments representing rectangle.
+ *
+ * @function Map._getRectangleSegments
+ * @since 0.6.0
+ *
+ *
+ * @return {array} Array of Phaser.Geom.Line objects.
+ */
 
 function getSegments() {
   return this._segments;
 }
-; //map update
+;
+/**
+ * Update rectangle's map of points and segments.
+ *
+ * @function Map._updateRectangleMap
+ * @since 0.6.0
+ *
+ *
+ * @return {object} Map object.
+ */
 
 function updateMap() {
   var points = [];
@@ -673,6 +808,34 @@ function updateMap() {
   return this;
 }
 ;
+
+/***/ }),
+
+/***/ "./src/map/segmentsCount.js":
+/*!**********************************!*\
+  !*** ./src/map/segmentsCount.js ***!
+  \**********************************/
+/*! exports provided: setSegmentCount */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setSegmentCount", function() { return setSegmentCount; });
+/**
+ * Set segment count for cirle's map.
+ *
+ * @function Map.setSegmentCount
+ * @since 0.6.0
+ *
+ * @param {integer} [count] - Circle's map segments count.
+ *
+ * @return {object} Map object.
+ */
+function setSegmentCount(count) {
+  this.segmentCount = count;
+  this.updateMap();
+  return this;
+}
 
 /***/ }),
 
