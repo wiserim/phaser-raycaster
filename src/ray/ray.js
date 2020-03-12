@@ -1,10 +1,16 @@
 /**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
-
-//set ray
+ * Set ray's position, direction (angle) and range.
+ *
+ * @function Ray.setAngle
+ * @since 0.6.0
+ *
+ * @param {integer} x - X coordinate.
+ * @param {integer} y - Y coordinate.
+ * @param {float} [angle] - Ray's angle in radians.
+ * @param {integer} [range] = Phaser.Math.MAX_SAFE_INTEGER - Ray's range.
+ *
+ * @return {object} Ray object.
+ */
 export function setRay(x, y, angle, range = Phaser.Math.MAX_SAFE_INTEGER) {
     this.origin.setTo(x, y);
     this.angle = Phaser.Math.Angle.Normalize(angle);

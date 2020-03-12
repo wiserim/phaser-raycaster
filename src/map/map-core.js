@@ -1,10 +1,17 @@
 /**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
-
-export function Map(options, scene) {
+ * @classdesc
+ *
+ * Map class responible for mapping game objects.
+ *
+ * @class Map
+ * @memberof Raycaster
+ * @constructor
+ * @since 6.0.0
+ *
+ * @param {object} options - Map specific configuration settings.
+ * @param {Raycaster} [raycaster] - Parent raycaster object.
+ */
+export function Map(options) {
     this.type;
     this.active;
     this.dynamic;

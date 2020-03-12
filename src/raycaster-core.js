@@ -4,6 +4,17 @@
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 
+/**
+ * @classdesc
+ *
+ * Raycaster class responible for creating ray objects and managing mapped objects.
+ *
+ * @class Raycaster
+ * @constructor
+ * @since 6.0.0
+ *
+ * @param {object} options - Ray specific configuration settings.
+ */
 export function Raycaster(options) {
     this.version = '0.7.0';
     this.scene;
@@ -85,7 +96,7 @@ Raycaster.prototype = {
                 object: objects,
                 dynamic: dynamic,
                 segmentCount: segmentCount
-            }, this.scene);
+            });
 
             objects.data.set('raycasterMap', map);
             this.mappedObjects.push(objects);

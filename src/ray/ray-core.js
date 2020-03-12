@@ -1,9 +1,16 @@
 /**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
-* @copyright    2020 Marcin Walczak
-* @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
-*/
-
+ * @classdesc
+ *
+ * Ray class responible for casting ray's and testing their collisions with mapped objects.
+ *
+ * @class Ray
+ * @memberof Raycaster
+ * @constructor
+ * @since 6.0.0
+ *
+ * @param {object} options - Ray specific configuration settings.
+ * @param {Raycaster} [raycaster] - Parent raycaster object.
+ */
 export function Ray(options, raycaster) {
     this.origin = new Phaser.Geom.Point();
     this._ray = new Phaser.Geom.Line();
