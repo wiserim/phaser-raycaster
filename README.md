@@ -1,14 +1,11 @@
 # Phaser Raycaster
 Raycasting plugin for Phaser 3.
 
-Plugin is functional, but still work in progress. Require further improvements.
-
 [![GitHub release](https://img.shields.io/github/release/wiserim/phaser-raycaster.svg)](https://github.com/wiserim/phaser-raycaster/releases) [![npm](https://img.shields.io/npm/v/phaser-raycaster.svg)](https://www.npmjs.com/package/phaser-raycaster) [![GitHub](https://img.shields.io/github/license/wiserim/phaser-raycaster.svg)](https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE) [![Github file size](https://img.shields.io/github/size/wiserim/phaser-raycaster/dist/phaser-raycaster.min.js.svg)](https://github.com/wiserim/phaser-raycaster)
 
 **TODO:**
 * documentation and examples,
 * raycasting optimization,
-* casting ray in a cone,
 * implementing Matter.js support,
 * raycasting for tilemaps.
 
@@ -20,7 +17,7 @@ Code examples are available on CodePen: [LINK](https://codepen.io/collection/AOO
 
 **Features:**
 * works with arcade physics,
-* cast rays in a single direction or 360 degrees,
+* cast rays in a single direction, 360 degrees circle or in a cone,
 * test rays on mapped game objects (lines, rectangles, polygons, circles and sprites),
 * provides closest intersection points between rays and tested objects,
 * tests can be made on all mapped objects or only selected ones,
@@ -111,9 +108,19 @@ this.raycaster.mapGameObjects(this.group.getChildren());
 this.ray.setOrigin(400, 300);
 //set ray direction (in radians)
 this.ray.setAngle(2);
+//set ray direction (in degrees)
+this.ray.setAngleDeg(90);
 //cast single ray and get closets intersection with mapped objects
 let intersection = this.ray.cast();
 
 //cast rays in all directions (toward all mapped objects vertices / points)
 let intersections = this.ray.castCircle();
+
+//set ray's cone angle (in radians)
+this.ray.setCone(1);
+//set ray's cone angle (in degrees)
+this.ray.setCone(90);
+
+//cast rays in a cone
+let intersections = this.ray.castCone();
 ```
