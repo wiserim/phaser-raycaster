@@ -26,7 +26,7 @@ export function setRange(range = Phaser.Math.MAX_SAFE_INTEGER) {
  */
 export function setDetectionRange(detectionRange = 0) {
     this.detectionRange = detectionRange;
-    this.rangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
+    this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
     return this;
 }
 

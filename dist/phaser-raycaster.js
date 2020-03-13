@@ -1746,7 +1746,7 @@ function setRange() {
 function setDetectionRange() {
   var detectionRange = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
   this.detectionRange = detectionRange;
-  this.rangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
+  this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
   return this;
 }
 /**
