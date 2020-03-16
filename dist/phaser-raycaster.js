@@ -890,7 +890,7 @@ __webpack_require__.r(__webpack_exports__);
 function cast() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var closestIntersection;
-  var closestDistance = Phaser.Math.MAX_SAFE_INTEGER; //if bounding box is defined check bounding box intersection
+  var closestDistance = this.range; //if bounding box is defined check bounding box intersection
 
   if (this._raycaster && this._raycaster.boundingBox) {
     var _intersections = [];
@@ -924,10 +924,16 @@ function cast() {
           }
         }
       }
-    } else {
-      closestDistance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, options.target.x, options.target.y);
-      closestIntersection = options.target;
-    }
+    } //if ray target is declared
+    else if (options.target) {
+        var _distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, options.target.x, options.target.y); //if target is within ray range
+
+
+        if (this.range > _distance) {
+          closestDistance = _distance;
+          closestIntersection = options.target;
+        }
+      }
   } //if no objects to cast ray were passed, use raycasters mapped objects
 
 
@@ -963,10 +969,10 @@ function cast() {
           else if (!Phaser.Geom.Intersects.LineToLine(this._ray, segment, _intersection2)) continue; //get closest intersection
 
 
-          var _distance3 = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, _intersection2.x, _intersection2.y);
+          var _distance4 = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, _intersection2.x, _intersection2.y);
 
-          if (_distance3 < closestDistance) {
-            closestDistance = _distance3;
+          if (_distance4 < closestDistance) {
+            closestDistance = _distance4;
             closestIntersection = _intersection2;
           }
         } //check arc intersections if its not
@@ -1006,10 +1012,10 @@ function cast() {
 
               if (Phaser.Geom.Point.Equals(options.target, point)) {
                 //get closest intersection
-                var _distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
+                var _distance2 = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
 
-                if (_distance < closestDistance) {
-                  closestDistance = _distance;
+                if (_distance2 < closestDistance) {
+                  closestDistance = _distance2;
                   closestIntersection = point;
                   isTangent = true;
                   break;
@@ -1062,10 +1068,10 @@ function cast() {
               var _intersection = _step5.value;
 
               //get closest intersection
-              var _distance2 = Phaser.Math.Distance.Between(this._ray.x1, this._ray.y1, _intersection.x, _intersection.y);
+              var _distance3 = Phaser.Math.Distance.Between(this._ray.x1, this._ray.y1, _intersection.x, _intersection.y);
 
-              if (_distance2 < closestDistance) {
-                closestDistance = _distance2;
+              if (_distance3 < closestDistance) {
+                closestDistance = _distance3;
                 closestIntersection = _intersection;
               }
             }

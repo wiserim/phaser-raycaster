@@ -12,7 +12,7 @@
  */
 export function cast(options = {}) {
     let closestIntersection;
-    let closestDistance = Phaser.Math.MAX_SAFE_INTEGER;
+    let closestDistance = this.range;
     //if bounding box is defined check bounding box intersection
     if(this._raycaster && this._raycaster.boundingBox) {
         let intersections = [];
@@ -28,9 +28,14 @@ export function cast(options = {}) {
                 }
             }
         }
-        else {
-            closestDistance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, options.target.x, options.target.y);
-            closestIntersection = options.target;
+        //if ray target is declared
+        else if(options.target){
+            let distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, options.target.x, options.target.y);
+            //if target is within ray range
+            if(this.range > distance) {
+                closestDistance = distance;
+                closestIntersection = options.target;
+            }
         }
     }
 
@@ -52,6 +57,7 @@ export function cast(options = {}) {
         //check intersections
         for(let segment of map.getSegments()) {
             let intersection = [];
+
             //if target point is segmemt point
             if(options.target) {
                 if(
