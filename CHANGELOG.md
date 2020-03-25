@@ -58,7 +58,6 @@
 
 * `Raycaster`: bounds will be set to the world bounds by default.
 * `Ray.castAll`: method renamed to `Ray.castCircle`.
-* 
 
 ### Bug fixes
 
