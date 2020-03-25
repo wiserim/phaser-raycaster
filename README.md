@@ -11,19 +11,19 @@ Raycasting plugin for Phaser 3.
 
 
 Phaser Raycaster is a [Phaser 3](https://github.com/photonstorm/phaser) plugin which provide raycasting for geometric game objects and sprites.
-It doesn't require Matter.js (but it's support is planned) and can be used with arcade physics.
+It doesn't require Matter.js and can be used with arcade physics.
 
 Code examples are available on CodePen: [LINK](https://codepen.io/collection/AOOQWr)
 
 **Features:**
 * works with arcade physics,
 * cast rays in a single direction, 360 degrees circle or in a cone,
-* test rays on mapped game objects (lines, rectangles, polygons, circles and sprites),
+* test rays on mapped game objects (containers, lines, rectangles, polygons, circles and sprites),
 * provides closest intersection points between rays and tested objects,
 * tests can be made on all mapped objects or only selected ones,
 * static and dynamic mapping for individual objects,
 * mapped objects intersections detection,
-* rays can test objects below defined range,
+* rays can limit tests to objects below defined range.
 
 
 ***NPM***
@@ -39,7 +39,7 @@ npm install phaser-raycaster
 ### 1. Include plugin in your project:
 ```html
 <!--CDN-->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.7.0/dist/phaser-raycaster.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.7.1/dist/phaser-raycaster.min.js"></script>
 ```
 ```
 # NPM

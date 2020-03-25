@@ -15,7 +15,7 @@ export function Map(options) {
     this.type;
     this.active;
     this.dynamic;
-    this._object;
+    this.object;
     this._points = [];
     this._segments = [];
     this.getPoints;
@@ -33,6 +33,7 @@ let rectangle = require('./map-rectangle-methods.js');
 let line = require('./map-line-methods.js');
 let polygon = require('./map-polygon-methods.js');
 let arc = require('./map-circle-methods.js');
+let container = require('./map-container-methods.js');
 
 Map.prototype = {
     config: require('./config.js').config,
@@ -52,5 +53,11 @@ Map.prototype = {
     //methods for circle maps
     _getArcPoints: arc.getPoints,
     _getArcSegments: arc.getSegments,
-    _updateArcMap: arc.updateMap
+    _updateArcMap: arc.updateMap,
+    //methods for container maps
+    _getContainerPoints: container.getPoints,
+    _getContainerSegments: container.getSegments,
+    _updateContainerMap: container.updateMap
 };
+
+Map.prototype.constructor = Map;

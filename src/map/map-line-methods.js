@@ -69,7 +69,7 @@ export function updateMap() {
         points.push(new Phaser.Geom.Point(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y));
         points.push(new Phaser.Geom.Point(pointB.x * this.object.scaleX + offset.x, pointB.y * this.object.scaleY + offset.y));
         //set segment
-        segments.push(new Phaser.Geom.Line(pointA.x + offset.x, pointA.y + offset.y, pointB.x + offset.x, pointB.y + offset.y));
+        segments.push(new Phaser.Geom.Line(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y, pointB.x + offset.x * this.object.scaleX, pointB.y * this.object.scaleY + offset.y));
     }
     
 

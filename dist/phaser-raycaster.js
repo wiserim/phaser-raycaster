@@ -231,6 +231,12 @@ function config(options) {
       this.updateMap = this._updateLineMap;
       break;
 
+    case 'Container':
+      this.getPoints = this._getContainerPoints;
+      this.getSegments = this._getContainerSegments;
+      this.updateMap = this._updateContainerMap;
+      break;
+
     default:
       this.getPoints = this._getRectanglePoints;
       this.getSegments = this._getRectangleSegments;
@@ -418,6 +424,338 @@ function updateMap() {
 
 /***/ }),
 
+/***/ "./src/map/map-container-methods.js":
+/*!******************************************!*\
+  !*** ./src/map/map-container-methods.js ***!
+  \******************************************/
+/*! exports provided: getPoints, getSegments, updateMap */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
+/*Map methods for containers*/
+
+/**
+ * Get array of container's children points.
+ *
+ * @function Map._getContainerPoints
+ * @since 0.7.1
+ *
+ * @param {object} [ray] - Ray object.
+ *
+ * @return {array} Array of points.
+ */
+function getPoints() {
+  var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  var getCircles = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  var points = [];
+  if (!getCircles) points = this._points; //calculate offset based on container position and origin point
+
+  var offset = new Phaser.Geom.Point();
+  offset.x = this.object.x - this.object.displayWidth * this.object.originX;
+  offset.y = this.object.y - this.object.displayHeight * this.object.originY; //get tangent points of container's circles
+
+  if (ray) {
+    //create temporary ray
+    var vector = new Phaser.Geom.Line(0, 0, ray.origin.x - offset.x, ray.origin.y - offset.y);
+    Phaser.Geom.Line.SetToAngle(vector, 0, 0, Phaser.Geom.Line.Angle(vector) - this.object.rotation, Phaser.Geom.Line.Length(vector));
+
+    var tempRay = ray._raycaster.createRay({
+      origin: {
+        x: vector.getPointB().x,
+        y: vector.getPointB().y
+      }
+    });
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = this.object.list[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var child = _step.value;
+
+        if (child.type === 'Arc') {
+          var map = child.data.get('raycasterMap');
+
+          if (map._points.length == 0) {
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+              for (var _iterator2 = map.getPoints(tempRay, true)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var point = _step2.value;
+
+                var _vector = new Phaser.Geom.Line(0, 0, point.x, point.y);
+
+                Phaser.Geom.Line.SetToAngle(_vector, 0, 0, Phaser.Geom.Line.Angle(_vector) + this.object.rotation, Phaser.Geom.Line.Length(_vector));
+                points.push(new Phaser.Geom.Point(_vector.getPointB().x + offset.x, _vector.getPointB().y + offset.y));
+              }
+            } catch (err) {
+              _didIteratorError2 = true;
+              _iteratorError2 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                  _iterator2.return();
+                }
+              } finally {
+                if (_didIteratorError2) {
+                  throw _iteratorError2;
+                }
+              }
+            }
+          }
+        } else if (child.type === 'Container') {
+          var _iteratorNormalCompletion3 = true;
+          var _didIteratorError3 = false;
+          var _iteratorError3 = undefined;
+
+          try {
+            for (var _iterator3 = child.data.get('raycasterMap').getPoints(tempRay, true)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var _point = _step3.value;
+
+              if (this.object.rotation !== 0) {
+                var _vector2 = new Phaser.Geom.Line(this.object.x, this.object.y, _point.x * this.object.scaleX + offset.x, _point.y * this.object.scaleY + offset.y);
+
+                Phaser.Geom.Line.SetToAngle(_vector2, this.object.x, this.object.y, Phaser.Geom.Line.Angle(_vector2) + this.object.rotation, Phaser.Geom.Line.Length(_vector2));
+                points.push(_vector2.getPointB());
+              } //if rotation === 0
+              else points.push(new Phaser.Geom.Point(_point.x * this.object.scaleX + offset.x, _point.y * this.object.scaleX + offset.y));
+            }
+          } catch (err) {
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+                _iterator3.return();
+              }
+            } finally {
+              if (_didIteratorError3) {
+                throw _iteratorError3;
+              }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return != null) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+  }
+
+  return points;
+}
+;
+/**
+ * Get array of segments representing container's children.
+ *
+ * @function Map._getContainerSegments
+ * @since 0.7.1
+ *
+ *
+ * @return {array} Array of Phaser.Geom.Line objects.
+ */
+
+function getSegments() {
+  var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  return this._segments;
+}
+;
+/**
+ * Update containers's map of points and segments.
+ *
+ * @function Map._updateContainerleMap
+ * @since 0.7.1
+ *
+ *
+ * @return {object} Map object.
+ */
+
+function updateMap() {
+  var points = [];
+  var segments = [];
+  var container = this.object; //calculate offset based on container position and origin point
+
+  var offset = new Phaser.Geom.Point();
+  offset.x = this.object.x - this.object.displayWidth * this.object.originX;
+  offset.y = this.object.y - this.object.displayHeight * this.object.originY;
+  var rotation = container.rotation; //iterate through container's children
+
+  container.iterate(function (child) {
+    if (!child.data) child.setDataEnabled(); //get child map
+
+    var map = child.data.get('raycasterMap');
+
+    if (!map) {
+      map = new this.constructor({
+        object: child,
+        segmentCount: this.segmentCount
+      });
+      child.data.set('raycasterMap', map);
+    } else map.updateMap(); //add child points
+
+
+    var childPoints = [];
+    var _iteratorNormalCompletion4 = true;
+    var _didIteratorError4 = false;
+    var _iteratorError4 = undefined;
+
+    try {
+      for (var _iterator4 = map.getPoints()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+        var point = _step4.value;
+
+        //calculate positions after container's rotation
+        if (rotation !== 0) {
+          var vector = new Phaser.Geom.Line(this.object.x, this.object.y, point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y);
+          Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
+          points.push(vector.getPointB());
+        } //if rotation === 0
+        else points.push(new Phaser.Geom.Point(point.x * container.scaleX + offset.x, point.y * container.scaleX + offset.y));
+
+        childPoints.push(points[points.length - 1]);
+      } //add child segments
+
+    } catch (err) {
+      _didIteratorError4 = true;
+      _iteratorError4 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+          _iterator4.return();
+        }
+      } finally {
+        if (_didIteratorError4) {
+          throw _iteratorError4;
+        }
+      }
+    }
+
+    var _iteratorNormalCompletion5 = true;
+    var _didIteratorError5 = false;
+    var _iteratorError5 = undefined;
+
+    try {
+      for (var _iterator5 = map.getSegments()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+        var segment = _step5.value;
+
+        //calculate positions after container's rotation
+        if (rotation !== 0) {
+          var pointA = segment.getPointA();
+          var pointB = segment.getPointB();
+          var vectorA = new Phaser.Geom.Line(this.object.x, this.object.y, pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y);
+          var vectorB = new Phaser.Geom.Line(this.object.x, this.object.y, pointB.x * this.object.scaleX + offset.x, pointB.y * this.object.scaleY + offset.y);
+          Phaser.Geom.Line.SetToAngle(vectorA, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vectorA) + rotation, Phaser.Geom.Line.Length(vectorA));
+          Phaser.Geom.Line.SetToAngle(vectorB, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vectorB) + rotation, Phaser.Geom.Line.Length(vectorB));
+          segments.push(new Phaser.Geom.Line(vectorA.getPointB().x, vectorA.getPointB().y, vectorB.getPointB().x, vectorB.getPointB().y));
+        } //if rotation === 0
+        else segments.push(new Phaser.Geom.Line(segment.getPointA().x * container.scaleX + offset.x, segment.getPointA().y * container.scaleY + offset.y, segment.getPointB().x * container.scaleX + offset.x, segment.getPointB().y * container.scaleY + offset.y));
+      }
+    } catch (err) {
+      _didIteratorError5 = true;
+      _iteratorError5 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
+          _iterator5.return();
+        }
+      } finally {
+        if (_didIteratorError5) {
+          throw _iteratorError5;
+        }
+      }
+    }
+  }.bind(this)); //get children intersections
+
+  for (var i = 0, iLength = container.list.length; i < iLength; i++) {
+    var childA = container.list[i];
+    var mapA = childA.data.get('raycasterMap');
+
+    for (var j = i + 1, jLength = container.list.length; j < jLength; j++) {
+      var childB = container.list[j];
+      var mapB = childB.data.get('raycasterMap'); //check if bounding boxes overlap
+
+      if (!Phaser.Geom.Intersects.RectangleToRectangle(childA.getBounds(), childB.getBounds())) continue; //find objects intersections
+
+      var _iteratorNormalCompletion6 = true;
+      var _didIteratorError6 = false;
+      var _iteratorError6 = undefined;
+
+      try {
+        for (var _iterator6 = mapA.getSegments()[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+          var segmentA = _step6.value;
+          var _iteratorNormalCompletion7 = true;
+          var _didIteratorError7 = false;
+          var _iteratorError7 = undefined;
+
+          try {
+            for (var _iterator7 = mapB.getSegments()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+              var segmentB = _step7.value;
+              var intersection = [];
+              if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue; //calculate positions after container's rotation
+
+              if (rotation !== 0) {
+                var vector = new Phaser.Geom.Line(this.object.x, this.object.y, intersection.x * this.object.scaleX + offset.x, intersection.y * this.object.scaleY + offset.y);
+                Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
+                points.push(vector.getPointB());
+              } //if rotation === 0
+              else points.push(new Phaser.Geom.Point(intersection.x * container.scaleX + offset.x, intersection.y * container.scaleX + offset.y));
+            }
+          } catch (err) {
+            _didIteratorError7 = true;
+            _iteratorError7 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion7 && _iterator7.return != null) {
+                _iterator7.return();
+              }
+            } finally {
+              if (_didIteratorError7) {
+                throw _iteratorError7;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        _didIteratorError6 = true;
+        _iteratorError6 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
+            _iterator6.return();
+          }
+        } finally {
+          if (_didIteratorError6) {
+            throw _iteratorError6;
+          }
+        }
+      }
+    }
+  }
+
+  this._points = points;
+  this._segments = segments;
+  return this;
+}
+;
+
+/***/ }),
+
 /***/ "./src/map/map-core.js":
 /*!*****************************!*\
   !*** ./src/map/map-core.js ***!
@@ -445,7 +783,7 @@ function Map(options) {
   this.type;
   this.active;
   this.dynamic;
-  this._object;
+  this.object;
   this._points = [];
   this._segments = [];
   this.getPoints;
@@ -466,6 +804,8 @@ var polygon = __webpack_require__(/*! ./map-polygon-methods.js */ "./src/map/map
 
 var arc = __webpack_require__(/*! ./map-circle-methods.js */ "./src/map/map-circle-methods.js");
 
+var container = __webpack_require__(/*! ./map-container-methods.js */ "./src/map/map-container-methods.js");
+
 Map.prototype = {
   config: __webpack_require__(/*! ./config.js */ "./src/map/config.js").config,
   setSegmentCount: __webpack_require__(/*! ./segmentsCount.js */ "./src/map/segmentsCount.js").setSegmentCount,
@@ -484,8 +824,13 @@ Map.prototype = {
   //methods for circle maps
   _getArcPoints: arc.getPoints,
   _getArcSegments: arc.getSegments,
-  _updateArcMap: arc.updateMap
+  _updateArcMap: arc.updateMap,
+  //methods for container maps
+  _getContainerPoints: container.getPoints,
+  _getContainerSegments: container.getSegments,
+  _updateContainerMap: container.updateMap
 };
+Map.prototype.constructor = Map;
 
 /***/ }),
 
@@ -572,7 +917,7 @@ function updateMap() {
       points.push(new Phaser.Geom.Point(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y));
       points.push(new Phaser.Geom.Point(pointB.x * this.object.scaleX + offset.x, pointB.y * this.object.scaleY + offset.y)); //set segment
 
-      segments.push(new Phaser.Geom.Line(pointA.x + offset.x, pointA.y + offset.y, pointB.x + offset.x, pointB.y + offset.y));
+      segments.push(new Phaser.Geom.Line(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y, pointB.x + offset.x * this.object.scaleX, pointB.y * this.object.scaleY + offset.y));
     }
 
   this._points = points;
@@ -957,7 +1302,7 @@ function cast() {
       var _iteratorError3 = undefined;
 
       try {
-        for (var _iterator3 = map.getSegments()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        for (var _iterator3 = map.getSegments(this)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
           var segment = _step3.value;
           var _intersection2 = []; //if target point is segmemt point
 
@@ -1221,14 +1566,14 @@ function castCircle() {
         var _iteratorError3 = undefined;
 
         try {
-          for (var _iterator3 = map.getSegments()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          for (var _iterator3 = map.getSegments(this)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
             var segmentA = _step3.value;
             var _iteratorNormalCompletion4 = true;
             var _didIteratorError4 = false;
             var _iteratorError4 = undefined;
 
             try {
-              for (var _iterator4 = mapB.getSegments()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              for (var _iterator4 = mapB.getSegments(this)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
                 var segmentB = _step4.value;
                 var intersection = [];
                 if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
@@ -1481,14 +1826,14 @@ function castCone() {
       var _iteratorError3 = undefined;
 
       try {
-        for (var _iterator3 = map.getSegments()[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        for (var _iterator3 = map.getSegments(this)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
           var segmentA = _step3.value;
           var _iteratorNormalCompletion4 = true;
           var _didIteratorError4 = false;
           var _iteratorError4 = undefined;
 
           try {
-            for (var _iterator4 = mapB.getSegments()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            for (var _iterator4 = mapB.getSegments(this)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
               var segmentB = _step4.value;
               var intersection = [];
               if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
@@ -1896,7 +2241,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param {object} options - Ray specific configuration settings.
  */
 function Raycaster(options) {
-  this.version = '0.7.0';
+  this.version = '0.7.1';
   this.scene;
   this.graphics;
   this.boundingBox = false;
@@ -1907,10 +2252,11 @@ function Raycaster(options) {
   if (options !== undefined) {
     if (options.boundingBox === undefined && options.scene !== undefined && options.scene.physics !== undefined) options.boundingBox = options.scene.physics.world.bounds;
     this.setOptions(options);
-  } //update event
+    if (options.autoUpdate === undefined || options.autoUpdate) //automatically update event
+      this.scene.events.on('update', this.update.bind(this));
+  } else //automatically update event
+    this.scene.events.on('update', this.update.bind(this));
 
-
-  this.scene.events.on('update', this.update.bind(this));
   return this;
 }
 Raycaster.prototype = {

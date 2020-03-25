@@ -55,7 +55,7 @@ export function cast(options = {}) {
         let map = object.data.get('raycasterMap');
         
         //check intersections
-        for(let segment of map.getSegments()) {
+        for(let segment of map.getSegments(this)) {
             let intersection = [];
 
             //if target point is segmemt point

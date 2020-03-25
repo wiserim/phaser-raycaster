@@ -60,8 +60,8 @@ export function castCircle(options = {}) {
                     continue;
                 
                 //find objects intersections
-                for(let segmentA of map.getSegments()) {
-                    for(let segmentB of mapB.getSegments()) {
+                for(let segmentA of map.getSegments(this)) {
+                    for(let segmentB of mapB.getSegments(this)) {
                         let intersection = [];
                         if(!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection))
                             continue;

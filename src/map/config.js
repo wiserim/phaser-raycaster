@@ -35,6 +35,11 @@ export function config(options) {
             this.getSegments = this._getLineSegments;
             this.updateMap = this._updateLineMap;
             break;
+        case 'Container':
+            this.getPoints = this._getContainerPoints;
+            this.getSegments = this._getContainerSegments;
+            this.updateMap = this._updateContainerMap;
+            break;
         default:
             this.getPoints = this._getRectanglePoints;
             this.getSegments = this._getRectangleSegments;

@@ -16,7 +16,7 @@
  * @param {object} options - Ray specific configuration settings.
  */
 export function Raycaster(options) {
-    this.version = '0.7.0';
+    this.version = '0.7.1';
     this.scene;
     this.graphics;
     this.boundingBox = false;
@@ -29,10 +29,14 @@ export function Raycaster(options) {
             options.boundingBox = options.scene.physics.world.bounds;
 
         this.setOptions(options);
-    }
 
-    //update event
-    this.scene.events.on('update', this.update.bind(this));
+        if(options.autoUpdate === undefined || options.autoUpdate)
+            //automatically update event
+            this.scene.events.on('update', this.update.bind(this));
+    }
+    else
+        //automatically update event
+        this.scene.events.on('update', this.update.bind(this));
 
     return this;
 }
