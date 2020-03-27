@@ -6,6 +6,9 @@
 
 * `Map` can now map `Phaser.GameObjects.Container` objects and its children. At this moment circle maps of container's children are tested by `Ray` objects properly only when `Raycaster.mapSegmentCount` or `Map.segmentCount` is set above 0 (when circle map consists of segments which number is defined by `Map.segmentCount`).
 
+### Updates
+* Automatic map updates on update event can be now disabled, by passing `autoUpdate` option to raycaster constructor.
+
 ### Bug fixes
 
 * Typo in `Ray.setDetectionRange` method.
