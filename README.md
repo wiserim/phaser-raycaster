@@ -65,7 +65,7 @@ new Phaser.Game(config);
 ### 3. Create new raycaster in your scene:
 ```javascript
 create() {
-  this.raycaster = this.raycasterPlugin.createRaycaster();
+  this.raycaster = this.raycasterPlugin.createRaycaster(options);
   
   // additional code
 }
