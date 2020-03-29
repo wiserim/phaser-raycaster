@@ -10,6 +10,9 @@
  * @return {array} Array of Phaser.GeomLine objects.
  */
 export function getPoints(ray = false) {
+    if(!this.active)
+        return [];
+
     if(this._points.length > 0)
         return this._points;
     
@@ -62,6 +65,8 @@ export function getPoints(ray = false) {
  * @return {array} Array of Phaser.Geom.Line objects.
  */
 export function getSegments() {
+    if(!this.active)
+        return [];
     return this._segments;
 };
 
@@ -75,6 +80,9 @@ export function getSegments() {
  * @return {object} Map object.
  */
 export function updateMap() {
+    if(!this.active)
+        return this;
+
     if(!this.segmentCount) {
         this._points = [];
         this._segments = [];

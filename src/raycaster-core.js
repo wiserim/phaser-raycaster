@@ -16,7 +16,7 @@
  * @param {object} options - Ray specific configuration settings.
  */
 export function Raycaster(options) {
-    this.version = '0.7.1';
+    this.version = '0.7.2';
     this.scene;
     this.graphics;
     this.boundingBox = false;
@@ -140,6 +140,52 @@ Raycaster.prototype = {
             let index = this.mappedObjects.indexOf(object);
             if(index >= 0)
                 this.mappedObjects.splice(index, 1)
+        }
+
+        return this;
+    },
+
+    //enable maps
+    enableMaps: function(objects) {
+        if(!Array.isArray(objects)) {
+            if(objects.data) {
+                let map = objects.data.get('raycasterMap');
+                if(map)
+                    map.active = true;
+            }
+                
+            return this;
+        }
+        
+        for(let object of objects) {
+            if(object.data) {
+                let map = object.data.get('raycasterMap');
+                if(map)
+                    map.active = true;
+            }
+        }
+
+        return this;
+    },
+
+    //disable maps
+    disableMaps: function(objects) {
+        if(!Array.isArray(objects)) {
+            if(objects.data) {
+                let map = objects.data.get('raycasterMap');
+                if(map)
+                    map.active = false;
+            }
+                
+            return this;
+        }
+        
+        for(let object of objects) {
+            if(object.data) {
+                let map = object.data.get('raycasterMap');
+                if(map)
+                    map.active = false;
+            }
         }
 
         return this;

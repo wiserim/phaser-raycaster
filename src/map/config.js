@@ -9,6 +9,7 @@
  * - {string} [type] - Map type. If not defined, will be determined from object
  * - {boolean} [dynamic] = false - If set true, map will be dynamic (updated on scene update event).
  * - {integer} [segmentCount] = 0 - Circle map's segment count. If set to 0, map won't be generating segments and relay only on generated tangent point to actually testing ray.
+ * - {boolean} [active] = true - If set true, map will be active (will provide points, segments and will be updated).
  *
  * @return {object} Map object.
  */
@@ -48,7 +49,10 @@ export function config(options) {
 
     //dynamic map
     this.dynamic = (options.dynamic == true) ? true : false;
+    //circle segments count
     this.segmentCount = (options.segmentCount) ? options.segmentCount : 0;
+    //enable/disable map
+    this.active = (options.active !== undefined) ? options.active : true;
 
     return this;
 }

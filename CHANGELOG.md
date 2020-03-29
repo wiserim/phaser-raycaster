@@ -1,5 +1,15 @@
 # Change Log
 
+## Version 0.7.2 - 29.03.2020
+
+### New features
+
+* `Map` can be enabled / disabled with `Map.active` option. Disabled map return empty arrays instead of its points and segments and won't be updated.
+* `Raycaster.enableMaps` is new methods that allows to enable objects maps by passing game object / game objects array as an argument.
+* `Raycaster.disableMaps` is new methods that allows to disable objects maps by passing game object / game objects array as an argument.
+
+---
+
 ## Version 0.7.1 - 25.03.2020
 
 ### New features

@@ -10,6 +10,9 @@
  * @return {array} Array of points.
  */
 export function getPoints(ray = false, getCircles = false) {
+    if(!this.active)
+        return [];
+
     let points = [];
     if(!getCircles)
         points = this._points;
@@ -73,6 +76,9 @@ export function getPoints(ray = false, getCircles = false) {
  * @return {array} Array of Phaser.Geom.Line objects.
  */
 export function getSegments(ray = false) {
+    if(!this.active)
+        return [];
+
     return this._segments;
 };
 
@@ -86,6 +92,9 @@ export function getSegments(ray = false) {
  * @return {object} Map object.
  */
 export function updateMap() {
+    if(!this.active)
+        return this;
+
     let points = [];
     let segments = [];
     let container = this.object;

@@ -203,6 +203,7 @@ __webpack_require__.r(__webpack_exports__);
  * - {string} [type] - Map type. If not defined, will be determined from object
  * - {boolean} [dynamic] = false - If set true, map will be dynamic (updated on scene update event).
  * - {integer} [segmentCount] = 0 - Circle map's segment count. If set to 0, map won't be generating segments and relay only on generated tangent point to actually testing ray.
+ * - {boolean} [active] = true - If set true, map will be active (will provide points, segments and will be updated).
  *
  * @return {object} Map object.
  */
@@ -244,8 +245,11 @@ function config(options) {
   } //dynamic map
 
 
-  this.dynamic = options.dynamic == true ? true : false;
-  this.segmentCount = options.segmentCount ? options.segmentCount : 0;
+  this.dynamic = options.dynamic == true ? true : false; //circle segments count
+
+  this.segmentCount = options.segmentCount ? options.segmentCount : 0; //enable/disable map
+
+  this.active = options.active !== undefined ? options.active : true;
   return this;
 }
 
@@ -277,6 +281,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  if (!this.active) return [];
   if (this._points.length > 0) return this._points;
   var points = [];
   var offset = new Phaser.Geom.Point();
@@ -323,6 +328,7 @@ function getPoints() {
  */
 
 function getSegments() {
+  if (!this.active) return [];
   return this._segments;
 }
 ;
@@ -337,6 +343,8 @@ function getSegments() {
  */
 
 function updateMap() {
+  if (!this.active) return this;
+
   if (!this.segmentCount) {
     this._points = [];
     this._segments = [];
@@ -451,6 +459,7 @@ __webpack_require__.r(__webpack_exports__);
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   var getCircles = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  if (!this.active) return [];
   var points = [];
   if (!getCircles) points = this._points; //calculate offset based on container position and origin point
 
@@ -574,6 +583,7 @@ function getPoints() {
 
 function getSegments() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  if (!this.active) return [];
   return this._segments;
 }
 ;
@@ -588,6 +598,7 @@ function getSegments() {
  */
 
 function updateMap() {
+  if (!this.active) return this;
   var points = [];
   var segments = [];
   var container = this.object; //calculate offset based on container position and origin point
@@ -860,6 +871,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  if (!this.active) return [];
   return this._points;
 }
 ;
@@ -874,6 +886,7 @@ function getPoints() {
  */
 
 function getSegments() {
+  if (!this.active) return [];
   return this._segments;
 }
 ;
@@ -888,6 +901,7 @@ function getSegments() {
  */
 
 function updateMap() {
+  if (!this.active) return this;
   var points = [];
   var segments = []; //calculate offset based on object position and origin point
 
@@ -954,6 +968,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  if (!this.active) return [];
   return this._points;
 }
 ;
@@ -968,6 +983,7 @@ function getPoints() {
  */
 
 function getSegments() {
+  if (!this.active) return [];
   return this._segments;
 }
 ;
@@ -982,6 +998,7 @@ function getSegments() {
  */
 
 function updateMap() {
+  if (!this.active) return this;
   var points = [];
   var segments = []; //calculate offset based on object position and origin point
 
@@ -1090,6 +1107,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  if (!this.active) return [];
   return this._points;
 }
 ;
@@ -1104,6 +1122,7 @@ function getPoints() {
  */
 
 function getSegments() {
+  if (!this.active) return [];
   return this._segments;
 }
 ;
@@ -1118,6 +1137,7 @@ function getSegments() {
  */
 
 function updateMap() {
+  if (!this.active) return this;
   var points = [];
   var segments = []; //set points
 
@@ -2241,7 +2261,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param {object} options - Ray specific configuration settings.
  */
 function Raycaster(options) {
-  this.version = '0.7.1';
+  this.version = '0.7.2';
   this.scene;
   this.graphics;
   this.boundingBox = false;
@@ -2386,32 +2406,116 @@ Raycaster.prototype = {
 
     return this;
   },
+  //enable maps
+  enableMaps: function enableMaps(objects) {
+    if (!Array.isArray(objects)) {
+      if (objects.data) {
+        var map = objects.data.get('raycasterMap');
+        if (map) map.active = true;
+      }
+
+      return this;
+    }
+
+    var _iteratorNormalCompletion3 = true;
+    var _didIteratorError3 = false;
+    var _iteratorError3 = undefined;
+
+    try {
+      for (var _iterator3 = objects[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var object = _step3.value;
+
+        if (object.data) {
+          var _map2 = object.data.get('raycasterMap');
+
+          if (_map2) _map2.active = true;
+        }
+      }
+    } catch (err) {
+      _didIteratorError3 = true;
+      _iteratorError3 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+          _iterator3.return();
+        }
+      } finally {
+        if (_didIteratorError3) {
+          throw _iteratorError3;
+        }
+      }
+    }
+
+    return this;
+  },
+  //disable maps
+  disableMaps: function disableMaps(objects) {
+    if (!Array.isArray(objects)) {
+      if (objects.data) {
+        var map = objects.data.get('raycasterMap');
+        if (map) map.active = false;
+      }
+
+      return this;
+    }
+
+    var _iteratorNormalCompletion4 = true;
+    var _didIteratorError4 = false;
+    var _iteratorError4 = undefined;
+
+    try {
+      for (var _iterator4 = objects[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+        var object = _step4.value;
+
+        if (object.data) {
+          var _map3 = object.data.get('raycasterMap');
+
+          if (_map3) _map3.active = false;
+        }
+      }
+    } catch (err) {
+      _didIteratorError4 = true;
+      _iteratorError4 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+          _iterator4.return();
+        }
+      } finally {
+        if (_didIteratorError4) {
+          throw _iteratorError4;
+        }
+      }
+    }
+
+    return this;
+  },
   //scene update event listener
   update: function update() {
     //update dynamic maps
     if (this.mappedObjects.length > 0) {
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
+      var _iteratorNormalCompletion5 = true;
+      var _didIteratorError5 = false;
+      var _iteratorError5 = undefined;
 
       try {
-        for (var _iterator3 = this.mappedObjects[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-          var mapppedObject = _step3.value;
+        for (var _iterator5 = this.mappedObjects[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+          var mapppedObject = _step5.value;
           if (mapppedObject.data === undefined) continue;
           var map = mapppedObject.data.get('raycasterMap');
           if (map.dynamic) map.updateMap();
         }
       } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _didIteratorError5 = true;
+        _iteratorError5 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-            _iterator3.return();
+          if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
+            _iterator5.return();
           }
         } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
+          if (_didIteratorError5) {
+            throw _iteratorError5;
           }
         }
       }
