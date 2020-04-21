@@ -192,6 +192,19 @@ module.exports = PhaserRaycaster;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "config", function() { return config; });
+var rectangle = __webpack_require__(/*! ./map-rectangle-methods.js */ "./src/map/map-rectangle-methods.js");
+
+var line = __webpack_require__(/*! ./map-line-methods.js */ "./src/map/map-line-methods.js");
+
+var polygon = __webpack_require__(/*! ./map-polygon-methods.js */ "./src/map/map-polygon-methods.js");
+
+var arc = __webpack_require__(/*! ./map-circle-methods.js */ "./src/map/map-circle-methods.js");
+
+var segmentCount = __webpack_require__(/*! ./segmentsCount.js */ "./src/map/segmentsCount.js");
+
+var container = __webpack_require__(/*! ./map-container-methods.js */ "./src/map/map-container-methods.js");
+
+var tilemap = __webpack_require__(/*! ./map-tilemap-methods.js */ "./src/map/map-tilemap-methods.js");
 /**
  * Configure map on creation.
  *
@@ -207,6 +220,8 @@ __webpack_require__.r(__webpack_exports__);
  *
  * @return {object} Map object.
  */
+
+
 function config(options) {
   this.object = options.object; //object type
 
@@ -215,39 +230,62 @@ function config(options) {
 
   switch (options.type) {
     case 'Polygon':
-      this.getPoints = this._getPolygonPoints;
-      this.getSegments = this._getPolygonSegments;
-      this.updateMap = this._updatePolygonMap;
+      this.getPoints = polygon.getPoints;
+      this.getSegments = polygon.getSegments;
+      this.updateMap = polygon.updateMap;
       break;
 
     case 'Arc':
-      this.getPoints = this._getArcPoints;
-      this.getSegments = this._getArcSegments;
-      this.updateMap = this._updateArcMap;
+      //circle segments count
+      this.segmentCount = options.segmentCount ? options.segmentCount : 0;
+      this.getPoints = arc.getPoints;
+      this.getSegments = arc.getSegments;
+      this.updateMap = arc.updateMap;
+      this.setSegmentCount = segmentCount.setSegmentCount;
       break;
 
     case 'Line':
-      this.getPoints = this._getLinePoints;
-      this.getSegments = this._getLineSegments;
-      this.updateMap = this._updateLineMap;
+      this.getPoints = line.getPoints;
+      this.getSegments = line.getSegments;
+      this.updateMap = line.updateMap;
       break;
 
     case 'Container':
-      this.getPoints = this._getContainerPoints;
-      this.getSegments = this._getContainerSegments;
-      this.updateMap = this._updateContainerMap;
+      this.getPoints = container.getPoints;
+      this.getSegments = container.getSegments;
+      this.updateMap = container.updateMap;
+      break;
+
+    case 'StaticTilemapLayer':
+      //ray colliding tiles
+      this.collisionTiles = options.collisionTiles ? options.collisionTiles : [];
+      this.getPoints = tilemap.getPoints;
+      this.getSegments = tilemap.getSegments;
+      this.updateMap = tilemap.updateMap;
+      this.setCollisionTiles = tilemap.setCollisionTiles; //reset tilemap origin
+
+      this.object.setOrigin(0, 0);
+      break;
+
+    case 'DynamicTilemapLayer':
+      //ray colliding tiles
+      this.collisionTiles = options.collisionTiles ? options.collisionTiles : [];
+      this.getPoints = tilemap.getPoints;
+      this.getSegments = tilemap.getSegments;
+      this.updateMap = tilemap.updateMap;
+      this.setCollisionTiles = tilemap.setCollisionTiles; //reset tilemap origin
+
+      this.object.setOrigin(0, 0);
       break;
 
     default:
-      this.getPoints = this._getRectanglePoints;
-      this.getSegments = this._getRectangleSegments;
-      this.updateMap = this._updateRectangleMap;
+      this.getPoints = rectangle.getPoints;
+      this.getSegments = rectangle.getSegments;
+      this.updateMap = rectangle.updateMap;
   } //dynamic map
 
 
-  this.dynamic = options.dynamic == true ? true : false; //circle segments count
-
-  this.segmentCount = options.segmentCount ? options.segmentCount : 0; //enable/disable map
+  this.dynamic = options.dynamic == true ? true : false; //enable/disable map
 
   this.active = options.active !== undefined ? options.active : true;
   return this;
@@ -800,46 +838,13 @@ function Map(options) {
   this.getPoints;
   this.getSegments;
   this.getIntersections;
-  this.segmentCount = 0;
   this.config(options);
   this.updateMap();
   return this;
 }
 ;
-
-var rectangle = __webpack_require__(/*! ./map-rectangle-methods.js */ "./src/map/map-rectangle-methods.js");
-
-var line = __webpack_require__(/*! ./map-line-methods.js */ "./src/map/map-line-methods.js");
-
-var polygon = __webpack_require__(/*! ./map-polygon-methods.js */ "./src/map/map-polygon-methods.js");
-
-var arc = __webpack_require__(/*! ./map-circle-methods.js */ "./src/map/map-circle-methods.js");
-
-var container = __webpack_require__(/*! ./map-container-methods.js */ "./src/map/map-container-methods.js");
-
 Map.prototype = {
-  config: __webpack_require__(/*! ./config.js */ "./src/map/config.js").config,
-  setSegmentCount: __webpack_require__(/*! ./segmentsCount.js */ "./src/map/segmentsCount.js").setSegmentCount,
-  //methods for rectangle maps
-  _getRectanglePoints: rectangle.getPoints,
-  _getRectangleSegments: rectangle.getSegments,
-  _updateRectangleMap: rectangle.updateMap,
-  //methods for line maps
-  _getLinePoints: line.getPoints,
-  _getLineSegments: line.getSegments,
-  _updateLineMap: line.updateMap,
-  //methods for polygon maps
-  _getPolygonPoints: polygon.getPoints,
-  _getPolygonSegments: polygon.getSegments,
-  _updatePolygonMap: polygon.updateMap,
-  //methods for circle maps
-  _getArcPoints: arc.getPoints,
-  _getArcSegments: arc.getSegments,
-  _updateArcMap: arc.updateMap,
-  //methods for container maps
-  _getContainerPoints: container.getPoints,
-  _getContainerSegments: container.getSegments,
-  _updateContainerMap: container.updateMap
+  config: __webpack_require__(/*! ./config.js */ "./src/map/config.js").config
 };
 Map.prototype.constructor = Map;
 
@@ -1152,6 +1157,427 @@ function updateMap() {
   return this;
 }
 ;
+
+/***/ }),
+
+/***/ "./src/map/map-tilemap-methods.js":
+/*!****************************************!*\
+  !*** ./src/map/map-tilemap-methods.js ***!
+  \****************************************/
+/*! exports provided: getPoints, getSegments, updateMap, setCollisionTiles */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCollisionTiles", function() { return setCollisionTiles; });
+/*Map methods for tilemaps*/
+
+/**
+ * Get array of points for tilemap.
+ *
+ * @function Map._getTilemapPoints
+ * @since 0.7.3
+ *
+ * @param {object} [ray] - Ray object.
+ *
+ * @return {array} Array of points.
+ */
+function getPoints() {
+  var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  if (!this.active) return [];
+  if (!ray || ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER)) return this._points;
+  var points = [];
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = this._points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var point = _step.value;
+      if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, point.x, point.y) <= ray.detectionRange) points.push(point);
+    } //get intersections between tilemap's segments and ray's detection range edge
+
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return != null) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  var segments = this.getSegments(ray);
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    for (var _iterator2 = segments[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var segment = _step2.value;
+      if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x1, segment.y1) > ray.detectionRange) points.push(new Phaser.Geom.Point(segment.x1, segment.y1));
+      if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x2, segment.y2) > ray.detectionRange) points.push(new Phaser.Geom.Point(segment.x2, segment.y2));
+    }
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+        _iterator2.return();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+
+  return points;
+}
+;
+/**
+ * Get array of segments representing tilemap.
+ *
+ * @function Map._getTilemapSegments
+ * @since 0.7.3
+ *
+ *
+ * @return {array} Array of Phaser.Geom.Line objects.
+ */
+
+function getSegments() {
+  var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  if (!this.active) return [];
+  if (!ray || ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER)) return this._segments;
+  var segments = [];
+  var _iteratorNormalCompletion3 = true;
+  var _didIteratorError3 = false;
+  var _iteratorError3 = undefined;
+
+  try {
+    for (var _iterator3 = this._segments[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      var segment = _step3.value;
+
+      if (Phaser.Geom.Intersects.LineToCircle(segment, ray.detectionRangeCircle)) {
+        segments.push(segment);
+      }
+    }
+  } catch (err) {
+    _didIteratorError3 = true;
+    _iteratorError3 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+        _iterator3.return();
+      }
+    } finally {
+      if (_didIteratorError3) {
+        throw _iteratorError3;
+      }
+    }
+  }
+
+  return segments;
+}
+;
+/**
+ * Update tilemap's map of points and segments.
+ *
+ * @function Map._updateTilemapMap
+ * @since 0.7.3
+ *
+ *
+ * @return {object} Map object.
+ */
+
+function updateMap() {
+  var _this = this;
+
+  if (!this.active) return this;
+  var points = [];
+  var segments = []; //calculate offset based on object position and origin point
+
+  var offset = new Phaser.Geom.Point();
+  offset.x = this.object.x;
+  offset.y = this.object.y;
+  var horizontal = false;
+  var horizontals = [];
+  var verticals = []; //iterate rows
+
+  for (var i = 0, iLength = this.object.layer.data.length; i < iLength; i++) {
+    var row = this.object.layer.data[i]; //iterate row's tiles
+
+    for (var j = 0, jLength = row.length; j < jLength; j++) {
+      var tile = row[j]; //check if tile and its top and left neighbours have different are from different sets (rays blocking and non-bloking)
+
+      var upperEdge = i > 0 && this.collisionTiles.includes(this.object.layer.data[i - 1][j].index) != this.collisionTiles.includes(tile.index) || i == 0 && this.collisionTiles.includes(tile.index) ? true : false;
+      var leftEdge = j > 0 && this.collisionTiles.includes(this.object.layer.data[i][j - 1].index) != this.collisionTiles.includes(tile.index) || j == 0 && this.collisionTiles.includes(tile.index) ? true : false; //get current tile's column last vertical line
+
+      var _vertical = false;
+      if (verticals.length <= j) verticals[j] = [];else if (verticals[j].length > 0) _vertical = verticals[j][verticals[j].length - 1]; //check if tile has edge from left
+
+      if (leftEdge) {
+        if (_vertical && _vertical.y + _vertical.height == i) _vertical.height++;else {
+          verticals[j].push({
+            x: tile.x,
+            y: tile.y,
+            height: 1
+          });
+        }
+      } //check if tile has edge from top
+
+
+      if (upperEdge) {
+        if (horizontal) horizontal.width++;else horizontal = {
+          x: tile.x,
+          y: tile.y,
+          width: 1
+        };
+        continue;
+      }
+
+      if (horizontal) {
+        var x = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
+
+        var _y = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
+
+        var segment = new Phaser.Geom.Line(x, _y, x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y);
+        segments.push(segment);
+        horizontals.push(segment);
+        points.push(new Phaser.Geom.Point(x, _y));
+        points.push(new Phaser.Geom.Point(x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y));
+        horizontal = false;
+      }
+    } //at the end of row add segment if exist
+
+
+    if (horizontal) {
+      var _x = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
+
+      var _y2 = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
+
+      var _segment = new Phaser.Geom.Line(_x, _y2, _x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y2);
+
+      segments.push(_segment);
+      horizontals.push(_segment);
+      points.push(new Phaser.Geom.Point(_x, _y2));
+      points.push(new Phaser.Geom.Point(_x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y2));
+      horizontal = false;
+    }
+  } //add bottom horizontal segments
+
+
+  var _iteratorNormalCompletion4 = true;
+  var _didIteratorError4 = false;
+  var _iteratorError4 = undefined;
+
+  try {
+    for (var _iterator4 = this.object.layer.data[this.object.layer.data.length - 1][Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      var _tile = _step4.value;
+
+      if (this.collisionTiles.includes(_tile.index)) {
+        if (horizontal) horizontal.width++;else horizontal = {
+          x: _tile.x,
+          y: _tile.y + 1,
+          width: 1
+        };
+        continue;
+      }
+
+      if (horizontal) {
+        var _x3 = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
+
+        var _y4 = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
+
+        var _segment3 = new Phaser.Geom.Line(_x3, _y4, _x3 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y4);
+
+        segments.push(_segment3);
+        horizontals.push(_segment3);
+        points.push(new Phaser.Geom.Point(_x3, _y4));
+        points.push(new Phaser.Geom.Point(_x3 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y4));
+        horizontal = false;
+      }
+    } //add segment if exist
+
+  } catch (err) {
+    _didIteratorError4 = true;
+    _iteratorError4 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+        _iterator4.return();
+      }
+    } finally {
+      if (_didIteratorError4) {
+        throw _iteratorError4;
+      }
+    }
+  }
+
+  if (horizontal) {
+    var _x2 = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
+
+    var _y3 = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
+
+    var _segment2 = new Phaser.Geom.Line(_x2, _y3, _x2 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y3);
+
+    segments.push(_segment2);
+    horizontals.push(_segment2);
+    points.push(new Phaser.Geom.Point(_x2, _y3));
+    points.push(new Phaser.Geom.Point(_x2 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y3));
+    horizontal = false;
+  } //add right vertical segments
+
+
+  var vertical = false;
+  var verticalsLastColumn = [];
+  var _iteratorNormalCompletion5 = true;
+  var _didIteratorError5 = false;
+  var _iteratorError5 = undefined;
+
+  try {
+    for (var _iterator5 = this.object.layer.data[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+      var _row = _step5.value;
+      var _tile2 = _row[_row.length - 1]; //if tile blocks ray
+
+      if (this.collisionTiles.includes(_tile2.index)) {
+        if (vertical) {
+          vertical.height++;
+        } else {
+          vertical = {
+            x: _tile2.x + 1,
+            y: _tile2.y,
+            height: 1
+          };
+        }
+
+        continue;
+      }
+
+      if (vertical) {
+        verticalsLastColumn.push(vertical);
+        vertical = false;
+      }
+    }
+  } catch (err) {
+    _didIteratorError5 = true;
+    _iteratorError5 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
+        _iterator5.return();
+      }
+    } finally {
+      if (_didIteratorError5) {
+        throw _iteratorError5;
+      }
+    }
+  }
+
+  verticals.push(verticalsLastColumn); //add vertical segments
+
+  for (var _i = 0, _verticals = verticals; _i < _verticals.length; _i++) {
+    var column = _verticals[_i];
+    if (!column) continue;
+    var _iteratorNormalCompletion6 = true;
+    var _didIteratorError6 = false;
+    var _iteratorError6 = undefined;
+
+    try {
+      var _loop = function _loop() {
+        var vertical = _step6.value;
+        var x = vertical.x * _this.object.layer.tileWidth * _this.object.scaleX + offset.x;
+        var y1 = vertical.y * _this.object.layer.tileHeight * _this.object.scaleY + offset.y;
+        var y2 = y1 + _this.object.layer.tileHeight * _this.object.scaleY * vertical.height;
+        var segment = new Phaser.Geom.Line(x, y1, x, y2);
+        segments.push(segment); //add points if they're not already there
+
+        if (!points.filter(function (point) {
+          return point.x == x && point.y == y1;
+        })) points.push(new Phaser.Geom.Point(x, y));
+        if (!points.filter(function (point) {
+          return point.x == x && point.y == y2;
+        })) points.push(new Phaser.Geom.Point(x, y)); //get intersections between horizontal segments and vertical
+
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
+
+        try {
+          for (var _iterator7 = horizontals[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var horizontalSegment = _step7.value;
+            if (segment.x1 == horizontalSegment.x1 || segment.x1 == horizontalSegment.x2 || segment.x2 == horizontalSegment.x1 || segment.x2 == horizontalSegment.x2) continue;
+            if (segment.y1 == horizontalSegment.y1 || segment.y1 == horizontalSegment.y2 || segment.y2 == horizontalSegment.y1 || segment.y2 == horizontalSegment.y2) continue;
+            var point = new Phaser.Geom.Point();
+
+            if (Phaser.Geom.Intersects.LineToLine(segment, horizontalSegment, point)) {
+              points.push(point);
+            }
+          }
+        } catch (err) {
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion7 && _iterator7.return != null) {
+              _iterator7.return();
+            }
+          } finally {
+            if (_didIteratorError7) {
+              throw _iteratorError7;
+            }
+          }
+        }
+      };
+
+      for (var _iterator6 = column[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+        _loop();
+      }
+    } catch (err) {
+      _didIteratorError6 = true;
+      _iteratorError6 = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
+          _iterator6.return();
+        }
+      } finally {
+        if (_didIteratorError6) {
+          throw _iteratorError6;
+        }
+      }
+    }
+  }
+
+  this._points = points;
+  this._segments = segments;
+  return this;
+}
+;
+/**
+ * Set tilemap's tiles which collide with rays.
+ *
+ * @function Map.setCollidingTiles
+ * @since 0.7.3
+ *
+ *
+ * @return {object} Map object.
+ */
+
+function setCollisionTiles() {
+  var tiles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  this.collisionTiles = tiles;
+  return this;
+}
 
 /***/ }),
 
@@ -2024,19 +2450,19 @@ __webpack_require__.r(__webpack_exports__);
 function config(options) {
   this.object = options.object; //origin
 
-  if (options.origin) this.origin.setTo(options.origin.x, options.origin.y); //angle
+  if (options.origin !== undefined) this.origin.setTo(options.origin.x, options.origin.y); //angle
 
-  if (options.angle) this.angle = Phaser.Math.Angle.Normalize(options.angle); //angle deg
+  if (options.angle !== undefined) this.angle = Phaser.Math.Angle.Normalize(options.angle); //angle deg
 
-  if (options.angleDeg) this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(options.angleDeg)); //cone angle
+  if (options.angleDeg !== undefined) this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(options.angleDeg)); //cone angle
 
-  if (options.cone) this.cone = options.cone; //cone angle deg
+  if (options.cone !== undefined) this.cone = options.cone; //cone angle deg
 
-  if (options.coneDeg) this.cone = Phaser.Math.DegToRad(options.coneDeg); //range (0 = max)
+  if (options.coneDeg !== undefined) this.cone = Phaser.Math.DegToRad(options.coneDeg); //range (0 = max)
 
-  if (options.range) this.range = options.range; //detection range (0 = max)
+  if (options.range !== undefined) this.range = options.range; //detection range (0 = max)
 
-  if (options.detectionRange) this.detectionRange = options.detectionRange;
+  if (options.detectionRange !== undefined) this.detectionRange = options.detectionRange;
   if (options.ignoreNotIntersectedRays !== undefined) this.ignoreNotIntersectedRays = options.ignoreNotIntersectedRays == true;
   Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
   this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
@@ -2261,7 +2687,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param {object} options - Ray specific configuration settings.
  */
 function Raycaster(options) {
-  this.version = '0.7.2';
+  this.version = '0.7.3';
   this.scene;
   this.graphics;
   this.boundingBox = false;
@@ -2318,16 +2744,15 @@ Raycaster.prototype = {
   //map object
   mapGameObjects: function mapGameObjects(objects) {
     var dynamic = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-    var segmentCount = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : this.mapSegmentCount;
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    options.dynamic = dynamic;
+    options.segmentCount = options.segmentCount !== undefined ? options.segmentCount : this.segmentCount;
 
     if (!Array.isArray(objects)) {
       if (this.mappedObjects.includes(objects)) return this;
       if (!objects.data) objects.setDataEnabled();
-      var map = new this.Map({
-        object: objects,
-        dynamic: dynamic,
-        segmentCount: segmentCount
-      });
+      options.object = objects;
+      var map = new this.Map(options);
       objects.data.set('raycasterMap', map);
       this.mappedObjects.push(objects);
       return this;
@@ -2342,12 +2767,15 @@ Raycaster.prototype = {
         var object = _step.value;
         if (this.mappedObjects.includes(object)) continue;
         if (!object.data) object.setDataEnabled();
+        var config = {};
 
-        var _map = new this.Map({
-          object: object,
-          dynamic: dynamic,
-          segmentCount: segmentCount
-        });
+        for (var option in options) {
+          config[option] = options[option];
+        }
+
+        config.object = object;
+
+        var _map = new this.Map(config);
 
         object.data.set('raycasterMap', _map);
         this.mappedObjects.push(object);

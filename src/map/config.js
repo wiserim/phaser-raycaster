@@ -1,3 +1,10 @@
+let rectangle = require('./map-rectangle-methods.js');
+let line = require('./map-line-methods.js');
+let polygon = require('./map-polygon-methods.js');
+let arc = require('./map-circle-methods.js');
+let segmentCount = require('./segmentsCount.js');
+let container = require('./map-container-methods.js');
+let tilemap = require('./map-tilemap-methods.js');
 /**
  * Configure map on creation.
  *
@@ -19,38 +26,60 @@ export function config(options) {
     if(options.type === undefined)
         options.type = options.object.type;
     this.type = options.type;
-
+    
     switch(options.type) {
         case 'Polygon':
-            this.getPoints = this._getPolygonPoints;
-            this.getSegments = this._getPolygonSegments;
-            this.updateMap = this._updatePolygonMap;
+            this.getPoints = polygon.getPoints;
+            this.getSegments = polygon.getSegments;
+            this.updateMap = polygon.updateMap;
             break;
         case 'Arc':
-            this.getPoints = this._getArcPoints;
-            this.getSegments = this._getArcSegments;
-            this.updateMap = this._updateArcMap;
+            //circle segments count
+            this.segmentCount = (options.segmentCount) ? options.segmentCount : 0;
+            this.getPoints = arc.getPoints;
+            this.getSegments = arc.getSegments;
+            this.updateMap = arc.updateMap;
+            this.setSegmentCount = segmentCount.setSegmentCount;
             break;
         case 'Line':
-            this.getPoints = this._getLinePoints;
-            this.getSegments = this._getLineSegments;
-            this.updateMap = this._updateLineMap;
+            this.getPoints = line.getPoints;
+            this.getSegments = line.getSegments;
+            this.updateMap = line.updateMap;
             break;
         case 'Container':
-            this.getPoints = this._getContainerPoints;
-            this.getSegments = this._getContainerSegments;
-            this.updateMap = this._updateContainerMap;
+            this.getPoints = container.getPoints;
+            this.getSegments = container.getSegments;
+            this.updateMap = container.updateMap;
+            break;
+        case 'StaticTilemapLayer':
+            //ray colliding tiles
+            this.collisionTiles = (options.collisionTiles) ? options.collisionTiles : [];
+            this.getPoints = tilemap.getPoints;
+            this.getSegments = tilemap.getSegments;
+            this.updateMap = tilemap.updateMap;
+            this.setCollisionTiles = tilemap.setCollisionTiles;
+            //reset tilemap origin
+            this.object.setOrigin(0,0);
+            break;
+        case 'DynamicTilemapLayer':
+            //ray colliding tiles
+            this.collisionTiles = (options.collisionTiles) ? options.collisionTiles : [];
+            this.getPoints = tilemap.getPoints;
+            this.getSegments = tilemap.getSegments;
+            this.updateMap = tilemap.updateMap;
+            this.setCollisionTiles = tilemap.setCollisionTiles;
+            //reset tilemap origin
+            this.object.setOrigin(0,0);
             break;
         default:
-            this.getPoints = this._getRectanglePoints;
-            this.getSegments = this._getRectangleSegments;
-            this.updateMap = this._updateRectangleMap;
+            this.getPoints = rectangle.getPoints;
+            this.getSegments = rectangle.getSegments;
+            this.updateMap = rectangle.updateMap;
     }
 
     //dynamic map
     this.dynamic = (options.dynamic == true) ? true : false;
-    //circle segments count
-    this.segmentCount = (options.segmentCount) ? options.segmentCount : 0;
+
     //enable/disable map
     this.active = (options.active !== undefined) ? options.active : true;
 

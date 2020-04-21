@@ -16,7 +16,7 @@
  * @param {object} options - Ray specific configuration settings.
  */
 export function Raycaster(options) {
-    this.version = '0.7.2';
+    this.version = '0.7.3';
     this.scene;
     this.graphics;
     this.boundingBox = false;
@@ -88,7 +88,10 @@ Raycaster.prototype = {
     },
 
     //map object
-    mapGameObjects: function(objects, dynamic = false, segmentCount = this.mapSegmentCount) {
+    mapGameObjects: function(objects, dynamic = false, options = {}) {
+        options.dynamic = dynamic;
+        options.segmentCount = (options.segmentCount !== undefined) ? options.segmentCount : this.segmentCount;
+
         if(!Array.isArray(objects)) {
             if(this.mappedObjects.includes(objects))
                 return this;
@@ -96,11 +99,9 @@ Raycaster.prototype = {
             if(!objects.data)
                 objects.setDataEnabled();
 
-            let map = new this.Map({
-                object: objects,
-                dynamic: dynamic,
-                segmentCount: segmentCount
-            });
+            options.object = objects;
+
+            let map = new this.Map(options);
 
             objects.data.set('raycasterMap', map);
             this.mappedObjects.push(objects);
@@ -115,11 +116,13 @@ Raycaster.prototype = {
             if(!object.data)
                 object.setDataEnabled();
 
-            let map = new this.Map({
-                object: object,
-                dynamic: dynamic,
-                segmentCount: segmentCount
-            });
+            let config = {};
+            for(let option in options) {
+                config[option] = options[option];
+            }
+            config.object = object;
+            
+            let map = new this.Map(config);
 
             object.data.set('raycasterMap', map);
             this.mappedObjects.push(object);

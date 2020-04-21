@@ -11,7 +11,7 @@ Code examples are available on CodePen: [LINK](https://codepen.io/collection/AOO
 **Features:**
 * works with arcade physics,
 * cast rays in a single direction, 360 degrees circle or in a cone,
-* test rays on mapped game objects (containers, lines, rectangles, polygons, circles and sprites),
+* test rays on mapped game objects (containers, lines, rectangles, polygons, circles, sprites and tilemaps),
 * provides closest intersection points between rays and tested objects,
 * tests can be made on all mapped objects or only selected ones,
 * static and dynamic mapping for individual objects,
@@ -94,6 +94,14 @@ this.group = this.add.group();
 
 //map game objects actually in group
 this.raycaster.mapGameObjects(this.group.getChildren());
+
+//map tilemap
+this.map = this.make.tilemap();
+this.tilemap = this.map.createStaticLayer();
+
+this.raycaster.mapGameObjects(this.tilemap, false, {
+  collisionTiles: [1,2,3] //array of tiles types which can collide with ray
+});
 ```
 ### 6. Cast ray
 ```javascript

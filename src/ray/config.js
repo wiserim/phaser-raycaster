@@ -19,31 +19,31 @@
 export function config(options) {
     this.object = options.object;
     //origin
-    if(options.origin)
+    if(options.origin !== undefined)
         this.origin.setTo(options.origin.x, options.origin.y);
 
     //angle
-    if(options.angle)
+    if(options.angle !== undefined)
         this.angle = Phaser.Math.Angle.Normalize(options.angle);
 
     //angle deg
-    if(options.angleDeg)
+    if(options.angleDeg !== undefined)
         this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(options.angleDeg));
 
     //cone angle
-    if(options.cone)
+    if(options.cone !== undefined)
         this.cone = options.cone;
 
     //cone angle deg
-    if(options.coneDeg)
+    if(options.coneDeg !== undefined)
         this.cone = Phaser.Math.DegToRad(options.coneDeg);
 
     //range (0 = max)
-    if(options.range)
+    if(options.range !== undefined)
         this.range = options.range;
 
     //detection range (0 = max)
-    if(options.detectionRange)
+    if(options.detectionRange !== undefined)
         this.detectionRange = options.detectionRange;
 
     if(options.ignoreNotIntersectedRays !== undefined)

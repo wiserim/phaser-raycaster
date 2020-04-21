@@ -1,5 +1,13 @@
 # Change Log
 
+## Version 0.7.3 - 21.04.2020
+
+### New features
+
+* `Map` can now map `Phaser.Tilemaps.StaticTilemapLayer` and `Phaser.Tilemaps.DynamicTilemapLayer` objects.
+
+---
+
 ## Version 0.7.2 - 29.03.2020
 
 ### New features
