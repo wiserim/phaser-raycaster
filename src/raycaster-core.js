@@ -8,21 +8,66 @@
  * @classdesc
  *
  * Raycaster class responible for creating ray objects and managing mapped objects.
- *
+ * 
+ * @namespace Raycaster
  * @class Raycaster
  * @constructor
  * @since 6.0.0
  *
- * @param {object} options - Ray specific configuration settings.
+ * @param {object} [options] - Raycaster's configuration options. May include:
+ * @param {Phaser.Scene} [options.scene] - Scene in which Raycaster will be used.
+ * @param {integer} [options.mapSegmentCount = 0] - Number of segments of circle maps. If set to 0, map will be teste
+ * @param {(object|array)} [options.objects] - Game object or array of game objects to map.
+ * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box.
+ * @param {boolean} [options.autoUpdate = true] - If set true, automatically update dynamic maps on scene update event.
  */
 export function Raycaster(options) {
+    /**
+    * Plugin version.
+    *
+    * @name Raycaster#version
+    * @type {string}
+    * @readonly
+    * @since 0.6.0
+    */
     this.version = '0.7.3';
+    /**
+    * Raycaster's scene
+    *
+    * @name Raycaster#version
+    * @type {string}
+    * @private
+    * @since 0.6.0
+    */
     this.scene;
     this.graphics;
+
+    /**
+    * Raycaster's bounding box.
+    *
+    * @name Raycaster#boundingBox
+    * @type {Phaser.Geom.Rectangle}
+    * @private
+    * @since 0.6.0
+    */
     this.boundingBox = false;
+    /**
+    * Array of mapped game objects.
+    *
+    * @name Raycaster#mappedObjects
+    * @type {array}
+    * @since 0.6.0
+    */
     this.mappedObjects = [];
     this.sortedPoints = [];
-    this.mapSegmentCount = 0;   //quantity of segments of map of circle
+    /**
+    * Number of segments of circle maps.
+    *
+    * @name Raycaster#mapSegmentCount
+    * @type {integer}
+    * @since 0.6.0
+    */
+    this.mapSegmentCount = 0;
 
     if(options !== undefined) {
         if(options.boundingBox === undefined && options.scene !== undefined && options.scene.physics !== undefined)
@@ -42,7 +87,22 @@ export function Raycaster(options) {
 }
 
 Raycaster.prototype = {
-    //set options
+    /**
+    * Configure raycaster.
+    *
+    * @method Raycaster#setOptions
+    * @memberof Raycaster
+    * @instance
+    * @since 0.6.0
+    *
+    * @param {object} [options] - Raycaster's congfiguration options. May include:
+    * @param {Phaser.Scene} [options.scene] - Scene in which Raycaster will be used.
+    * @param {integer} [options.mapSegmentCount = 0] - Number of segments of circle maps.
+    * @param {(object|array)} [options.objects] - Game object or array of game objects to map.
+    * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box.
+    *
+    * @return {Raycaster} Raycaster instance
+    */
     setOptions: function(options) {
         if(options.scene !== undefined) {
             this.scene = options.scene;
@@ -61,7 +121,21 @@ Raycaster.prototype = {
         return this;
     },
 
-    //set bounding box
+    /**
+    * Set Raycatser's bounding box.
+    *
+    * @method Raycaster#setBoundingBox
+    * @memberof Raycaster
+    * @instance
+    * @since 0.6.0
+    *
+    * @param {integer} x - The X coordinate of the top left corner of bounding box.
+    * @param {integer} y - The Y coordinate of the top left corner of bounding box.
+    * @param {integer} width - The width of bounding box.
+    * @param {integer} height - The height of bounding box.
+    *
+    * @return {Raycaster} Raycaster instance
+    */
     setBoundingBox: function(x, y, width, height) {
         this.boundingBox = {
             rectangle: new Phaser.Geom.Rectangle(x, y, width, height),
@@ -87,7 +161,20 @@ Raycaster.prototype = {
         }
     },
 
-    //map object
+    /**
+    * Map game objects
+    *
+    * @method Raycaster#mapGameObjects
+    * @memberof Raycaster
+    * @instance
+    * @since 0.6.0
+    *
+    * @param {object|array} objects - Game object or array of game objects to map.
+    * @param {boolean} [dynamic = false] - {@link Raycaster.Map Raycaster.Map} dynamic flag (determines map will be updated automatically).
+    * @param {object} [options] - Additional options for {@link Raycaster.Map Raycaster.Map}
+    *
+    * @return {Raycaster} Raycaster instance
+    */
     mapGameObjects: function(objects, dynamic = false, options = {}) {
         options.dynamic = dynamic;
         options.segmentCount = (options.segmentCount !== undefined) ? options.segmentCount : this.segmentCount;
@@ -130,7 +217,18 @@ Raycaster.prototype = {
         return this;
     },
 
-    //remove mapped Objects
+    /**
+    * Remove game object's {@link Raycaster.Map Raycaster.Map} maps.
+    *
+    * @method Raycaster#removeMappedObjects
+    * @memberof Raycaster
+    * @instance
+    * @since 0.6.0
+    *
+    * @param {(object|array)} objects - Game object or array of game objects which maps will be removed.
+    *
+    * @return {Raycaster} Raycaster instance
+    */
     removeMappedObjects: function(objects) {
         if(!Array.isArray(objects)) {
             let index = this.mappedObjects.indexOf(objects);
@@ -148,7 +246,18 @@ Raycaster.prototype = {
         return this;
     },
 
-    //enable maps
+    /**
+    * Enable game object's {@link Raycaster.Map Raycaster.Map} maps.
+    *
+    * @method Raycaster#enableMaps
+    * @memberof Raycaster
+    * @instance
+    * @since 0.7.2
+    *
+    * @param {(object|array)} objects - Game object or array of game objects which maps will be enabled.
+    *
+    * @return {Raycaster} Raycaster instance
+    */
     enableMaps: function(objects) {
         if(!Array.isArray(objects)) {
             if(objects.data) {
@@ -171,7 +280,18 @@ Raycaster.prototype = {
         return this;
     },
 
-    //disable maps
+    /**
+    * Disable game object's {@link Raycaster.Map Raycaster.Map} maps.
+    *
+    * @method Raycaster#disableMaps
+    * @memberof Raycaster
+    * @instance
+    * @since 0.7.2
+    *
+    * @param {(object|array)} objects - Game object or array of game objects which maps will be disabled.
+    *
+    * @return {Raycaster} Raycaster instance
+    */
     disableMaps: function(objects) {
         if(!Array.isArray(objects)) {
             if(objects.data) {
@@ -194,7 +314,15 @@ Raycaster.prototype = {
         return this;
     },
 
-    //scene update event listener
+    /**
+    * Updates all {@link Raycaster.Map Raycaster.Map} dynamic maps. Fired on Phaser.Scene update event.
+    *
+    * @method Raycaster#update
+    * @memberof Raycaster
+    * @instance
+    * @since 0.6.0
+    *
+    */
     update: function() {
         //update dynamic maps
         if(this.mappedObjects.length > 0)
@@ -208,7 +336,18 @@ Raycaster.prototype = {
             }
     },
 
-    //ray factory
+    /**
+    * Create {@link Raycaster.Ray Raycaster.Ray} object.
+    *
+    * @method Raycaster#createRay
+    * @memberof Raycaster
+    * @instance
+    * @since 0.6.0
+    *
+    * @param {object} [options] - Ray options:
+    *
+    * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+    */
     createRay: function(options = {}) {
         return new this.Ray(options, this);
     }

@@ -1,20 +1,22 @@
 /**
- * Configure ray on creation.
+ * Configure ray.
  *
- * @function Ray.config
+ * @method Raycaster.Ray#config
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
  * @param {object} [options] - Ray's congfiguration options. May include:
- * - {Phaser.Types.Math.Vector2Like} [origin] = {x:0, y:0} - Ray's position.
- * - {float} [angle] = 0 - Ray's angle in radians.
- * - {float} [angleDeg] = 0 - Ray's angle in degrees.
- * - {float} [cone] = 0 - Ray's cone angle in radians.
- * - {float} [coneDeg] = 0 - Ray's cone angle in degrees.
- * - {integer} [range] = Phaser.Math.MAX_SAFE_INTEGER - Ray's range.
- * - {integer} [detectionRange] = Phaser.Math.MAX_SAFE_INTEGER - Maximum distance between ray's position and tested objects bounding boxes.
- * - {boolean} [ignoreNotIntersectedRays] = true - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target.
+ * @param {Phaser.Geom.Point} [options.origin = {x:0, y:0}] - Ray's position.
+ * @param {float} [options.angle = 0] - Ray's angle in radians.
+ * @param {float} [options.angleDeg = 0] - Ray's angle in degrees.
+ * @param {float} [options.cone = 0] - Ray's cone angle in radians.
+ * @param {float} [options.coneDeg = 0] - Ray's cone angle in degrees.
+ * @param {integer} [options.range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
+ * @param {integer} [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
+ * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function config(options) {
     this.object = options.object;

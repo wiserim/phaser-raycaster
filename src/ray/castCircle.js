@@ -1,13 +1,15 @@
 /**
  * Cast ray in all directions to find closest intersections with tested mapped objects.
  *
- * @function Ray.castCircle
+ * @method Raycaster.Ray#castCircle
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
  * @param {object} [options] - options that may include:
- * - {array} [objects] - Array of game objects to test. If not provided use all mapped game objects.
+ * @param {array} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {array} - Array of Point objects of ray's closest intersections with tested objects.
+ * @return {array} Array of points of ray's closest intersections with tested objects.
  */
 export function castCircle(options = {}) {
     let originalAngle = this.angle;

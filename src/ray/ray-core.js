@@ -3,8 +3,8 @@
  *
  * Ray class responible for casting ray's and testing their collisions with mapped objects.
  *
- * @class Ray
- * @memberof Raycaster
+ * @namespace Raycaster.Ray
+ * @class Raycaster.Ray
  * @constructor
  * @since 6.0.0
  *
@@ -12,6 +12,14 @@
  * @param {Raycaster} [raycaster] - Parent raycaster object.
  */
 export function Ray(options, raycaster) {
+    /**
+    * Plugin version.
+    *
+    * @name Raycaster#version
+    * @type {Phaser.Geom.Point}
+    * @readonly
+    * @since 0.6.0
+    */
     this.origin = new Phaser.Geom.Point();
     this._ray = new Phaser.Geom.Line();
     this.angle = 0;

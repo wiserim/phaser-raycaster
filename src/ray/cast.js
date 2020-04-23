@@ -1,14 +1,16 @@
 /**
  * Cast ray to find closest intersection with tested mapped objects.
  *
- * @function Ray.cast
+ * @method Raycaster.Ray#cast
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
  * @param {object} [options] - options that may include:
- * - {array} [objects] - Array of game objects to test. If not provided use all mapped game objects.
- * - {Phaser.Types.Math.Vector2Like} [target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
+ * @param {array} [options.objects = {Raycaster#mappedObjects}] - Array of game objects to test. If not provided test all mapped game objects.
+ * @param {Phaser.Geom.Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
  *
- * @return {Phaser.Types.Math.Vector2Like} / {boolean} - Point object of ray's closest intersection with tested objects. Returns false if no intersection has been found.
+ * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found.
  */
 export function cast(options = {}) {
     let closestIntersection;
