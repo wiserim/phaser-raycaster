@@ -1,12 +1,14 @@
 /**
- * Set ray's cone angle in radians.
+ * Set ray's cone angle (width) in radians.
  *
- * @function Ray.setAngle
+ * @method Raycaster.Ray#setCone
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.7.0
  *
- * @param {float} [cone] - Ray's cone angle in radians.
+ * @param {float} [cone = 0] - Ray's cone angle in radians.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function setCone(cone = 0) {
     this.cone = cone;
@@ -14,14 +16,16 @@ export function setCone(cone = 0) {
 }
 
 /**
- * Set ray's cone angle in degrees.
+ * Set ray's cone angle (width) in degrees.
  *
- * @function Ray.setAngleDeg
+ * @method Raycaster.Ray#setConeDeg
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.7.0
  *
- * @param {float} [cone] - Ray's cone angle in degrees.
+ * @param {float} [cone = 0] - Ray's cone angle in degrees.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function setConeDeg(cone = 0) {
     this.cone = Phaser.Math.DegToRad(cone);

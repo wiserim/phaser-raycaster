@@ -1,12 +1,14 @@
 /**
  * Set ray's range.
  *
- * @function Ray.setRange
+ * @method Raycaster.Ray#setRange
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
- * @param {integer} [range] = Phaser.Math.MAX_SAFE_INTEGER - Ray's range.
+ * @param {integer} [range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function setRange(range = Phaser.Math.MAX_SAFE_INTEGER) {
     this.range = range;
@@ -15,14 +17,17 @@ export function setRange(range = Phaser.Math.MAX_SAFE_INTEGER) {
 }
 
 /**
- * Set ray's range.
+ * Set ray's maximum detection range. Objects outside detection range won't be tested.
+ * Ray tests all objects when set to 0.
  *
- * @function Ray.setRange
+ * @method Raycaster.Ray#setDetectionRange
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
- * @param {integer} [detectionRange] = Phaser.Math.MAX_SAFE_INTEGER - Maximum distance between ray's position and tested objects bounding boxes.
+ * @param {integer} [detectionRange = 0] - Maximum distance between ray's position and tested objects bounding boxes.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function setDetectionRange(detectionRange = 0) {
     this.detectionRange = detectionRange;
@@ -33,11 +38,13 @@ export function setDetectionRange(detectionRange = 0) {
 /**
  * Test if object's bounding box is in ray's detection range.
  *
- * @function Ray.boundsInRange
+ * @method Raycaster.Ray#boundsInRange
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
  * @param {object} object - Tested object
- * @param {Phaser.Geom. Rectangle} / {boolean} [bounds] = false - Tested object's bounds. If not passed bounds will be generated.
+ * @param {(Phaser.Geom.Rectangle|boolean)} [bounds = false] - Tested object's bounds. If not passed bounds will be generated automatically.
  *
  * @return {boolean} Information if object is in ray's detection range.
  */

@@ -1,12 +1,14 @@
 /**
- * Set ray angle in radians.
+ * Set ray's angle (direction) in radians.
  *
- * @function Ray.setAngle
+ * @method Raycaster.Ray#setAngle
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
- * @param {float} [angle] - Ray's angle in radians.
+ * @param {float} [angle = 0] - Ray's angle in radians.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function setAngle(angle = 0) {
     this.angle = Phaser.Math.Angle.Normalize(angle);
@@ -15,14 +17,16 @@ export function setAngle(angle = 0) {
 }
 
 /**
- * Set ray angle in degrees.
+ * Set ray's angle (direction) in degrees.
  *
- * @function Ray.setAngleDeg
+ * @method Raycaster.Ray#setAngleDeg
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.1
  *
- * @param {float} [angle] - Ray's angle in degrees.
+ * @param {float} [angle = 0] - Ray's angle in degrees.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function setAngleDeg(angle = 0) {
     this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(angle));

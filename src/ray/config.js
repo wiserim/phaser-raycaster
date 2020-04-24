@@ -14,7 +14,7 @@
  * @param {float} [options.coneDeg = 0] - Ray's cone angle in degrees.
  * @param {integer} [options.range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
  * @param {integer} [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
- * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target.
+ * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */

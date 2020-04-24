@@ -1,13 +1,15 @@
 /**
- * Set ray's position.
+ * Set ray's source position.
  *
- * @function Ray.setOrigin
+ * @method Raycaster.Ray#setOrigin
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
  * @param {integer} x - X coordinate.
  * @param {integer} y - Y coordinate.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function setOrigin(x, y) {
     this.origin.setTo(x, y);

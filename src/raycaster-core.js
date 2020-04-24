@@ -47,6 +47,7 @@ export function Raycaster(options) {
     *
     * @name Raycaster#boundingBox
     * @type {Phaser.Geom.Rectangle}
+    * @default false
     * @private
     * @since 0.6.0
     */
@@ -65,6 +66,7 @@ export function Raycaster(options) {
     *
     * @name Raycaster#mapSegmentCount
     * @type {integer}
+    * @default 0
     * @since 0.6.0
     */
     this.mapSegmentCount = 0;
@@ -101,7 +103,7 @@ Raycaster.prototype = {
     * @param {(object|array)} [options.objects] - Game object or array of game objects to map.
     * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box.
     *
-    * @return {Raycaster} Raycaster instance
+    * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
     setOptions: function(options) {
         if(options.scene !== undefined) {
@@ -134,7 +136,7 @@ Raycaster.prototype = {
     * @param {integer} width - The width of bounding box.
     * @param {integer} height - The height of bounding box.
     *
-    * @return {Raycaster} Raycaster instance
+    * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
     setBoundingBox: function(x, y, width, height) {
         this.boundingBox = {
@@ -173,7 +175,7 @@ Raycaster.prototype = {
     * @param {boolean} [dynamic = false] - {@link Raycaster.Map Raycaster.Map} dynamic flag (determines map will be updated automatically).
     * @param {object} [options] - Additional options for {@link Raycaster.Map Raycaster.Map}
     *
-    * @return {Raycaster} Raycaster instance
+    * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
     mapGameObjects: function(objects, dynamic = false, options = {}) {
         options.dynamic = dynamic;
@@ -227,7 +229,7 @@ Raycaster.prototype = {
     *
     * @param {(object|array)} objects - Game object or array of game objects which maps will be removed.
     *
-    * @return {Raycaster} Raycaster instance
+    * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
     removeMappedObjects: function(objects) {
         if(!Array.isArray(objects)) {
@@ -256,7 +258,7 @@ Raycaster.prototype = {
     *
     * @param {(object|array)} objects - Game object or array of game objects which maps will be enabled.
     *
-    * @return {Raycaster} Raycaster instance
+    * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
     enableMaps: function(objects) {
         if(!Array.isArray(objects)) {
@@ -290,7 +292,7 @@ Raycaster.prototype = {
     *
     * @param {(object|array)} objects - Game object or array of game objects which maps will be disabled.
     *
-    * @return {Raycaster} Raycaster instance
+    * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
     disableMaps: function(objects) {
         if(!Array.isArray(objects)) {
