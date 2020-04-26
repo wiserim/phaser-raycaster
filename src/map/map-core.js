@@ -49,7 +49,7 @@ export function Map(options) {
     */
     this.object;
     /**
-    * Array of mapped object's vertices used as rays targets
+    * Array of mapped object's vertices used as rays targets.
     *
     * @name Raycaster.Map#_points
     * @type {array}
@@ -66,8 +66,43 @@ export function Map(options) {
     * @since 0.6.0
     */
     this._segments = [];
+    /**
+    * Get array of mapped object's vertices used as rays targets.
+    *
+    * @method Raycaster.Map#getPoints
+    * @memberof Raycaster.Map
+    * @instance
+    * @since 0.6.0
+    *
+    * @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+    *
+    * @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+    */
     this.getPoints;
+    /**
+    * Get array of mapped object's segments used to test object's intersection with ray.
+    *
+    * @method Raycaster.Map#getSegments
+    * @memberof Raycaster.Map
+    * @instance
+    * @since 0.6.0
+    *
+    * @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+    *
+    * @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+    */
     this.getSegments;
+    /**
+    * Update object's map of points and segments.
+    *
+    * @method Raycaster.Map#updateMap
+    * @memberof Raycaster.Map
+    * @instance
+    * @since 0.6.0
+    *
+    * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+    */
+    this.updateMap;
     this.getIntersections;
 
     this.config(options);

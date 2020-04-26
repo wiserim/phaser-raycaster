@@ -5,20 +5,23 @@ let arc = require('./map-circle-methods.js');
 let segmentCount = require('./segmentsCount.js');
 let container = require('./map-container-methods.js');
 let tilemap = require('./map-tilemap-methods.js');
+
 /**
- * Configure map on creation.
+ * Configure map.
  *
- * @function Map.config
+ * @method Raycaster.Map#config
+ * @memberof Raycaster.Map
+ * @instance
  * @since 0.6.0
  *
- * @param {object} [options] - Ray's congfiguration options. May include:
- * - {object} object - Mapped game object
- * - {string} [type] - Map type. If not defined, will be determined from object
- * - {boolean} [dynamic] = false - If set true, map will be dynamic (updated on scene update event).
- * - {integer} [segmentCount] = 0 - Circle map's segment count. If set to 0, map won't be generating segments and relay only on generated tangent point to actually testing ray.
- * - {boolean} [active] = true - If set true, map will be active (will provide points, segments and will be updated).
- *
- * @return {object} Map object.
+ * @param {object} [options] - Map's congfiguration options. May include:
+ * @param {object} options.object - Game object to map
+ * @param {string} [options.type] - Map type. If not defined, it will be determined based on object.
+ * @param {boolean} [options.dynamic = false] - If set true, map will be dynamic (updated on scene update event).
+ * @param {integer} [options.segmentCount] - Circle map's segment count. If set to 0, map won't be generating segments and relay only on tangent points calculated for currently testing ray.
+ * @param {boolean} [options.active = true] - If set true, map will be active (will provide points, segments and will be updated).
+ * 
+ * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
  */
 export function config(options) {
     this.object = options.object;

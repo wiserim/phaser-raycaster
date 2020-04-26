@@ -1,12 +1,15 @@
 /**
  * Set segment count for cirle's map.
+ * If set to 0, map won't be generating segments and relay only on tangent points calculated for currently testing ray.
  *
- * @function Map.setSegmentCount
+ * @method Raycaster.Map#setSegmentCount
+ * @memberof Raycaster.Map
+ * @instance
  * @since 0.6.0
  *
- * @param {integer} [count] - Circle's map segments count.
+ * @param {integer} count - Circle map's segment count.
  *
- * @return {object} Map object.
+ * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
  */
 export function setSegmentCount(count) {
     this.segmentCount = count;

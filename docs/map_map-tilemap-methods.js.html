@@ -1,4 +1,76 @@
-/*Map methods for tilemaps*/
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Phaser-raycaster Source: map/map-tilemap-methods.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.paper.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Phaser-raycaster</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="Raycaster.html">Raycaster</a></li><li><a href="Raycaster.Ray.html">Raycaster.Ray</a></li><li><a href="Raycaster.Map.html">Raycaster.Map</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: map/map-tilemap-methods.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/*Map methods for tilemaps*/
 /**
 * Get array of mapped tilemap's vertices used as rays targets.
 *
@@ -15,12 +87,12 @@
 export function getPoints(ray = false) {
     if(!this.active)
         return [];
-    if(!ray || ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER))
+    if(!ray || ray &amp;&amp; (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER))
         return this._points;
 
     let points = [];
     for(let point of this._points) {
-        if(Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, point.x, point.y) <= ray.detectionRange)
+        if(Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, point.x, point.y) &lt;= ray.detectionRange)
             points.push(point);
     }
 
@@ -54,7 +126,7 @@ export function getPoints(ray = false) {
 export function getSegments(ray = false) {
     if(!this.active)
         return [];
-    if(!ray || ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER))
+    if(!ray || ray &amp;&amp; (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER))
         return this._segments;
 
     let segments = [];
@@ -95,27 +167,27 @@ export function updateMap() {
     let verticals = [];
 
     //iterate rows
-    for(let i = 0, iLength = this.object.layer.data.length; i < iLength; i++) {
+    for(let i = 0, iLength = this.object.layer.data.length; i &lt; iLength; i++) {
         let row = this.object.layer.data[i];
 
         //iterate row's tiles
-        for(let j = 0, jLength = row.length; j < jLength; j++) {
+        for(let j = 0, jLength = row.length; j &lt; jLength; j++) {
             let tile = row[j];
 
             //check if tile and its top and left neighbours have different are from different sets (rays blocking and non-bloking)
-            let upperEdge = ((i > 0 && this.collisionTiles.includes(this.object.layer.data[i-1][j].index) != this.collisionTiles.includes(tile.index)) || (i == 0 && this.collisionTiles.includes(tile.index))) ? true : false;
-            let leftEdge = ((j > 0 && this.collisionTiles.includes(this.object.layer.data[i][j-1].index) != this.collisionTiles.includes(tile.index)) || (j == 0 && this.collisionTiles.includes(tile.index))) ? true : false;
+            let upperEdge = ((i > 0 &amp;&amp; this.collisionTiles.includes(this.object.layer.data[i-1][j].index) != this.collisionTiles.includes(tile.index)) || (i == 0 &amp;&amp; this.collisionTiles.includes(tile.index))) ? true : false;
+            let leftEdge = ((j > 0 &amp;&amp; this.collisionTiles.includes(this.object.layer.data[i][j-1].index) != this.collisionTiles.includes(tile.index)) || (j == 0 &amp;&amp; this.collisionTiles.includes(tile.index))) ? true : false;
 
             //get current tile's column last vertical line
             let vertical = false;
-            if(verticals.length <= j)
+            if(verticals.length &lt;= j)
                 verticals[j] = [];
             else if(verticals[j].length > 0)
                 vertical = verticals[j][verticals[j].length - 1];
 
             //check if tile has edge from left
             if(leftEdge) {
-                if(vertical && vertical.y + vertical.height == i)
+                if(vertical &amp;&amp; vertical.y + vertical.height == i)
                     vertical.height++;
                 else {
                     verticals[j].push({
@@ -245,10 +317,10 @@ export function updateMap() {
             segments.push(segment);
 
             //add points if they're not already there
-            if(!points.filter(point => point.x == x && point.y == y1))
+            if(!points.filter(point => point.x == x &amp;&amp; point.y == y1))
                 points.push(new Phaser.Geom.Point(x, y));
 
-            if(!points.filter(point => point.x == x && point.y == y2))
+            if(!points.filter(point => point.x == x &amp;&amp; point.y == y2))
                 points.push(new Phaser.Geom.Point(x, y));
 
             //get intersections between horizontal segments and vertical
@@ -288,3 +360,142 @@ export function setCollisionTiles(tiles = []) {
     this.collisionTiles = tiles;
     return this;
 }
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+	<p class="text-center"><a href="https://github.com/wiserim/phaser-raycaster" target="_blank" rel="noopener noreferrer">Phaser-raycaster</a></p>
+
+
+	<span class="copyright">
+	&copy; Marcin Walczak 2020
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a>
+	
+		on 2020-04-26T20:50:09+02:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

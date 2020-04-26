@@ -1,0 +1,17 @@
+{
+  "name": "phaser-raycaster-documentation",
+  "version": "1.0.0",
+  "description": "Phaser-raycaster plugin documentation",
+  "main": "index.js",
+  "scripts": {
+    "build": "node node_modules/jsdoc/jsdoc.js -c jsdoc.conf.json -R ../README.md",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marcin Walczak",
+  "license": "ISC",
+  "devDependencies": {
+    "jsdoc": "^3.6.4",
+    "ink-docstrap": "^1.3.2"
+  },
+  "dependencies": {}
+}

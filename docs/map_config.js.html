@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Phaser-raycaster Source: map/config.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.paper.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Phaser-raycaster</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="Raycaster.html">Raycaster</a></li><li><a href="Raycaster.Ray.html">Raycaster.Ray</a></li><li><a href="Raycaster.Map.html">Raycaster.Map</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: map/config.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">let rectangle = require('./map-rectangle-methods.js');
+let line = require('./map-line-methods.js');
+let polygon = require('./map-polygon-methods.js');
+let arc = require('./map-circle-methods.js');
+let segmentCount = require('./segmentsCount.js');
+let container = require('./map-container-methods.js');
+let tilemap = require('./map-tilemap-methods.js');
+
+/**
+ * Configure map.
+ *
+ * @method Raycaster.Map#config
+ * @memberof Raycaster.Map
+ * @instance
+ * @since 0.6.0
+ *
+ * @param {object} [options] - Map's congfiguration options. May include:
+ * @param {object} options.object - Game object to map
+ * @param {string} [options.type] - Map type. If not defined, it will be determined based on object.
+ * @param {boolean} [options.dynamic = false] - If set true, map will be dynamic (updated on scene update event).
+ * @param {integer} [options.segmentCount] - Circle map's segment count. If set to 0, map won't be generating segments and relay only on tangent points calculated for currently testing ray.
+ * @param {boolean} [options.active = true] - If set true, map will be active (will provide points, segments and will be updated).
+ * 
+ * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+ */
+export function config(options) {
+    this.object = options.object;
+    //object type
+    if(options.type === undefined)
+        options.type = options.object.type;
+    this.type = options.type;
+    
+    switch(options.type) {
+        case 'Polygon':
+            this.getPoints = polygon.getPoints;
+            this.getSegments = polygon.getSegments;
+            this.updateMap = polygon.updateMap;
+            break;
+        case 'Arc':
+            //circle segments count
+            this.segmentCount = (options.segmentCount) ? options.segmentCount : 0;
+            this.getPoints = arc.getPoints;
+            this.getSegments = arc.getSegments;
+            this.updateMap = arc.updateMap;
+            this.setSegmentCount = segmentCount.setSegmentCount;
+            break;
+        case 'Line':
+            this.getPoints = line.getPoints;
+            this.getSegments = line.getSegments;
+            this.updateMap = line.updateMap;
+            break;
+        case 'Container':
+            this.getPoints = container.getPoints;
+            this.getSegments = container.getSegments;
+            this.updateMap = container.updateMap;
+            break;
+        case 'StaticTilemapLayer':
+            //ray colliding tiles
+            this.collisionTiles = (options.collisionTiles) ? options.collisionTiles : [];
+            this.getPoints = tilemap.getPoints;
+            this.getSegments = tilemap.getSegments;
+            this.updateMap = tilemap.updateMap;
+            this.setCollisionTiles = tilemap.setCollisionTiles;
+            //reset tilemap origin
+            this.object.setOrigin(0,0);
+            break;
+        case 'DynamicTilemapLayer':
+            //ray colliding tiles
+            this.collisionTiles = (options.collisionTiles) ? options.collisionTiles : [];
+            this.getPoints = tilemap.getPoints;
+            this.getSegments = tilemap.getSegments;
+            this.updateMap = tilemap.updateMap;
+            this.setCollisionTiles = tilemap.setCollisionTiles;
+            //reset tilemap origin
+            this.object.setOrigin(0,0);
+            break;
+        default:
+            this.getPoints = rectangle.getPoints;
+            this.getSegments = rectangle.getSegments;
+            this.updateMap = rectangle.updateMap;
+    }
+
+    //dynamic map
+    this.dynamic = (options.dynamic == true) ? true : false;
+
+    //enable/disable map
+    this.active = (options.active !== undefined) ? options.active : true;
+
+    return this;
+}
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+	<p class="text-center"><a href="https://github.com/wiserim/phaser-raycaster" target="_blank" rel="noopener noreferrer">Phaser-raycaster</a></p>
+
+
+	<span class="copyright">
+	&copy; Marcin Walczak 2020
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a>
+	
+		on 2020-04-26T20:50:09+02:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

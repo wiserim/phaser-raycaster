@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Phaser-raycaster Source: ray/castCircle.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.paper.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Phaser-raycaster</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="Raycaster.html">Raycaster</a></li><li><a href="Raycaster.Ray.html">Raycaster.Ray</a></li><li><a href="Raycaster.Map.html">Raycaster.Map</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: ray/castCircle.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * Cast ray in all directions to find closest intersections with tested mapped objects.
+ *
+ * @method Raycaster.Ray#castCircle
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.6.0
+ *
+ * @param {object} [options] - options that may include:
+ * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
+ *
+ * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
+ */
+export function castCircle(options = {}) {
+    let originalAngle = this.angle;
+    let intersections = [];
+    let maps = [];
+    let rayTargets = [];
+    let testedObjects = [];
+
+    //if no objects to cast ray were passed, use raycasters mapped objects
+    if(!options.objects) {
+        if(this._raycaster)
+            options.objects = this._raycaster.mappedObjects;
+        else
+            return intersections;
+
+        //if bounding box is defined add bounding box points to 
+        if(this._raycaster &amp;&amp; this._raycaster.boundingBox) {
+            for(let point of this._raycaster.boundingBox.points) {
+                rayTargets.push({
+                    point: point,
+                    angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, point.x, point.y)
+                });
+            }
+        }
+
+        for(let i=0, iLength = options.objects.length; i &lt; iLength; i++) {
+            let object = options.objects[i];
+            //if bound in range
+            if(!this.boundsInRange(object))
+                continue;
+            
+            testedObjects.push(object);
+
+            let map = object.data.get('raycasterMap');
+            maps.push(map);
+            //get points and angles
+            for(let point of map.getPoints(this)) {
+                rayTargets.push({
+                    point: point,
+                    angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, point.x, point.y)
+                });
+            }
+
+            //get objects intersections
+            for(let j = i+1, jLength = options.objects.length; j &lt; jLength; j++){
+                let objectB = options.objects[j];
+                let mapB = objectB.data.get('raycasterMap');
+                //check if bounding boxes overlap
+                if(!Phaser.Geom.Intersects.RectangleToRectangle(object.getBounds(), objectB.getBounds()))
+                    continue;
+                
+                //find objects intersections
+                for(let segmentA of map.getSegments(this)) {
+                    for(let segmentB of mapB.getSegments(this)) {
+                        let intersection = [];
+                        if(!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection))
+                            continue;
+                        
+                        rayTargets.push({
+                            point: new Phaser.Geom.Point(intersection.x, intersection.y),
+                            angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y)
+                        });
+                    }
+                }
+            }
+        }
+
+        //sort target points by angle
+        rayTargets.sort(function(a, b){
+            //if rays towards points have the same angles promote closer one
+            if(a.angle == b.angle) {
+                if(Phaser.Math.Distance.Between(this.origin.x, this.origin.y, a.point.x, a.point.y) &lt; Phaser.Math.Distance.Between(this.origin.x, this.origin.y, b.point.x, b.point.y))
+                    return 1;
+                else
+                    return -1;
+            }
+
+            return a.angle - b.angle;
+        }.bind(this));
+
+        //cast rays
+        for(let target of rayTargets){
+            this.setAngle(target.angle);
+            let intersection = this.cast({
+                objects: testedObjects,
+                target: target.point
+            });
+            if(intersection){
+                //if intersection hits target point cast two additional rays
+                if(Phaser.Geom.Point.Equals(target.point, intersection)) {
+                    this.setAngle(target.angle - 0.0001);
+                    let intersectionA = this.cast({
+                        objects: testedObjects
+                    });
+                    if(intersectionA)
+                        intersections.push(intersectionA);
+                    
+                    intersections.push(intersection);
+
+                    this.setAngle(target.angle + 0.0001);
+                    let intersectionB = this.cast({
+                        objects: testedObjects
+                    });
+                    if(intersectionB)
+                        intersections.push(intersectionB);
+
+                    continue;
+                }
+                intersections.push(intersection);
+            }
+        }
+    }
+
+    this.setAngle(originalAngle);
+    return intersections;
+}
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+	<p class="text-center"><a href="https://github.com/wiserim/phaser-raycaster" target="_blank" rel="noopener noreferrer">Phaser-raycaster</a></p>
+
+
+	<span class="copyright">
+	&copy; Marcin Walczak 2020
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a>
+	
+		on 2020-04-26T20:50:09+02:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

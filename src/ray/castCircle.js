@@ -7,9 +7,9 @@
  * @since 0.6.0
  *
  * @param {object} [options] - options that may include:
- * @param {array} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
+ * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {array} Array of points of ray's closest intersections with tested objects.
+ * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
  */
 export function castCircle(options = {}) {
     let originalAngle = this.angle;

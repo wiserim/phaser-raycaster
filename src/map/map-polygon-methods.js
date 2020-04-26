@@ -1,14 +1,17 @@
 /*Map methods for polygons*/
 /**
- * Get array of polygon's points.
- *
- * @function Map._getPolygonPoints
- * @since 0.6.0
- *
- * @param {object} [ray] - Ray object.
- *
- * @return {array} Array of points.
- */
+* Get array of mapped polygon's vertices used as rays targets.
+*
+* @method Raycaster.Map#polygon.getPoints
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+*
+* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+*/
 export function getPoints(ray = false) {
     if(!this.active)
         return [];
@@ -16,14 +19,16 @@ export function getPoints(ray = false) {
 };
 
 /**
- * Get array of segments representing polygon.
- *
- * @function Map._getPolygonSegments
- * @since 0.6.0
- *
- *
- * @return {array} Array of Phaser.Geom.Line objects.
- */
+* Get array of mapped polygon's segments used to test object's intersection with ray.
+*
+* @method Raycaster.Map#polygon.getSegments
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+*/
 export function getSegments() {
     if(!this.active)
         return [];
@@ -31,14 +36,16 @@ export function getSegments() {
 };
 
 /**
- * Update polygon's map of points and segments.
- *
- * @function Map._updatePolygonMap
- * @since 0.6.0
- *
- *
- * @return {object} Map object.
- */
+* Update polygon's map of points and segments.
+*
+* @method Raycaster.Map#polygon.updateMap
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+*/
 export function updateMap() {
     if(!this.active)
         return this;

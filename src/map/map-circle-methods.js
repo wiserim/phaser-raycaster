@@ -1,14 +1,18 @@
 /*Map methods for circles*/
 /**
- * Get array of points on circle.
- *
- * @function Map._getArcPoints
- * @since 0.6.0
- *
- * @param {object} [ray] - Ray object. Used to generate points of rays tangent to circle, from ray origin.
- *
- * @return {array} Array of Phaser.GeomLine objects.
- */
+* Get array of mapped circle's vertices used as rays targets.
+* If {@link Raycaster.Map#segmentCount Raycaster.Map#segmentCount} is set to 0, it'll calculatoe tangent points for passed ray.
+*
+* @method Raycaster.Map#arc.getPoints
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+*
+* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+*/
 export function getPoints(ray = false) {
     if(!this.active)
         return [];
@@ -56,14 +60,17 @@ export function getPoints(ray = false) {
 };
 
 /**
- * Get array of segments representing circle.
- *
- * @function Map._getArcSegments
- * @since 0.6.0
- *
- *
- * @return {array} Array of Phaser.Geom.Line objects.
- */
+* Get array of mapped circle's segments used to test object's intersection with ray.
+* If {@link Raycaster.Map#segmentCount Raycaster.Map#segmentCount} is set to 0, it'll return empty array.
+*
+* @method Raycaster.Map#arc.getSegments
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+*/
 export function getSegments() {
     if(!this.active)
         return [];
@@ -71,14 +78,16 @@ export function getSegments() {
 };
 
 /**
- * Update circle's map of points and segments. If segmentCount == 0. Map is generated dynamically by calculating points of rays tangent to circle, from ray origin.
- *
- * @function Map._updateArcMap
- * @since 0.6.0
- *
- *
- * @return {object} Map object.
- */
+* Update circles's map of points and segments.
+*
+* @method Raycaster.Map#arc.updateMap
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+*/
 export function updateMap() {
     if(!this.active)
         return this;

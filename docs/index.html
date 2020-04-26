@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Phaser-raycaster Index</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.paper.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Phaser-raycaster</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="Raycaster.html">Raycaster</a></li><li><a href="Raycaster.Ray.html">Raycaster.Ray</a></li><li><a href="Raycaster.Map.html">Raycaster.Map</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+    <section class="readme-section">
+        <article><h1>Phaser Raycaster</h1>
+<p>Raycasting plugin for Phaser 3.</p>
+<p><a href="https://github.com/wiserim/phaser-raycaster/releases"><img src="https://img.shields.io/github/release/wiserim/phaser-raycaster.svg" alt="GitHub release"></a> <a href="https://www.npmjs.com/package/phaser-raycaster"><img src="https://img.shields.io/npm/v/phaser-raycaster.svg" alt="npm"></a> <a href="https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE"><img src="https://img.shields.io/github/license/wiserim/phaser-raycaster.svg" alt="GitHub"></a> <a href="https://github.com/wiserim/phaser-raycaster"><img src="https://img.shields.io/github/size/wiserim/phaser-raycaster/dist/phaser-raycaster.min.js.svg" alt="Github file size"></a></p>
+<p>Phaser Raycaster is a <a href="https://github.com/photonstorm/phaser">Phaser 3</a> plugin which provide raycasting for geometric game objects and sprites.
+It doesn't require Matter.js and can be used with arcade physics.</p>
+<p>Code examples are available on CodePen: <a href="https://codepen.io/collection/AOOQWr">LINK</a></p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>works with arcade physics,</li>
+<li>cast rays in a single direction, 360 degrees circle or in a cone,</li>
+<li>test rays on mapped game objects (containers, lines, rectangles, polygons, circles, sprites and tilemaps),</li>
+<li>provides closest intersection points between rays and tested objects,</li>
+<li>tests can be made on all mapped objects or only selected ones,</li>
+<li>static and dynamic mapping for individual objects,</li>
+<li>mapped objects intersections detection,</li>
+<li>rays can limit tests to objects below defined range.</li>
+</ul>
+<p><em><strong>NPM</strong></em></p>
+<pre class="prettyprint source"><code>npm install phaser-raycaster
+</code></pre>
+<p><em><strong>CDN</strong></em></p>
+<p><a href="https://www.jsdelivr.com/package/npm/phaser-raycaster">https://www.jsdelivr.com/package/npm/phaser-raycaster</a></p>
+<h2>Getting started</h2>
+<h3>1. Include plugin in your project:</h3>
+<pre class="prettyprint source lang-html"><code>&lt;!--CDN-->
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.jsdelivr.net/npm/phaser-raycaster@0.7.3/dist/phaser-raycaster.min.js&quot;>&lt;/script>
+</code></pre>
+<pre class="prettyprint source"><code># NPM
+npm install phaser-raycaster
+</code></pre>
+<h3>2. Enable plugin in your Game config:</h3>
+<pre class="prettyprint source lang-javascript"><code>let config = {
+    type: Phaser.Auto,
+    parent: 'game',
+    width: 800,
+    height: 600,
+    backgroundColor: &quot;black&quot;,
+    scene: [
+        Scene1
+    ],
+    plugins: {
+        scene: [
+            {
+                key: 'PhaserRaycaster',
+                plugin: PhaserRaycaster,
+                mapping: 'raycasterPlugin'
+            }
+        ]
+    }
+}
+
+new Phaser.Game(config);
+</code></pre>
+<h3>3. Create new raycaster in your scene:</h3>
+<pre class="prettyprint source lang-javascript"><code>create() {
+  this.raycaster = this.raycasterPlugin.createRaycaster(options);
+  
+  // additional code
+}
+</code></pre>
+<h3>4. Create new ray</h3>
+<pre class="prettyprint source lang-javascript"><code>create() {
+  // additional code
+  
+  this.ray = this.raycaster.createRay();
+  
+  // additional code
+}
+</code></pre>
+<h3>5. Map game objects which will be tested by rays</h3>
+<pre class="prettyprint source lang-javascript"><code>//create game object
+this.rectangle = this.add.rectangle(100, 100, 50, 50)
+  .setStrokeStyle(1, 0xff0000);
+
+//map game object
+this.raycaster.mapGameObjects(this.rectangle);
+
+//create group
+this.group = this.add.group();
+
+//map game objects actually in group
+this.raycaster.mapGameObjects(this.group.getChildren());
+
+//map tilemap layer
+this.map = this.make.tilemap();
+this.tilemap = this.map.createStaticLayer();
+
+this.raycaster.mapGameObjects(this.tilemap, false, {
+  collisionTiles: [1,2,3] //array of tiles types which can collide with ray
+});
+</code></pre>
+<h3>6. Cast ray</h3>
+<pre class="prettyprint source lang-javascript"><code>//set ray position
+this.ray.setOrigin(400, 300);
+//set ray direction (in radians)
+this.ray.setAngle(2);
+//set ray direction (in degrees)
+this.ray.setAngleDeg(90);
+//cast single ray and get closets intersection with mapped objects
+let intersection = this.ray.cast();
+
+//cast rays in all directions (toward all mapped objects vertices / points)
+let intersections = this.ray.castCircle();
+
+//set ray's cone angle (in radians)
+this.ray.setCone(1);
+//set ray's cone angle (in degrees)
+this.ray.setCone(90);
+
+//cast rays in a cone
+let intersections = this.ray.castCone();
+</code></pre></article>
+    </section>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+	<p class="text-center"><a href="https://github.com/wiserim/phaser-raycaster" target="_blank" rel="noopener noreferrer">Phaser-raycaster</a></p>
+
+
+	<span class="copyright">
+	&copy; Marcin Walczak 2020
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a>
+	
+		on 2020-04-26T20:50:09+02:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>
