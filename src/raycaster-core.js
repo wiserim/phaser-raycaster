@@ -7,7 +7,7 @@
 /**
  * @classdesc
  *
- * Raycaster class responible for creating ray objects and managing mapped objects.
+ * Raycaster class responsible for creating ray objects and managing mapped objects.
  * 
  * @namespace Raycaster
  * @class Raycaster

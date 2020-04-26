@@ -1,7 +1,7 @@
 /**
  * @classdesc
  *
- * Map class responible for mapping game objects.
+ * Map class responsible for mapping game objects.
  *
  * @namespace Raycaster.Map
  * @class Raycaster.Map

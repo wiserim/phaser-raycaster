@@ -1,7 +1,7 @@
 /**
  * @classdesc
  *
- * Ray class responible for casting ray's and testing their collisions with mapped objects.
+ * Ray class responsible for casting ray's and testing their collisions with mapped objects.
  *
  * @namespace Raycaster.Ray
  * @class Raycaster.Ray
