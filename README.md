@@ -7,6 +7,7 @@ Phaser Raycaster is a [Phaser 3](https://github.com/photonstorm/phaser) plugin w
 It doesn't require Matter.js and can be used with arcade physics.
 
 Documentation: [https://wiserim.github.io/phaser-raycaster/](https://wiserim.github.io/phaser-raycaster/)
+
 Code examples are available on CodePen: [LINK](https://codepen.io/collection/AOOQWr)
 
 **Features:**
