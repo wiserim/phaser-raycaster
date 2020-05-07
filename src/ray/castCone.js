@@ -172,5 +172,9 @@ export function castCone(options = {}) {
     }
 
     this.setAngle(originalAngle);
+    this.intersections = intersections;
+    if(this.autoSlice)
+        this.slicedIntersections = this.slice(intersections, false);
+
     return intersections;
 }

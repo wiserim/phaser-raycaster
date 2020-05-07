@@ -84,7 +84,33 @@ export function Ray(options, raycaster) {
     * @since 0.6.0
     */
     this.ignoreNotIntersectedRays = true;
+    /**
+    * If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
+    *
+    * @name Raycaster.Ray#autoSlice
+    * @type {boolean}
+    * @default true
+    * @since 0.8.0
+    */
+    this.autoSlice = true;
+    /**
+    * Array of intersections from last raycast representing field of view.
+    *
+    * @name Raycaster.Ray#intersections
+    * @type {object[]}
+    * @default []
+    * @since 0.8.0
+    */
     this.intersections = [];
+    /**
+    * Array of triangles representing slices of field of view from last raycast.
+    *
+    * @name Raycaster.Ray#slicedIntersections
+    * @type {Phaser.Geom.Triangle[]}
+    * @default []
+    * @since 0.8.0
+    */
+    this.slicedIntersections = [];
     /**
     * Reference to parent Raycaster object.
     *
@@ -94,6 +120,16 @@ export function Ray(options, raycaster) {
     * @since 0.6.0
     */
     this._raycaster = raycaster ? raycaster : false;
+
+    /**
+    * Physics body.
+    *
+    * @name Raycaster.Ray#body
+    * @type {(object|bolean)}
+    * @default false
+    * @since 0.8.0
+    */
+    this.body = false;
 
     this.config(options);
 };
@@ -111,5 +147,7 @@ Ray.prototype = {
     boundsInRange: require('./range.js').boundsInRange,
     cast: require('./cast.js').cast,
     castCircle: require('./castCircle.js').castCircle,
-    castCone: require('./castCone.js').castCone
+    castCone: require('./castCone.js').castCone,
+    slice: require('./slice.js').slice,
+    enableArcadePhysics: require('./enableArcadePhysics.js').enableArcadePhysics
 };
