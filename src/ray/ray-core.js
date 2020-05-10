@@ -89,10 +89,10 @@ export function Ray(options, raycaster) {
     *
     * @name Raycaster.Ray#autoSlice
     * @type {boolean}
-    * @default true
+    * @default false
     * @since 0.8.0
     */
-    this.autoSlice = true;
+    this.autoSlice = false;
     /**
     * Array of intersections from last raycast representing field of view.
     *
