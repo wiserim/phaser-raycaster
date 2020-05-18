@@ -20,6 +20,9 @@ export function slice(intersections = this.intersections, closed = true) {
             return [];
     }
 
+    if(intersections.length === 0)
+        return [];
+
     let slices = [];
     for(let i = 0, iLength = intersections.length - 1; i < iLength; i++) {
         slices.push(new Phaser.Geom.Triangle(this.origin.x, this.origin.y, intersections[i].x, intersections[i].y, intersections[i+1].x, intersections[i+1].y));
