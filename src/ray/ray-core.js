@@ -13,6 +13,15 @@
  */
 export function Ray(options, raycaster) {
     /**
+    * Reference to parent Raycaster object.
+    *
+    * @name Raycaster.Ray#_raycaster
+    * @type {Raycaster}
+    * @private
+    * @since 0.6.0
+    */
+    this._raycaster = raycaster ? raycaster : false;
+    /**
     * Ray's source position.
     *
     * @name Raycaster.Ray#origin
@@ -51,7 +60,7 @@ export function Ray(options, raycaster) {
     * Ray's maximum range
     *
     * @name Raycaster.Ray#range
-    * @type {Phaser.Geom.Point}
+    * @type {integer}
     * @default Phaser.Math.MAX_SAFE_INTEGER
     * @since 0.6.0
     */
@@ -61,7 +70,7 @@ export function Ray(options, raycaster) {
     * Ray tests all objects when set to 0.
     *
     * @name Raycaster.Ray#detectionRange
-    * @type {Phaser.Geom.Point}
+    * @type {integer}
     * @default
     * @since 0.6.0
     */
@@ -75,6 +84,15 @@ export function Ray(options, raycaster) {
     * @since 0.6.0
     */
     this.detectionRangeCircle = new Phaser.Geom.Circle();
+    /**
+    * Ray's maximum collision range of ray's field of view. Radius of {@link Raycaster.Ray#collisionRangeCircle Ray.body}.
+    *
+    * @name Raycaster.Ray#collisionRange
+    * @type {integer}
+    * @default Phaser.Math.MAX_SAFE_INTEGER
+    * @since 0.8.0
+    */
+    this.collisionRange = Phaser.Math.MAX_SAFE_INTEGER;
     /**
     * If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
     *
@@ -111,18 +129,9 @@ export function Ray(options, raycaster) {
     * @since 0.8.0
     */
     this.slicedIntersections = [];
-    /**
-    * Reference to parent Raycaster object.
-    *
-    * @name Raycaster.Ray#_raycaster
-    * @type {Raycaster}
-    * @private
-    * @since 0.6.0
-    */
-    this._raycaster = raycaster ? raycaster : false;
 
     /**
-    * Physics body.
+    * Physics body for testing field of view collisions.
     *
     * @name Raycaster.Ray#body
     * @type {(object|bolean)}

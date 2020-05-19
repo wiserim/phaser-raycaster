@@ -11,6 +11,11 @@
  */
 export function enableArcadePhysics() {
     
-    
+    if(this.body)
+        return this;
+
+    this.body = new Phaser.Physics.Arcade.Body(this._raycaster.scene.physics.world, this.origin);
+    this.body.setCircle(this.collisionRange);
+    this.body.halfWidth = this.collisionRange;
     return this;
 }
