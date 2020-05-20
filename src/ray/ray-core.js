@@ -59,12 +59,12 @@ export function Ray(options, raycaster) {
     /**
     * Ray's maximum range
     *
-    * @name Raycaster.Ray#range
+    * @name Raycaster.Ray#rayRange
     * @type {integer}
     * @default Phaser.Math.MAX_SAFE_INTEGER
     * @since 0.6.0
     */
-    this.range = Phaser.Math.MAX_SAFE_INTEGER;
+    this.rayRange = Phaser.Math.MAX_SAFE_INTEGER;
     /**
     * Ray's maximum detection range. Objects outside detection range won't be tested.
     * Ray tests all objects when set to 0.
@@ -138,7 +138,8 @@ export function Ray(options, raycaster) {
     * @default false
     * @since 0.8.0
     */
-    this.body = false;
+    //this.body = false;
+    //this.arcadePhysicsCircle;
 
     this.config(options);
 };
@@ -147,7 +148,7 @@ Ray.prototype = {
     config: require('./config.js').config,
     setRay: require('./ray.js').setRay,    
     setOrigin: require('./origin.js').setOrigin,
-    setRange: require('./range.js').setRange,
+    setRayRange: require('./range.js').setRayRange,
     setAngle: require('./angle.js').setAngle,
     setAngleDeg: require('./angle.js').setAngleDeg,
     setCone: require('./cone.js').setCone,
@@ -158,5 +159,7 @@ Ray.prototype = {
     castCircle: require('./castCircle.js').castCircle,
     castCone: require('./castCone.js').castCone,
     slice: require('./slice.js').slice,
-    enableArcadePhysics: require('./enableArcadePhysics.js').enableArcadePhysics
+    enableArcadePhysics: require('./enableArcadePhysics.js').enableArcadePhysics,
+    overlap: require('./overlap.js').overlap,
+    testOverlap: require('./overlap.js').testOverlap
 };

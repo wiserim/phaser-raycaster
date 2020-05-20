@@ -11,11 +11,15 @@
  */
 export function enableArcadePhysics() {
     
-    if(this.body)
+    if(this.body !== undefined)
         return this;
 
-    this.body = new Phaser.Physics.Arcade.Body(this._raycaster.scene.physics.world, this.origin);
+    this.arcadePhysicsCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y);
+    this.arcadePhysicsCircle.setOrigin(0.5, 0.5);
+    this._raycaster.scene.physics.add.existing(this.arcadePhysicsCircle);
+
+    this.body = this.arcadePhysicsCircle.body;
     this.body.setCircle(this.collisionRange);
-    this.body.halfWidth = this.collisionRange;
+
     return this;
 }

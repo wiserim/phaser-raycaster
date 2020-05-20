@@ -42,9 +42,9 @@ export function config(options) {
     if(options.coneDeg !== undefined)
         this.cone = Phaser.Math.DegToRad(options.coneDeg);
 
-    //range (0 = max)
-    if(options.range !== undefined)
-        this.range = options.range;
+    //ray range (0 = max)
+    if(options.rayRange !== undefined)
+        this.rayRange = options.rayRange;
 
     //collision range (0 = max)
     if(options.collisionRange !== undefined)
@@ -62,7 +62,7 @@ export function config(options) {
     if(options.autoSlice !== undefined)
         this.autoSlice = (options.autoSlice == true)
     
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
 
     return this;

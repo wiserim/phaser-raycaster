@@ -1631,7 +1631,7 @@ __webpack_require__.r(__webpack_exports__);
 function setAngle() {
   var angle = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
   this.angle = Phaser.Math.Angle.Normalize(angle);
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   return this;
 }
 /**
@@ -1650,7 +1650,7 @@ function setAngle() {
 function setAngleDeg() {
   var angle = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
   this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(angle));
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   return this;
 }
 
@@ -1689,7 +1689,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function cast() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var closestIntersection;
-  var closestDistance = this.range; //if bounding box is defined check bounding box intersection
+  var closestDistance = this.rayRange; //if bounding box is defined check bounding box intersection
 
   if (this._raycaster && this._raycaster.boundingBox) {
     var _intersections = [];
@@ -1718,7 +1718,7 @@ function cast() {
         var _distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, options.target.x, options.target.y); //if target is within ray range
 
 
-        if (this.range > _distance) {
+        if (this.rayRange > _distance) {
           closestDistance = _distance;
           closestIntersection = options.target;
         }
@@ -2357,9 +2357,9 @@ function config(options) {
 
   if (options.cone !== undefined) this.cone = options.cone; //cone angle deg
 
-  if (options.coneDeg !== undefined) this.cone = Phaser.Math.DegToRad(options.coneDeg); //range (0 = max)
+  if (options.coneDeg !== undefined) this.cone = Phaser.Math.DegToRad(options.coneDeg); //ray range (0 = max)
 
-  if (options.range !== undefined) this.range = options.range; //collision range (0 = max)
+  if (options.rayRange !== undefined) this.rayRange = options.rayRange; //collision range (0 = max)
 
   if (options.collisionRange !== undefined) this.collisionRange = options.collisionRange; //detection range (0 = max)
 
@@ -2368,7 +2368,7 @@ function config(options) {
   if (options.ignoreNotIntersectedRays !== undefined) this.ignoreNotIntersectedRays = options.ignoreNotIntersectedRays == true; //auto slice
 
   if (options.autoSlice !== undefined) this.autoSlice = options.autoSlice == true;
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
   return this;
 }
@@ -2397,10 +2397,14 @@ __webpack_require__.r(__webpack_exports__);
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 function enableArcadePhysics() {
-  if (this.body) return this;
-  this.body = new Phaser.Physics.Arcade.Body(this._raycaster.scene.physics.world, this.origin);
+  if (this.body !== undefined) return this;
+  this.arcadePhysicsCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y);
+  this.arcadePhysicsCircle.setOrigin(0.5, 0.5);
+
+  this._raycaster.scene.physics.add.existing(this.arcadePhysicsCircle);
+
+  this.body = this.arcadePhysicsCircle.body;
   this.body.setCircle(this.collisionRange);
-  this.body.halfWidth = this.collisionRange;
   return this;
 }
 
@@ -2431,9 +2435,159 @@ __webpack_require__.r(__webpack_exports__);
  */
 function setOrigin(x, y) {
   this.origin.setTo(x, y);
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
+
+  if (this.body !== undefined) {
+    this.arcadePhysicsCircle.x = x;
+    this.arcadePhysicsCircle.x = y;
+  }
+
   return this;
+}
+
+/***/ }),
+
+/***/ "./src/ray/overlap.js":
+/*!****************************!*\
+  !*** ./src/ray/overlap.js ***!
+  \****************************/
+/*! exports provided: overlap, testOverlap */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "overlap", function() { return overlap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testOverlap", function() { return testOverlap; });
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+/**
+ * Get game objects overlaping field of view.
+ *
+ * @method Raycaster.Ray#overlap
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.8.0
+ *
+ * @param {object|objects[]} [objects] - Game object / array off game objects to test.
+ *
+ * @return {objects[]} Array of game objects that overlaps with field of view.
+ */
+function overlap(objects) {
+  var targets = [];
+  var bodies = false;
+  var overlapCircle = new Phaser.Geom.Circle(this.origin.x, this.origin.y, this.collisionRange); //get bodies in range
+
+  if (objects === undefined) {
+    objects = this._raycaster.scene.physics.overlapCirc(this.origin.x, this.origin.y, this.collisionRange, true, true);
+    bodies = true;
+  } //get object's body
+  else if (!Array.isArray(objects)) {
+      objects = [objects];
+    } //if objects are bodies
+
+
+  if (bodies) {
+    var _iterator = _createForOfIteratorHelper(objects),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var body = _step.value;
+        if (body === this.body) continue;
+        var hitbox = void 0; //get physics body hitbox
+
+        if (body.isCircle) {
+          hitbox = new Phaser.Geom.Circle(body.position.x + body.halfWidth, body.position.y + body.halfWidth, body.halfWidth);
+        } else {
+          hitbox = new Phaser.Geom.Rectangle(body.x, body.y, body.width, body.height);
+        }
+
+        if (this.testOverlap(hitbox)) targets.push(body.gameObject);
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+  } //if objects are game objects
+  else {
+      var _iterator2 = _createForOfIteratorHelper(objects),
+          _step2;
+
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var object = _step2.value;
+
+          var _hitbox = void 0; //get physics body hitbox
+
+
+          if (object.body.isCircle) {
+            _hitbox = new Phaser.Geom.Circle(object.body.position.x + object.body.halfWidth, object.body.position.y + object.body.halfWidth, object.body.halfWidth);
+            if (!Phaser.Geom.Intersects.CircleToCircle(overlapCircle, _hitbox)) continue;
+          } else {
+            _hitbox = new Phaser.Geom.Rectangle(object.body.x, object.body.y, object.body.width, object.body.height);
+            if (!Phaser.Geom.Intersects.CircleToRectangle(overlapCircle, _hitbox)) continue;
+          }
+
+          if (this.testOverlap(_hitbox)) targets.push(object);
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+    }
+
+  return targets;
+}
+/**
+ * Test if hitbox overlaps with field of view. Method used in {@link Raycaster.Ray#overlap Raycaster.Ray#overlap}.
+ *
+ * @method Raycaster.Ray#testOverlap
+ * @memberof Raycaster.Ray
+ * @instance
+ * @private
+ * @since 0.8.0
+ *
+ * @param {object} hitbox - Game object's hitbox generated inside {@link Raycaster.Ray#overlap Raycaster.Ray#overlap}.
+ *
+ * @return {boolean} True if hitbox overlaps with {@link Raycaster.Ray Raycaster.Ray} field of view.
+ */
+
+function testOverlap(hitbox) {
+  var overlap = false; //iterate through field of view slices to check collisions with target
+
+  var _iterator3 = _createForOfIteratorHelper(this.slicedIntersections),
+      _step3;
+
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var slice = _step3.value;
+
+      //if target object is a circle
+      if (hitbox.type == 0) {
+        overlap = Phaser.Geom.Intersects.TriangleToCircle(slice, hitbox);
+      } //if target is a rectangle
+      else {
+          overlap = Phaser.Geom.Intersects.RectangleToTriangle(hitbox, slice);
+        }
+
+      if (overlap) {
+        return true;
+      }
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+
+  return false;
 }
 
 /***/ }),
@@ -2442,30 +2596,30 @@ function setOrigin(x, y) {
 /*!**************************!*\
   !*** ./src/ray/range.js ***!
   \**************************/
-/*! exports provided: setRange, setDetectionRange, boundsInRange */
+/*! exports provided: setRayRange, setDetectionRange, boundsInRange */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRange", function() { return setRange; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRayRange", function() { return setRayRange; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDetectionRange", function() { return setDetectionRange; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "boundsInRange", function() { return boundsInRange; });
 /**
  * Set ray's range.
  *
- * @method Raycaster.Ray#setRange
+ * @method Raycaster.Ray#setRayRange
  * @memberof Raycaster.Ray
  * @instance
  * @since 0.6.0
  *
- * @param {integer} [range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
+ * @param {integer} [rayRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
-function setRange() {
-  var range = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Phaser.Math.MAX_SAFE_INTEGER;
-  this.range = range;
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+function setRayRange() {
+  var rayRange = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Phaser.Math.MAX_SAFE_INTEGER;
+  this.rayRange = rayRange;
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   return this;
 }
 /**
@@ -2588,13 +2742,13 @@ function Ray(options, raycaster) {
   /**
   * Ray's maximum range
   *
-  * @name Raycaster.Ray#range
+  * @name Raycaster.Ray#rayRange
   * @type {integer}
   * @default Phaser.Math.MAX_SAFE_INTEGER
   * @since 0.6.0
   */
 
-  this.range = Phaser.Math.MAX_SAFE_INTEGER;
+  this.rayRange = Phaser.Math.MAX_SAFE_INTEGER;
   /**
   * Ray's maximum detection range. Objects outside detection range won't be tested.
   * Ray tests all objects when set to 0.
@@ -2674,8 +2828,9 @@ function Ray(options, raycaster) {
   * @default false
   * @since 0.8.0
   */
+  //this.body = false;
+  //this.arcadePhysicsCircle;
 
-  this.body = false;
   this.config(options);
 }
 ;
@@ -2683,7 +2838,7 @@ Ray.prototype = {
   config: __webpack_require__(/*! ./config.js */ "./src/ray/config.js").config,
   setRay: __webpack_require__(/*! ./ray.js */ "./src/ray/ray.js").setRay,
   setOrigin: __webpack_require__(/*! ./origin.js */ "./src/ray/origin.js").setOrigin,
-  setRange: __webpack_require__(/*! ./range.js */ "./src/ray/range.js").setRange,
+  setRayRange: __webpack_require__(/*! ./range.js */ "./src/ray/range.js").setRayRange,
   setAngle: __webpack_require__(/*! ./angle.js */ "./src/ray/angle.js").setAngle,
   setAngleDeg: __webpack_require__(/*! ./angle.js */ "./src/ray/angle.js").setAngleDeg,
   setCone: __webpack_require__(/*! ./cone.js */ "./src/ray/cone.js").setCone,
@@ -2694,7 +2849,9 @@ Ray.prototype = {
   castCircle: __webpack_require__(/*! ./castCircle.js */ "./src/ray/castCircle.js").castCircle,
   castCone: __webpack_require__(/*! ./castCone.js */ "./src/ray/castCone.js").castCone,
   slice: __webpack_require__(/*! ./slice.js */ "./src/ray/slice.js").slice,
-  enableArcadePhysics: __webpack_require__(/*! ./enableArcadePhysics.js */ "./src/ray/enableArcadePhysics.js").enableArcadePhysics
+  enableArcadePhysics: __webpack_require__(/*! ./enableArcadePhysics.js */ "./src/ray/enableArcadePhysics.js").enableArcadePhysics,
+  overlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").overlap,
+  testOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").testOverlap
 };
 
 /***/ }),
@@ -2725,11 +2882,11 @@ __webpack_require__.r(__webpack_exports__);
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 function setRay(x, y, angle) {
-  var range = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Phaser.Math.MAX_SAFE_INTEGER;
+  var rayRange = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Phaser.Math.MAX_SAFE_INTEGER;
   this.origin.setTo(x, y);
   this.angle = Phaser.Math.Angle.Normalize(angle);
-  this.range = range;
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+  this.rayRange = rayRange;
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
   return this;
 }

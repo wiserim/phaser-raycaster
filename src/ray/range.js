@@ -1,18 +1,18 @@
 /**
  * Set ray's range.
  *
- * @method Raycaster.Ray#setRange
+ * @method Raycaster.Ray#setRayRange
  * @memberof Raycaster.Ray
  * @instance
  * @since 0.6.0
  *
- * @param {integer} [range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
+ * @param {integer} [rayRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
-export function setRange(range = Phaser.Math.MAX_SAFE_INTEGER) {
-    this.range = range;
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+export function setRayRange(rayRange = Phaser.Math.MAX_SAFE_INTEGER) {
+    this.rayRange = rayRange;
+    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     return this;
 }
 
