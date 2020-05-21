@@ -36,6 +36,28 @@ export function setDetectionRange(detectionRange = 0) {
 }
 
 /**
+ * Set ray's field of view maximum collision range. Objects outside collision range won't be tested by {@link Raycaster.Ray#overlap Raycaster.Ray.overlap} method.
+ * Determines ray's physics body radius.
+ *
+ * @method Raycaster.Ray#setCollisionRange
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.8.0
+ *
+ * @param {integer} [collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's collision range and physics body radius.
+ *
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+export function setCollisionRange(collisionRange = Phaser.Math.MAX_SAFE_INTEGER) {
+    this.collisionRange = collisionRange;
+    if(this.body) {
+        this.arcadePhysicsCircle.setRadius(this.collisionRange);
+        this.body.setCircle(this.collisionRange);
+    }
+    return this;
+}
+
+/**
  * Test if object's bounding box is in ray's detection range.
  *
  * @method Raycaster.Ray#boundsInRange

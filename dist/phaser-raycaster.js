@@ -2386,25 +2386,24 @@ function config(options) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "enableArcadePhysics", function() { return enableArcadePhysics; });
 /**
- * Add to ray arcade physics body. Body will be circle with radius equal to {@link Raycaster.Ray#range Ray.range}.
+ * Add to ray arcade physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}.
  *
  * @method Raycaster.Ray#enableArcadePhysics
  * @memberof Raycaster.Ray
  * @instance
  * @since 0.8.0
  *
- *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 function enableArcadePhysics() {
   if (this.body !== undefined) return this;
-  this.arcadePhysicsCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y);
-  this.arcadePhysicsCircle.setOrigin(0.5, 0.5);
+  this.arcadePhysicsCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y, this.collisionRange);
+  this.arcadePhysicsCircle._ray = this;
 
   this._raycaster.scene.physics.add.existing(this.arcadePhysicsCircle);
 
   this.body = this.arcadePhysicsCircle.body;
-  this.body.setCircle(this.collisionRange);
+  this.body.setCircle(this.collisionRange).setAllowGravity(false).setImmovable(true);
   return this;
 }
 
@@ -2440,7 +2439,7 @@ function setOrigin(x, y) {
 
   if (this.body !== undefined) {
     this.arcadePhysicsCircle.x = x;
-    this.arcadePhysicsCircle.x = y;
+    this.arcadePhysicsCircle.y = y;
   }
 
   return this;
@@ -2452,12 +2451,13 @@ function setOrigin(x, y) {
 /*!****************************!*\
   !*** ./src/ray/overlap.js ***!
   \****************************/
-/*! exports provided: overlap, testOverlap */
+/*! exports provided: overlap, processOverlap, testOverlap */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "overlap", function() { return overlap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "processOverlap", function() { return processOverlap; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testOverlap", function() { return testOverlap; });
 function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -2473,9 +2473,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @instance
  * @since 0.8.0
  *
- * @param {object|objects[]} [objects] - Game object / array off game objects to test.
+ * @param {object|object[]} [objects] - Game object / array off game objects to test.
  *
- * @return {objects[]} Array of game objects that overlaps with field of view.
+ * @return {object[]} Array of game objects that overlaps with field of view.
  */
 function overlap(objects) {
   var targets = [];
@@ -2546,7 +2546,26 @@ function overlap(objects) {
   return targets;
 }
 /**
- * Test if hitbox overlaps with field of view. Method used in {@link Raycaster.Ray#overlap Raycaster.Ray#overlap}.
+ * Process callback for arcade physics collider / overlap.
+ *
+ * @method Raycaster.Ray#processOverlap
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.8.0
+ *
+ * @param {object} object1 - Game object passed by collider / overlap.
+ * @param {object} object2 - Game object passed by collider / overlap.
+ *
+ * @return {boolean} Return true if game object is overlapping ray's field of view.
+ */
+
+function processOverlap(object1, object2) {
+  var target;
+  if (object1._ray === this) target = object2;else if (object2._ray === this) target = obj1;else return false;
+  return this.overlap(target).length > 0;
+}
+/**
+ * Test if hitbox overlaps with field of view. Method used in {@link Raycaster.Ray#overlap Ray.overlap}.
  *
  * @method Raycaster.Ray#testOverlap
  * @memberof Raycaster.Ray
@@ -2554,7 +2573,7 @@ function overlap(objects) {
  * @private
  * @since 0.8.0
  *
- * @param {object} hitbox - Game object's hitbox generated inside {@link Raycaster.Ray#overlap Raycaster.Ray#overlap}.
+ * @param {object} hitbox - Game object's hitbox generated inside {@link Raycaster.Ray#overlap Ray.overlap}.
  *
  * @return {boolean} True if hitbox overlaps with {@link Raycaster.Ray Raycaster.Ray} field of view.
  */
@@ -2569,10 +2588,10 @@ function testOverlap(hitbox) {
     for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
       var slice = _step3.value;
 
-      //if target object is a circle
+      //if hitbox is a circle
       if (hitbox.type == 0) {
         overlap = Phaser.Geom.Intersects.TriangleToCircle(slice, hitbox);
-      } //if target is a rectangle
+      } //if hitbox is a rectangle
       else {
           overlap = Phaser.Geom.Intersects.RectangleToTriangle(hitbox, slice);
         }
@@ -2596,13 +2615,14 @@ function testOverlap(hitbox) {
 /*!**************************!*\
   !*** ./src/ray/range.js ***!
   \**************************/
-/*! exports provided: setRayRange, setDetectionRange, boundsInRange */
+/*! exports provided: setRayRange, setDetectionRange, setCollisionRange, boundsInRange */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRayRange", function() { return setRayRange; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDetectionRange", function() { return setDetectionRange; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCollisionRange", function() { return setCollisionRange; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "boundsInRange", function() { return boundsInRange; });
 /**
  * Set ray's range.
@@ -2640,6 +2660,31 @@ function setDetectionRange() {
   var detectionRange = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
   this.detectionRange = detectionRange;
   this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
+  return this;
+}
+/**
+ * Set ray's field of view maximum collision range. Objects outside collision range won't be tested by {@link Raycaster.Ray#overlap Raycaster.Ray.overlap} method.
+ * Determines ray's physics body radius.
+ *
+ * @method Raycaster.Ray#setCollisionRange
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.8.0
+ *
+ * @param {integer} [collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's collision range and physics body radius.
+ *
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+
+function setCollisionRange() {
+  var collisionRange = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Phaser.Math.MAX_SAFE_INTEGER;
+  this.collisionRange = collisionRange;
+
+  if (this.body) {
+    this.arcadePhysicsCircle.setRadius(this.collisionRange);
+    this.body.setCircle(this.collisionRange);
+  }
+
   return this;
 }
 /**
@@ -2849,8 +2894,10 @@ Ray.prototype = {
   castCircle: __webpack_require__(/*! ./castCircle.js */ "./src/ray/castCircle.js").castCircle,
   castCone: __webpack_require__(/*! ./castCone.js */ "./src/ray/castCone.js").castCone,
   slice: __webpack_require__(/*! ./slice.js */ "./src/ray/slice.js").slice,
+  setCollisionRange: __webpack_require__(/*! ./range.js */ "./src/ray/range.js").setCollisionRange,
   enableArcadePhysics: __webpack_require__(/*! ./enableArcadePhysics.js */ "./src/ray/enableArcadePhysics.js").enableArcadePhysics,
   overlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").overlap,
+  processOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").processOverlap,
   testOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").testOverlap
 };
 
@@ -2986,7 +3033,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.8.0-dev';
+  this.version = '0.8.0';
   /**
   * Raycaster's scene
   *

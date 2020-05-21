@@ -6,9 +6,9 @@
  * @instance
  * @since 0.8.0
  *
- * @param {object|objects[]} [objects] - Game object / array off game objects to test.
+ * @param {object|object[]} [objects] - Game object / array off game objects to test.
  *
- * @return {objects[]} Array of game objects that overlaps with field of view.
+ * @return {object[]} Array of game objects that overlaps with field of view.
  */
 export function overlap(objects) {
     let targets = [];
@@ -68,7 +68,33 @@ export function overlap(objects) {
 }
 
 /**
- * Test if hitbox overlaps with field of view. Method used in {@link Raycaster.Ray#overlap Raycaster.Ray#overlap}.
+ * Process callback for arcade physics collider / overlap.
+ *
+ * @method Raycaster.Ray#processOverlap
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.8.0
+ *
+ * @param {object} object1 - Game object passed by collider / overlap.
+ * @param {object} object2 - Game object passed by collider / overlap.
+ *
+ * @return {boolean} Return true if game object is overlapping ray's field of view.
+ */
+export function processOverlap(object1, object2) {
+    let target;
+
+    if(object1._ray === this)
+        target = object2;
+    else if(object2._ray === this)
+        target = obj1;
+    else
+        return false;
+
+    return (this.overlap(target).length > 0);
+}   
+
+/**
+ * Test if hitbox overlaps with field of view. Method used in {@link Raycaster.Ray#overlap Ray.overlap}.
  *
  * @method Raycaster.Ray#testOverlap
  * @memberof Raycaster.Ray
@@ -76,7 +102,7 @@ export function overlap(objects) {
  * @private
  * @since 0.8.0
  *
- * @param {object} hitbox - Game object's hitbox generated inside {@link Raycaster.Ray#overlap Raycaster.Ray#overlap}.
+ * @param {object} hitbox - Game object's hitbox generated inside {@link Raycaster.Ray#overlap Ray.overlap}.
  *
  * @return {boolean} True if hitbox overlaps with {@link Raycaster.Ray Raycaster.Ray} field of view.
  */
@@ -85,11 +111,11 @@ export function testOverlap(hitbox) {
 
     //iterate through field of view slices to check collisions with target
     for(let slice of this.slicedIntersections) {
-        //if target object is a circle
+        //if hitbox is a circle
         if(hitbox.type == 0) {
             overlap = Phaser.Geom.Intersects.TriangleToCircle(slice, hitbox);
         }
-        //if target is a rectangle
+        //if hitbox is a rectangle
         else {
             overlap = Phaser.Geom.Intersects.RectangleToTriangle(hitbox, slice);
         }

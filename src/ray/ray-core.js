@@ -159,7 +159,9 @@ Ray.prototype = {
     castCircle: require('./castCircle.js').castCircle,
     castCone: require('./castCone.js').castCone,
     slice: require('./slice.js').slice,
+    setCollisionRange: require('./range.js').setCollisionRange,
     enableArcadePhysics: require('./enableArcadePhysics.js').enableArcadePhysics,
     overlap: require('./overlap.js').overlap,
+    processOverlap: require('./overlap.js').processOverlap,
     testOverlap: require('./overlap.js').testOverlap
 };

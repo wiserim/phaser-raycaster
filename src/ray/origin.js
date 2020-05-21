@@ -18,7 +18,7 @@ export function setOrigin(x, y) {
 
     if(this.body !== undefined) {
         this.arcadePhysicsCircle.x = x;
-        this.arcadePhysicsCircle.x = y;
+        this.arcadePhysicsCircle.y = y;
     }
 
     return this;
