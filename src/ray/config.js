@@ -13,8 +13,10 @@
  * @param {float} [options.cone = 0] - Ray's cone angle in radians.
  * @param {float} [options.coneDeg = 0] - Ray's cone angle in degrees.
  * @param {integer} [options.range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
+ * @param {integer} [options.collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's maximum collision range of ray's field of view.
  * @param {integer} [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
  * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
+ * @param {boolean} [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
@@ -40,18 +42,27 @@ export function config(options) {
     if(options.coneDeg !== undefined)
         this.cone = Phaser.Math.DegToRad(options.coneDeg);
 
-    //range (0 = max)
-    if(options.range !== undefined)
-        this.range = options.range;
+    //ray range (0 = max)
+    if(options.rayRange !== undefined)
+        this.rayRange = options.rayRange;
+
+    //collision range (0 = max)
+    if(options.collisionRange !== undefined)
+        this.collisionRange = options.collisionRange;
 
     //detection range (0 = max)
     if(options.detectionRange !== undefined)
         this.detectionRange = options.detectionRange;
 
+    //ignore not intersected rays
     if(options.ignoreNotIntersectedRays !== undefined)
         this.ignoreNotIntersectedRays = (options.ignoreNotIntersectedRays == true)
+
+    //auto slice
+    if(options.autoSlice !== undefined)
+        this.autoSlice = (options.autoSlice == true)
     
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
 
     return this;

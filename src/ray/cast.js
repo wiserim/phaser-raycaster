@@ -14,7 +14,7 @@
  */
 export function cast(options = {}) {
     let closestIntersection;
-    let closestDistance = this.range;
+    let closestDistance = this.rayRange;
     //if bounding box is defined check bounding box intersection
     if(this._raycaster && this._raycaster.boundingBox) {
         let intersections = [];
@@ -34,7 +34,7 @@ export function cast(options = {}) {
         else if(options.target){
             let distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, options.target.x, options.target.y);
             //if target is within ray range
-            if(this.range > distance) {
+            if(this.rayRange > distance) {
                 closestDistance = distance;
                 closestIntersection = options.target;
             }

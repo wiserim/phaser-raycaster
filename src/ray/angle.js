@@ -12,7 +12,7 @@
  */
 export function setAngle(angle = 0) {
     this.angle = Phaser.Math.Angle.Normalize(angle);
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     return this;
 }
 
@@ -30,6 +30,6 @@ export function setAngle(angle = 0) {
  */
 export function setAngleDeg(angle = 0) {
     this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(angle));
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     return this;
 }

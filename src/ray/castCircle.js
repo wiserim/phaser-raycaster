@@ -124,5 +124,9 @@ export function castCircle(options = {}) {
     }
 
     this.setAngle(originalAngle);
+    this.intersections = intersections;
+    if(this.autoSlice)
+        this.slicedIntersections = this.slice();
+
     return intersections;
 }

@@ -13,12 +13,12 @@
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
-export function setRay(x, y, angle, range = Phaser.Math.MAX_SAFE_INTEGER) {
+export function setRay(x, y, angle, rayRange = Phaser.Math.MAX_SAFE_INTEGER) {
     this.origin.setTo(x, y);
     this.angle = Phaser.Math.Angle.Normalize(angle);
-    this.range = range;
+    this.rayRange = rayRange;
 
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
     return this;
 }

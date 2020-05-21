@@ -13,6 +13,15 @@
  */
 export function Ray(options, raycaster) {
     /**
+    * Reference to parent Raycaster object.
+    *
+    * @name Raycaster.Ray#_raycaster
+    * @type {Raycaster}
+    * @private
+    * @since 0.6.0
+    */
+    this._raycaster = raycaster ? raycaster : false;
+    /**
     * Ray's source position.
     *
     * @name Raycaster.Ray#origin
@@ -50,18 +59,18 @@ export function Ray(options, raycaster) {
     /**
     * Ray's maximum range
     *
-    * @name Raycaster.Ray#range
-    * @type {Phaser.Geom.Point}
+    * @name Raycaster.Ray#rayRange
+    * @type {integer}
     * @default Phaser.Math.MAX_SAFE_INTEGER
     * @since 0.6.0
     */
-    this.range = Phaser.Math.MAX_SAFE_INTEGER;
+    this.rayRange = Phaser.Math.MAX_SAFE_INTEGER;
     /**
     * Ray's maximum detection range. Objects outside detection range won't be tested.
     * Ray tests all objects when set to 0.
     *
     * @name Raycaster.Ray#detectionRange
-    * @type {Phaser.Geom.Point}
+    * @type {integer}
     * @default
     * @since 0.6.0
     */
@@ -76,6 +85,15 @@ export function Ray(options, raycaster) {
     */
     this.detectionRangeCircle = new Phaser.Geom.Circle();
     /**
+    * Ray's maximum collision range of ray's field of view. Radius of {@link Raycaster.Ray#collisionRangeCircle Ray.body}.
+    *
+    * @name Raycaster.Ray#collisionRange
+    * @type {integer}
+    * @default Phaser.Math.MAX_SAFE_INTEGER
+    * @since 0.8.0
+    */
+    this.collisionRange = Phaser.Math.MAX_SAFE_INTEGER;
+    /**
     * If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
     *
     * @name Raycaster.Ray#ignoreNotIntersectedRays
@@ -84,16 +102,44 @@ export function Ray(options, raycaster) {
     * @since 0.6.0
     */
     this.ignoreNotIntersectedRays = true;
+    /**
+    * If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
+    *
+    * @name Raycaster.Ray#autoSlice
+    * @type {boolean}
+    * @default false
+    * @since 0.8.0
+    */
+    this.autoSlice = false;
+    /**
+    * Array of intersections from last raycast representing field of view.
+    *
+    * @name Raycaster.Ray#intersections
+    * @type {object[]}
+    * @default []
+    * @since 0.8.0
+    */
     this.intersections = [];
     /**
-    * Reference to parent Raycaster object.
+    * Array of triangles representing slices of field of view from last raycast.
     *
-    * @name Raycaster.Ray#_raycaster
-    * @type {Raycaster}
-    * @private
-    * @since 0.6.0
+    * @name Raycaster.Ray#slicedIntersections
+    * @type {Phaser.Geom.Triangle[]}
+    * @default []
+    * @since 0.8.0
     */
-    this._raycaster = raycaster ? raycaster : false;
+    this.slicedIntersections = [];
+
+    /**
+    * Physics body for testing field of view collisions.
+    *
+    * @name Raycaster.Ray#body
+    * @type {(object|bolean)}
+    * @default false
+    * @since 0.8.0
+    */
+    //this.body = false;
+    //this.arcadePhysicsCircle;
 
     this.config(options);
 };
@@ -102,7 +148,7 @@ Ray.prototype = {
     config: require('./config.js').config,
     setRay: require('./ray.js').setRay,    
     setOrigin: require('./origin.js').setOrigin,
-    setRange: require('./range.js').setRange,
+    setRayRange: require('./range.js').setRayRange,
     setAngle: require('./angle.js').setAngle,
     setAngleDeg: require('./angle.js').setAngleDeg,
     setCone: require('./cone.js').setCone,
@@ -111,5 +157,11 @@ Ray.prototype = {
     boundsInRange: require('./range.js').boundsInRange,
     cast: require('./cast.js').cast,
     castCircle: require('./castCircle.js').castCircle,
-    castCone: require('./castCone.js').castCone
+    castCone: require('./castCone.js').castCone,
+    slice: require('./slice.js').slice,
+    setCollisionRange: require('./range.js').setCollisionRange,
+    enableArcadePhysics: require('./enableArcadePhysics.js').enableArcadePhysics,
+    overlap: require('./overlap.js').overlap,
+    processOverlap: require('./overlap.js').processOverlap,
+    testOverlap: require('./overlap.js').testOverlap
 };

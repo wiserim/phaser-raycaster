@@ -206,19 +206,21 @@ var container = __webpack_require__(/*! ./map-container-methods.js */ "./src/map
 
 var tilemap = __webpack_require__(/*! ./map-tilemap-methods.js */ "./src/map/map-tilemap-methods.js");
 /**
- * Configure map on creation.
+ * Configure map.
  *
- * @function Map.config
+ * @method Raycaster.Map#config
+ * @memberof Raycaster.Map
+ * @instance
  * @since 0.6.0
  *
- * @param {object} [options] - Ray's congfiguration options. May include:
- * - {object} object - Mapped game object
- * - {string} [type] - Map type. If not defined, will be determined from object
- * - {boolean} [dynamic] = false - If set true, map will be dynamic (updated on scene update event).
- * - {integer} [segmentCount] = 0 - Circle map's segment count. If set to 0, map won't be generating segments and relay only on generated tangent point to actually testing ray.
- * - {boolean} [active] = true - If set true, map will be active (will provide points, segments and will be updated).
- *
- * @return {object} Map object.
+ * @param {object} [options] - Map's congfiguration options. May include:
+ * @param {object} options.object - Game object to map
+ * @param {string} [options.type] - Map type. If not defined, it will be determined based on object.
+ * @param {boolean} [options.dynamic = false] - If set true, map will be dynamic (updated on scene update event).
+ * @param {integer} [options.segmentCount] - Circle map's segment count. If set to 0, map won't be generating segments and relay only on tangent points calculated for currently testing ray.
+ * @param {boolean} [options.active = true] - If set true, map will be active (will provide points, segments and will be updated).
+ * 
+ * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
  */
 
 
@@ -305,18 +307,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /*Map methods for circles*/
 
 /**
- * Get array of points on circle.
- *
- * @function Map._getArcPoints
- * @since 0.6.0
- *
- * @param {object} [ray] - Ray object. Used to generate points of rays tangent to circle, from ray origin.
- *
- * @return {array} Array of Phaser.GeomLine objects.
- */
+* Get array of mapped circle's vertices used as rays targets.
+* If {@link Raycaster.Map#segmentCount Raycaster.Map#segmentCount} is set to 0, it'll calculatoe tangent points for passed ray.
+*
+* @method Raycaster.Map#arc.getPoints
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+*
+* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+*/
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   if (!this.active) return [];
@@ -356,14 +368,17 @@ function getPoints() {
 }
 ;
 /**
- * Get array of segments representing circle.
- *
- * @function Map._getArcSegments
- * @since 0.6.0
- *
- *
- * @return {array} Array of Phaser.Geom.Line objects.
- */
+* Get array of mapped circle's segments used to test object's intersection with ray.
+* If {@link Raycaster.Map#segmentCount Raycaster.Map#segmentCount} is set to 0, it'll return empty array.
+*
+* @method Raycaster.Map#arc.getSegments
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+*/
 
 function getSegments() {
   if (!this.active) return [];
@@ -371,14 +386,16 @@ function getSegments() {
 }
 ;
 /**
- * Update circle's map of points and segments. If segmentCount == 0. Map is generated dynamically by calculating points of rays tangent to circle, from ray origin.
- *
- * @function Map._updateArcMap
- * @since 0.6.0
- *
- *
- * @return {object} Map object.
- */
+* Update circles's map of points and segments.
+*
+* @method Raycaster.Map#arc.updateMap
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+*/
 
 function updateMap() {
   if (!this.active) return this;
@@ -402,58 +419,39 @@ function updateMap() {
 
   if (rotation !== 0) {
     var newPoints = [];
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+
+    var _iterator = _createForOfIteratorHelper(points),
+        _step;
 
     try {
-      for (var _iterator = points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var point = _step.value;
         var vector = new Phaser.Geom.Line(this.object.x, this.object.y, this.object.x + (point.x + this.object.radius) * this.object.scaleX, this.object.y + (point.y + this.object.radius) * this.object.scaleY);
         Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
         newPoints.push(vector.getPointB());
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
 
     points = newPoints;
   } //if rotation === 0
   else {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iterator2 = _createForOfIteratorHelper(points),
+          _step2;
 
       try {
-        for (var _iterator2 = points[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var _point = _step2.value;
           _point.x = _point.x * this.object.scaleX + offset.x;
           _point.y = _point.y * this.object.scaleY + offset.y;
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
     } //set segments
 
@@ -482,18 +480,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /*Map methods for containers*/
 
 /**
- * Get array of container's children points.
- *
- * @function Map._getContainerPoints
- * @since 0.7.1
- *
- * @param {object} [ray] - Ray object.
- *
- * @return {array} Array of points.
- */
+* Get array of mapped container's and its children vertices used as rays targets.
+*
+* @method Raycaster.Map#container.getPoints
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.7.1
+*
+* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+*
+* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+*/
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   var getCircles = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -517,24 +524,22 @@ function getPoints() {
       }
     });
 
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iterator = _createForOfIteratorHelper(this.object.list),
+        _step;
 
     try {
-      for (var _iterator = this.object.list[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var child = _step.value;
 
         if (child.type === 'Arc') {
           var map = child.data.get('raycasterMap');
 
           if (map._points.length == 0) {
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
+            var _iterator2 = _createForOfIteratorHelper(map.getPoints(tempRay, true)),
+                _step2;
 
             try {
-              for (var _iterator2 = map.getPoints(tempRay, true)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
                 var point = _step2.value;
 
                 var _vector = new Phaser.Geom.Line(0, 0, point.x, point.y);
@@ -543,27 +548,17 @@ function getPoints() {
                 points.push(new Phaser.Geom.Point(_vector.getPointB().x + offset.x, _vector.getPointB().y + offset.y));
               }
             } catch (err) {
-              _didIteratorError2 = true;
-              _iteratorError2 = err;
+              _iterator2.e(err);
             } finally {
-              try {
-                if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-                  _iterator2.return();
-                }
-              } finally {
-                if (_didIteratorError2) {
-                  throw _iteratorError2;
-                }
-              }
+              _iterator2.f();
             }
           }
         } else if (child.type === 'Container') {
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iterator3 = _createForOfIteratorHelper(child.data.get('raycasterMap').getPoints(tempRay, true)),
+              _step3;
 
           try {
-            for (var _iterator3 = child.data.get('raycasterMap').getPoints(tempRay, true)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
               var _point = _step3.value;
 
               if (this.object.rotation !== 0) {
@@ -575,34 +570,16 @@ function getPoints() {
               else points.push(new Phaser.Geom.Point(_point.x * this.object.scaleX + offset.x, _point.y * this.object.scaleX + offset.y));
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _iterator3.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-                _iterator3.return();
-              }
-            } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
-              }
-            }
+            _iterator3.f();
           }
         }
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
   }
 
@@ -610,30 +587,33 @@ function getPoints() {
 }
 ;
 /**
- * Get array of segments representing container's children.
- *
- * @function Map._getContainerSegments
- * @since 0.7.1
- *
- *
- * @return {array} Array of Phaser.Geom.Line objects.
- */
+* Get array of mapped container's and its children segments used to test object's intersection with ray.
+*
+* @method Raycaster.Map#container.getSegments
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.7.1
+*
+* @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+*/
 
 function getSegments() {
-  var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   if (!this.active) return [];
   return this._segments;
 }
 ;
 /**
- * Update containers's map of points and segments.
- *
- * @function Map._updateContainerleMap
- * @since 0.7.1
- *
- *
- * @return {object} Map object.
- */
+* Update container's and its children maps of points and segments.
+*
+* @method Raycaster.Map#container.updateMap
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.7.1
+*
+* @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+*/
 
 function updateMap() {
   if (!this.active) return this;
@@ -661,12 +641,12 @@ function updateMap() {
 
 
     var childPoints = [];
-    var _iteratorNormalCompletion4 = true;
-    var _didIteratorError4 = false;
-    var _iteratorError4 = undefined;
+
+    var _iterator4 = _createForOfIteratorHelper(map.getPoints()),
+        _step4;
 
     try {
-      for (var _iterator4 = map.getPoints()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
         var point = _step4.value;
 
         //calculate positions after container's rotation
@@ -681,26 +661,16 @@ function updateMap() {
       } //add child segments
 
     } catch (err) {
-      _didIteratorError4 = true;
-      _iteratorError4 = err;
+      _iterator4.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-          _iterator4.return();
-        }
-      } finally {
-        if (_didIteratorError4) {
-          throw _iteratorError4;
-        }
-      }
+      _iterator4.f();
     }
 
-    var _iteratorNormalCompletion5 = true;
-    var _didIteratorError5 = false;
-    var _iteratorError5 = undefined;
+    var _iterator5 = _createForOfIteratorHelper(map.getSegments()),
+        _step5;
 
     try {
-      for (var _iterator5 = map.getSegments()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+      for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
         var segment = _step5.value;
 
         //calculate positions after container's rotation
@@ -716,18 +686,9 @@ function updateMap() {
         else segments.push(new Phaser.Geom.Line(segment.getPointA().x * container.scaleX + offset.x, segment.getPointA().y * container.scaleY + offset.y, segment.getPointB().x * container.scaleX + offset.x, segment.getPointB().y * container.scaleY + offset.y));
       }
     } catch (err) {
-      _didIteratorError5 = true;
-      _iteratorError5 = err;
+      _iterator5.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-          _iterator5.return();
-        }
-      } finally {
-        if (_didIteratorError5) {
-          throw _iteratorError5;
-        }
-      }
+      _iterator5.f();
     }
   }.bind(this)); //get children intersections
 
@@ -741,19 +702,18 @@ function updateMap() {
 
       if (!Phaser.Geom.Intersects.RectangleToRectangle(childA.getBounds(), childB.getBounds())) continue; //find objects intersections
 
-      var _iteratorNormalCompletion6 = true;
-      var _didIteratorError6 = false;
-      var _iteratorError6 = undefined;
+      var _iterator6 = _createForOfIteratorHelper(mapA.getSegments()),
+          _step6;
 
       try {
-        for (var _iterator6 = mapA.getSegments()[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
           var segmentA = _step6.value;
-          var _iteratorNormalCompletion7 = true;
-          var _didIteratorError7 = false;
-          var _iteratorError7 = undefined;
+
+          var _iterator7 = _createForOfIteratorHelper(mapB.getSegments()),
+              _step7;
 
           try {
-            for (var _iterator7 = mapB.getSegments()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
               var segmentB = _step7.value;
               var intersection = [];
               if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue; //calculate positions after container's rotation
@@ -766,33 +726,15 @@ function updateMap() {
               else points.push(new Phaser.Geom.Point(intersection.x * container.scaleX + offset.x, intersection.y * container.scaleX + offset.y));
             }
           } catch (err) {
-            _didIteratorError7 = true;
-            _iteratorError7 = err;
+            _iterator7.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion7 && _iterator7.return != null) {
-                _iterator7.return();
-              }
-            } finally {
-              if (_didIteratorError7) {
-                throw _iteratorError7;
-              }
-            }
+            _iterator7.f();
           }
         }
       } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
+        _iterator6.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
-            _iterator6.return();
-          }
-        } finally {
-          if (_didIteratorError6) {
-            throw _iteratorError6;
-          }
-        }
+        _iterator6.f();
       }
     }
   }
@@ -818,10 +760,10 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * @classdesc
  *
- * Map class responible for mapping game objects.
+ * Map class responsible for mapping game objects.
  *
- * @class Map
- * @memberof Raycaster
+ * @namespace Raycaster.Map
+ * @class Raycaster.Map
  * @constructor
  * @since 6.0.0
  *
@@ -829,14 +771,105 @@ __webpack_require__.r(__webpack_exports__);
  * @param {Raycaster} [raycaster] - Parent raycaster object.
  */
 function Map(options) {
+  /**
+  * Mapped object's type
+  *
+  * @name Raycaster.Map#type
+  * @type {string}
+  * @readonly
+  * @since 0.6.0
+  */
   this.type;
+  /**
+  * If set true, map will be tested by ray. Otherwise it will be ignored.
+  *
+  * @name Raycaster.Map#active
+  * @type {boolean}
+  * @default true
+  * @since 0.7.2
+  */
+
   this.active;
+  /**
+  * If set true, map will be automatically updated on scene update event.
+  *
+  * @name Raycaster.Map#dynamic
+  * @type {boolean}
+  * @default false
+  * @since 0.6.0
+  */
+
   this.dynamic;
+  /**
+  * Reference to mapped object.
+  *
+  * @name Raycaster.Map#object
+  * @type {object}
+  * @readonly
+  * @since 0.6.0
+  */
+
   this.object;
+  /**
+  * Array of mapped object's vertices used as rays targets.
+  *
+  * @name Raycaster.Map#_points
+  * @type {array}
+  * @private
+  * @since 0.6.0
+  */
+
   this._points = [];
+  /**
+  * Array of mapped object's segments used to test object's intersection with ray.
+  *
+  * @name Raycaster.Map#_segments
+  * @type {array}
+  * @private
+  * @since 0.6.0
+  */
+
   this._segments = [];
+  /**
+  * Get array of mapped object's vertices used as rays targets.
+  *
+  * @method Raycaster.Map#getPoints
+  * @memberof Raycaster.Map
+  * @instance
+  * @since 0.6.0
+  *
+  * @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+  *
+  * @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+  */
+
   this.getPoints;
+  /**
+  * Get array of mapped object's segments used to test object's intersection with ray.
+  *
+  * @method Raycaster.Map#getSegments
+  * @memberof Raycaster.Map
+  * @instance
+  * @since 0.6.0
+  *
+  * @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+  *
+  * @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+  */
+
   this.getSegments;
+  /**
+  * Update object's map of points and segments.
+  *
+  * @method Raycaster.Map#updateMap
+  * @memberof Raycaster.Map
+  * @instance
+  * @since 0.6.0
+  *
+  * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+  */
+
+  this.updateMap;
   this.getIntersections;
   this.config(options);
   this.updateMap();
@@ -865,15 +898,18 @@ __webpack_require__.r(__webpack_exports__);
 /*Map methods for lines*/
 
 /**
- * Get array of points for line.
- *
- * @function Map._getLinePoints
- * @since 0.6.0
- *
- * @param {object} [ray] - Ray object.
- *
- * @return {array} Array of points.
- */
+* Get array of mapped line's vertices used as rays targets.
+*
+* @method Raycaster.Map#line.getPoints
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+*
+* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+*/
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   if (!this.active) return [];
@@ -881,14 +917,16 @@ function getPoints() {
 }
 ;
 /**
- * Get array of segments representing line.
- *
- * @function Map._getLineSegments
- * @since 0.6.0
- *
- *
- * @return {array} Array of Phaser.Geom.Line objects.
- */
+* Get array of mapped line's segments used to test object's intersection with ray.
+*
+* @method Raycaster.Map#line.getSegments
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+*/
 
 function getSegments() {
   if (!this.active) return [];
@@ -896,14 +934,16 @@ function getSegments() {
 }
 ;
 /**
- * Update line's map of points and segments.
- *
- * @function Map._updateLineMap
- * @since 0.6.0
- *
- *
- * @return {object} Map object.
- */
+* Update line's map of points and segments.
+*
+* @method Raycaster.Map#line.updateMap
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+*/
 
 function updateMap() {
   if (!this.active) return this;
@@ -959,18 +999,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /*Map methods for polygons*/
 
 /**
- * Get array of polygon's points.
- *
- * @function Map._getPolygonPoints
- * @since 0.6.0
- *
- * @param {object} [ray] - Ray object.
- *
- * @return {array} Array of points.
- */
+* Get array of mapped polygon's vertices used as rays targets.
+*
+* @method Raycaster.Map#polygon.getPoints
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+*
+* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+*/
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   if (!this.active) return [];
@@ -978,14 +1027,16 @@ function getPoints() {
 }
 ;
 /**
- * Get array of segments representing polygon.
- *
- * @function Map._getPolygonSegments
- * @since 0.6.0
- *
- *
- * @return {array} Array of Phaser.Geom.Line objects.
- */
+* Get array of mapped polygon's segments used to test object's intersection with ray.
+*
+* @method Raycaster.Map#polygon.getSegments
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+*/
 
 function getSegments() {
   if (!this.active) return [];
@@ -993,14 +1044,16 @@ function getSegments() {
 }
 ;
 /**
- * Update polygon's map of points and segments.
- *
- * @function Map._updatePolygonMap
- * @since 0.6.0
- *
- *
- * @return {object} Map object.
- */
+* Update polygon's map of points and segments.
+*
+* @method Raycaster.Map#polygon.updateMap
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+*/
 
 function updateMap() {
   if (!this.active) return this;
@@ -1015,55 +1068,35 @@ function updateMap() {
   var rotation = this.object.rotation;
 
   if (rotation !== 0) {
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iterator = _createForOfIteratorHelper(this.object.geom.points),
+        _step;
 
     try {
-      for (var _iterator = this.object.geom.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var point = _step.value;
         var vector = new Phaser.Geom.Line(this.object.x, this.object.y, point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y);
         Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
         points.push(vector.getPointB());
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
   } //if rotation === 0
   else {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iterator2 = _createForOfIteratorHelper(this.object.geom.points),
+          _step2;
 
       try {
-        for (var _iterator2 = this.object.geom.points[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var _point = _step2.value;
           points.push(new Phaser.Geom.Point(_point.x * this.object.scaleX + offset.x, _point.y * this.object.scaleY + offset.y));
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
     } //set segments
 
@@ -1101,15 +1134,18 @@ __webpack_require__.r(__webpack_exports__);
 /*Map methods for rectangles*/
 
 /**
- * Get array of rectangle's points.
- *
- * @function Map._getRectanglePoints
- * @since 0.6.0
- *
- * @param {object} [ray] - Ray object.
- *
- * @return {array} Array of points.
- */
+* Get array of mapped rectangle's vertices used as rays targets.
+*
+* @method Raycaster.Map#rectangle.getPoints
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+*
+* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+*/
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   if (!this.active) return [];
@@ -1117,14 +1153,16 @@ function getPoints() {
 }
 ;
 /**
- * Get array of segments representing rectangle.
- *
- * @function Map._getRectangleSegments
- * @since 0.6.0
- *
- *
- * @return {array} Array of Phaser.Geom.Line objects.
- */
+* Get array of mapped rectangle's segments used to test object's intersection with ray.
+*
+* @method Raycaster.Map#rectangle.getSegments
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+*/
 
 function getSegments() {
   if (!this.active) return [];
@@ -1132,14 +1170,16 @@ function getSegments() {
 }
 ;
 /**
- * Update rectangle's map of points and segments.
- *
- * @function Map._updateRectangleMap
- * @since 0.6.0
- *
- *
- * @return {object} Map object.
- */
+* Update rectangle's map of points and segments.
+*
+* @method Raycaster.Map#rectangle.updateMap
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.6.0
+*
+* @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+*/
 
 function updateMap() {
   if (!this.active) return this;
@@ -1173,98 +1213,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCollisionTiles", function() { return setCollisionTiles; });
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /*Map methods for tilemaps*/
 
 /**
- * Get array of points for tilemap.
- *
- * @function Map._getTilemapPoints
- * @since 0.7.3
- *
- * @param {object} [ray] - Ray object.
- *
- * @return {array} Array of points.
- */
+* Get array of mapped tilemap's vertices used as rays targets.
+*
+* @method Raycaster.Map#tilemap.getPoints
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.7.3
+*
+* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+*
+* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+*/
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   if (!this.active) return [];
   if (!ray || ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER)) return this._points;
   var points = [];
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+
+  var _iterator = _createForOfIteratorHelper(this._points),
+      _step;
 
   try {
-    for (var _iterator = this._points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
       var point = _step.value;
       if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, point.x, point.y) <= ray.detectionRange) points.push(point);
     } //get intersections between tilemap's segments and ray's detection range edge
 
   } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
+    _iterator.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return != null) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
+    _iterator.f();
   }
 
   var segments = this.getSegments(ray);
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
+
+  var _iterator2 = _createForOfIteratorHelper(segments),
+      _step2;
 
   try {
-    for (var _iterator2 = segments[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var segment = _step2.value;
       if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x1, segment.y1) > ray.detectionRange) points.push(new Phaser.Geom.Point(segment.x1, segment.y1));
       if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x2, segment.y2) > ray.detectionRange) points.push(new Phaser.Geom.Point(segment.x2, segment.y2));
     }
   } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
+    _iterator2.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-        _iterator2.return();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
-      }
-    }
+    _iterator2.f();
   }
 
   return points;
 }
 ;
 /**
- * Get array of segments representing tilemap.
- *
- * @function Map._getTilemapSegments
- * @since 0.7.3
- *
- *
- * @return {array} Array of Phaser.Geom.Line objects.
- */
+* Get array of mapped tilemap's segments used to test object's intersection with ray.
+*
+* @method Raycaster.Map#tilemap.getSegments
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.7.3
+*
+* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+*
+* @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+*/
 
 function getSegments() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   if (!this.active) return [];
   if (!ray || ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER)) return this._segments;
   var segments = [];
-  var _iteratorNormalCompletion3 = true;
-  var _didIteratorError3 = false;
-  var _iteratorError3 = undefined;
+
+  var _iterator3 = _createForOfIteratorHelper(this._segments),
+      _step3;
 
   try {
-    for (var _iterator3 = this._segments[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
       var segment = _step3.value;
 
       if (Phaser.Geom.Intersects.LineToCircle(segment, ray.detectionRangeCircle)) {
@@ -1272,32 +1307,25 @@ function getSegments() {
       }
     }
   } catch (err) {
-    _didIteratorError3 = true;
-    _iteratorError3 = err;
+    _iterator3.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-        _iterator3.return();
-      }
-    } finally {
-      if (_didIteratorError3) {
-        throw _iteratorError3;
-      }
-    }
+    _iterator3.f();
   }
 
   return segments;
 }
 ;
 /**
- * Update tilemap's map of points and segments.
- *
- * @function Map._updateTilemapMap
- * @since 0.7.3
- *
- *
- * @return {object} Map object.
- */
+* Update tilemap's map of points and segments.
+*
+* @method Raycaster.Map#tilemap.updateMap
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.7.3
+*
+* @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+*/
 
 function updateMap() {
   var _this = this;
@@ -1376,12 +1404,11 @@ function updateMap() {
   } //add bottom horizontal segments
 
 
-  var _iteratorNormalCompletion4 = true;
-  var _didIteratorError4 = false;
-  var _iteratorError4 = undefined;
+  var _iterator4 = _createForOfIteratorHelper(this.object.layer.data[this.object.layer.data.length - 1]),
+      _step4;
 
   try {
-    for (var _iterator4 = this.object.layer.data[this.object.layer.data.length - 1][Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
       var _tile = _step4.value;
 
       if (this.collisionTiles.includes(_tile.index)) {
@@ -1409,18 +1436,9 @@ function updateMap() {
     } //add segment if exist
 
   } catch (err) {
-    _didIteratorError4 = true;
-    _iteratorError4 = err;
+    _iterator4.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-        _iterator4.return();
-      }
-    } finally {
-      if (_didIteratorError4) {
-        throw _iteratorError4;
-      }
-    }
+    _iterator4.f();
   }
 
   if (horizontal) {
@@ -1440,12 +1458,12 @@ function updateMap() {
 
   var vertical = false;
   var verticalsLastColumn = [];
-  var _iteratorNormalCompletion5 = true;
-  var _didIteratorError5 = false;
-  var _iteratorError5 = undefined;
+
+  var _iterator5 = _createForOfIteratorHelper(this.object.layer.data),
+      _step5;
 
   try {
-    for (var _iterator5 = this.object.layer.data[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
       var _row = _step5.value;
       var _tile2 = _row[_row.length - 1]; //if tile blocks ray
 
@@ -1469,18 +1487,9 @@ function updateMap() {
       }
     }
   } catch (err) {
-    _didIteratorError5 = true;
-    _iteratorError5 = err;
+    _iterator5.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-        _iterator5.return();
-      }
-    } finally {
-      if (_didIteratorError5) {
-        throw _iteratorError5;
-      }
-    }
+    _iterator5.f();
   }
 
   verticals.push(verticalsLastColumn); //add vertical segments
@@ -1488,9 +1497,9 @@ function updateMap() {
   for (var _i = 0, _verticals = verticals; _i < _verticals.length; _i++) {
     var column = _verticals[_i];
     if (!column) continue;
-    var _iteratorNormalCompletion6 = true;
-    var _didIteratorError6 = false;
-    var _iteratorError6 = undefined;
+
+    var _iterator6 = _createForOfIteratorHelper(column),
+        _step6;
 
     try {
       var _loop = function _loop() {
@@ -1508,12 +1517,11 @@ function updateMap() {
           return point.x == x && point.y == y2;
         })) points.push(new Phaser.Geom.Point(x, y)); //get intersections between horizontal segments and vertical
 
-        var _iteratorNormalCompletion7 = true;
-        var _didIteratorError7 = false;
-        var _iteratorError7 = undefined;
+        var _iterator7 = _createForOfIteratorHelper(horizontals),
+            _step7;
 
         try {
-          for (var _iterator7 = horizontals[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
             var horizontalSegment = _step7.value;
             if (segment.x1 == horizontalSegment.x1 || segment.x1 == horizontalSegment.x2 || segment.x2 == horizontalSegment.x1 || segment.x2 == horizontalSegment.x2) continue;
             if (segment.y1 == horizontalSegment.y1 || segment.y1 == horizontalSegment.y2 || segment.y2 == horizontalSegment.y1 || segment.y2 == horizontalSegment.y2) continue;
@@ -1524,37 +1532,19 @@ function updateMap() {
             }
           }
         } catch (err) {
-          _didIteratorError7 = true;
-          _iteratorError7 = err;
+          _iterator7.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return != null) {
-              _iterator7.return();
-            }
-          } finally {
-            if (_didIteratorError7) {
-              throw _iteratorError7;
-            }
-          }
+          _iterator7.f();
         }
       };
 
-      for (var _iterator6 = column[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+      for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
         _loop();
       }
     } catch (err) {
-      _didIteratorError6 = true;
-      _iteratorError6 = err;
+      _iterator6.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
-          _iterator6.return();
-        }
-      } finally {
-        if (_didIteratorError6) {
-          throw _iteratorError6;
-        }
-      }
+      _iterator6.f();
     }
   }
 
@@ -1564,14 +1554,17 @@ function updateMap() {
 }
 ;
 /**
- * Set tilemap's tiles which collide with rays.
- *
- * @function Map.setCollidingTiles
- * @since 0.7.3
- *
- *
- * @return {object} Map object.
- */
+* Set tile types which should be mapped (for Phaser.Tilemaps.StaticTilemapLayer and Phaser.Tilemaps.DynamicTilemapLayer maps only).
+*
+* @method Raycaster.Map#setCollisionTiles
+* @memberof Raycaster.Map
+* @instance
+* @since 0.7.3
+*
+* @param {array} [tiles = []] - Set of tile's indexes to map.
+*
+* @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+*/
 
 function setCollisionTiles() {
   var tiles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
@@ -1593,13 +1586,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setSegmentCount", function() { return setSegmentCount; });
 /**
  * Set segment count for cirle's map.
+ * If set to 0, map won't be generating segments and relay only on tangent points calculated for currently testing ray.
  *
- * @function Map.setSegmentCount
+ * @method Raycaster.Map#setSegmentCount
+ * @memberof Raycaster.Map
+ * @instance
  * @since 0.6.0
  *
- * @param {integer} [count] - Circle's map segments count.
+ * @param {integer} count - Circle map's segment count.
  *
- * @return {object} Map object.
+ * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
  */
 function setSegmentCount(count) {
   this.segmentCount = count;
@@ -1621,36 +1617,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setAngle", function() { return setAngle; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setAngleDeg", function() { return setAngleDeg; });
 /**
- * Set ray angle in radians.
+ * Set ray's angle (direction) in radians.
  *
- * @function Ray.setAngle
+ * @method Raycaster.Ray#setAngle
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
- * @param {float} [angle] - Ray's angle in radians.
+ * @param {float} [angle = 0] - Ray's angle in radians.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 function setAngle() {
   var angle = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
   this.angle = Phaser.Math.Angle.Normalize(angle);
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   return this;
 }
 /**
- * Set ray angle in degrees.
+ * Set ray's angle (direction) in degrees.
  *
- * @function Ray.setAngleDeg
+ * @method Raycaster.Ray#setAngleDeg
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.1
  *
- * @param {float} [angle] - Ray's angle in degrees.
+ * @param {float} [angle = 0] - Ray's angle in degrees.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 
 function setAngleDeg() {
   var angle = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
   this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(angle));
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   return this;
 }
 
@@ -1666,33 +1666,40 @@ function setAngleDeg() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cast", function() { return cast; });
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /**
  * Cast ray to find closest intersection with tested mapped objects.
  *
- * @function Ray.cast
+ * @method Raycaster.Ray#cast
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
  * @param {object} [options] - options that may include:
- * - {array} [objects] - Array of game objects to test. If not provided use all mapped game objects.
- * - {Phaser.Types.Math.Vector2Like} [target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
+ * @param {object[]} [options.objects = {Raycaster#mappedObjects}] - Array of game objects to test. If not provided test all mapped game objects.
+ * @param {Phaser.Geom.Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
  *
- * @return {Phaser.Types.Math.Vector2Like} / {boolean} - Point object of ray's closest intersection with tested objects. Returns false if no intersection has been found.
+ * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found.
  */
 function cast() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var closestIntersection;
-  var closestDistance = this.range; //if bounding box is defined check bounding box intersection
+  var closestDistance = this.rayRange; //if bounding box is defined check bounding box intersection
 
   if (this._raycaster && this._raycaster.boundingBox) {
     var _intersections = [];
     Phaser.Geom.Intersects.GetLineToRectangle(this._ray, this._raycaster.boundingBox.rectangle, _intersections);
     if (_intersections.length === 1) closestIntersection = _intersections[0];else if (_intersections.length > 1) {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iterator = _createForOfIteratorHelper(_intersections),
+          _step;
 
       try {
-        for (var _iterator = _intersections[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var intersection = _step.value;
           var distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, intersection.x, intersection.y);
 
@@ -1702,25 +1709,16 @@ function cast() {
           }
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
     } //if ray target is declared
     else if (options.target) {
         var _distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, options.target.x, options.target.y); //if target is within ray range
 
 
-        if (this.range > _distance) {
+        if (this.rayRange > _distance) {
           closestDistance = _distance;
           closestIntersection = options.target;
         }
@@ -1732,23 +1730,21 @@ function cast() {
     if (this._raycaster) options.objects = this._raycaster.mappedObjects;else return intersections;
   }
 
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
+  var _iterator2 = _createForOfIteratorHelper(options.objects),
+      _step2;
 
   try {
-    for (var _iterator2 = options.objects[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var object = _step2.value;
       //check if object is intersected by ray
       if (!Phaser.Geom.Intersects.GetLineToRectangle(this._ray, object.getBounds())) continue;
       var map = object.data.get('raycasterMap'); //check intersections
 
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
+      var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
+          _step3;
 
       try {
-        for (var _iterator3 = map.getSegments(this)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var segment = _step3.value;
           var _intersection2 = []; //if target point is segmemt point
 
@@ -1769,18 +1765,9 @@ function cast() {
         } //check arc intersections if its not
 
       } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _iterator3.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-            _iterator3.return();
-          }
-        } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
-          }
-        }
+        _iterator3.f();
       }
 
       if (map.type === 'Arc') {
@@ -1793,12 +1780,12 @@ function cast() {
         if (options.target) {
           var points = map.getPoints(this);
           var isTangent = false;
-          var _iteratorNormalCompletion4 = true;
-          var _didIteratorError4 = false;
-          var _iteratorError4 = undefined;
+
+          var _iterator4 = _createForOfIteratorHelper(points),
+              _step4;
 
           try {
-            for (var _iterator4 = points[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
               var point = _step4.value;
 
               if (Phaser.Geom.Point.Equals(options.target, point)) {
@@ -1814,18 +1801,9 @@ function cast() {
               }
             }
           } catch (err) {
-            _didIteratorError4 = true;
-            _iteratorError4 = err;
+            _iterator4.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-                _iterator4.return();
-              }
-            } finally {
-              if (_didIteratorError4) {
-                throw _iteratorError4;
-              }
-            }
+            _iterator4.f();
           }
 
           if (isTangent) continue;
@@ -1850,12 +1828,11 @@ function cast() {
         var circle = new Phaser.Geom.Circle(offset.x, offset.y, map.object.radius * map.object.scaleX);
 
         if (Phaser.Geom.Intersects.GetLineToCircle(this._ray, circle, circleIntersections)) {
-          var _iteratorNormalCompletion5 = true;
-          var _didIteratorError5 = false;
-          var _iteratorError5 = undefined;
+          var _iterator5 = _createForOfIteratorHelper(circleIntersections),
+              _step5;
 
           try {
-            for (var _iterator5 = circleIntersections[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
               var _intersection = _step5.value;
 
               //get closest intersection
@@ -1867,35 +1844,17 @@ function cast() {
               }
             }
           } catch (err) {
-            _didIteratorError5 = true;
-            _iteratorError5 = err;
+            _iterator5.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-                _iterator5.return();
-              }
-            } finally {
-              if (_didIteratorError5) {
-                throw _iteratorError5;
-              }
-            }
+            _iterator5.f();
           }
         }
       }
     }
   } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
+    _iterator2.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-        _iterator2.return();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
-      }
-    }
+    _iterator2.f();
   }
 
   if (!closestIntersection) return this.ignoreNotIntersectedRays ? false : this._ray.getPointB();
@@ -1914,16 +1873,24 @@ function cast() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "castCircle", function() { return castCircle; });
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /**
  * Cast ray in all directions to find closest intersections with tested mapped objects.
  *
- * @function Ray.castCircle
+ * @method Raycaster.Ray#castCircle
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
  * @param {object} [options] - options that may include:
- * - {array} [objects] - Array of game objects to test. If not provided use all mapped game objects.
+ * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {array} - Array of Point objects of ray's closest intersections with tested objects.
+ * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
  */
 function castCircle() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -1937,12 +1904,11 @@ function castCircle() {
     if (this._raycaster) options.objects = this._raycaster.mappedObjects;else return intersections; //if bounding box is defined add bounding box points to 
 
     if (this._raycaster && this._raycaster.boundingBox) {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iterator = _createForOfIteratorHelper(this._raycaster.boundingBox.points),
+          _step;
 
       try {
-        for (var _iterator = this._raycaster.boundingBox.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var point = _step.value;
           rayTargets.push({
             point: point,
@@ -1950,18 +1916,9 @@ function castCircle() {
           });
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
     }
 
@@ -1973,12 +1930,11 @@ function castCircle() {
       var map = object.data.get('raycasterMap');
       maps.push(map); //get points and angles
 
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iterator2 = _createForOfIteratorHelper(map.getPoints(this)),
+          _step2;
 
       try {
-        for (var _iterator2 = map.getPoints(this)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var _point = _step2.value;
           rayTargets.push({
             point: _point,
@@ -1987,18 +1943,9 @@ function castCircle() {
         } //get objects intersections
 
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
 
       for (var j = i + 1, jLength = options.objects.length; j < jLength; j++) {
@@ -2007,19 +1954,18 @@ function castCircle() {
 
         if (!Phaser.Geom.Intersects.RectangleToRectangle(object.getBounds(), objectB.getBounds())) continue; //find objects intersections
 
-        var _iteratorNormalCompletion3 = true;
-        var _didIteratorError3 = false;
-        var _iteratorError3 = undefined;
+        var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
+            _step3;
 
         try {
-          for (var _iterator3 = map.getSegments(this)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
             var segmentA = _step3.value;
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
+
+            var _iterator4 = _createForOfIteratorHelper(mapB.getSegments(this)),
+                _step4;
 
             try {
-              for (var _iterator4 = mapB.getSegments(this)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
                 var segmentB = _step4.value;
                 var intersection = [];
                 if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
@@ -2029,33 +1975,15 @@ function castCircle() {
                 });
               }
             } catch (err) {
-              _didIteratorError4 = true;
-              _iteratorError4 = err;
+              _iterator4.e(err);
             } finally {
-              try {
-                if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-                  _iterator4.return();
-                }
-              } finally {
-                if (_didIteratorError4) {
-                  throw _iteratorError4;
-                }
-              }
+              _iterator4.f();
             }
           }
         } catch (err) {
-          _didIteratorError3 = true;
-          _iteratorError3 = err;
+          _iterator3.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-              _iterator3.return();
-            }
-          } finally {
-            if (_didIteratorError3) {
-              throw _iteratorError3;
-            }
-          }
+          _iterator3.f();
         }
       }
     } //sort target points by angle
@@ -2070,12 +1998,11 @@ function castCircle() {
       return a.angle - b.angle;
     }.bind(this)); //cast rays
 
-    var _iteratorNormalCompletion5 = true;
-    var _didIteratorError5 = false;
-    var _iteratorError5 = undefined;
+    var _iterator5 = _createForOfIteratorHelper(rayTargets),
+        _step5;
 
     try {
-      for (var _iterator5 = rayTargets[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+      for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
         var target = _step5.value;
         this.setAngle(target.angle);
 
@@ -2105,22 +2032,15 @@ function castCircle() {
         }
       }
     } catch (err) {
-      _didIteratorError5 = true;
-      _iteratorError5 = err;
+      _iterator5.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-          _iterator5.return();
-        }
-      } finally {
-        if (_didIteratorError5) {
-          throw _iteratorError5;
-        }
-      }
+      _iterator5.f();
     }
   }
 
   this.setAngle(originalAngle);
+  this.intersections = intersections;
+  if (this.autoSlice) this.slicedIntersections = this.slice();
   return intersections;
 }
 
@@ -2136,16 +2056,24 @@ function castCircle() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "castCone", function() { return castCone; });
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /**
- * Cast ray in cone to find closest intersections with tested mapped objects.
+ * Cast ray in a cone to find closest intersections with tested mapped objects.
  *
- * @function Ray.castCone
+ * @method Raycaster.Ray#castCone
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.7.0
  *
  * @param {object} [options] - options that may include:
- * - {array} [objects] - Array of game objects to test. If not provided use all mapped game objects.
+ * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {array} - Array of Point objects of ray's closest intersections with tested objects.
+ * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
  */
 function castCone() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -2182,12 +2110,11 @@ function castCone() {
     if (this._raycaster) options.objects = this._raycaster.mappedObjects;else return intersections; //if bounding box is defined add bounding box points to 
 
     if (this._raycaster && this._raycaster.boundingBox) {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iterator = _createForOfIteratorHelper(this._raycaster.boundingBox.points),
+          _step;
 
       try {
-        for (var _iterator = this._raycaster.boundingBox.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var point = _step.value;
           var angle = Phaser.Math.Angle.Between(this.origin.x, this.origin.y, point.x, point.y);
           var angleOffsetDeg = Phaser.Math.Angle.ShortestBetween(Phaser.Math.RadToDeg(angle), Phaser.Math.RadToDeg(originalAngle));
@@ -2201,18 +2128,9 @@ function castCone() {
           }
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
     }
   }
@@ -2225,12 +2143,11 @@ function castCone() {
     var map = object.data.get('raycasterMap');
     maps.push(map); //get points and angles
 
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
+    var _iterator2 = _createForOfIteratorHelper(map.getPoints(this)),
+        _step2;
 
     try {
-      for (var _iterator2 = map.getPoints(this)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
         var _point = _step2.value;
 
         var _angle2 = Phaser.Math.Angle.Between(this.origin.x, this.origin.y, _point.x, _point.y);
@@ -2247,18 +2164,9 @@ function castCone() {
       } //get objects intersections
 
     } catch (err) {
-      _didIteratorError2 = true;
-      _iteratorError2 = err;
+      _iterator2.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-          _iterator2.return();
-        }
-      } finally {
-        if (_didIteratorError2) {
-          throw _iteratorError2;
-        }
-      }
+      _iterator2.f();
     }
 
     for (var j = i + 1, jLength = options.objects.length; j < jLength; j++) {
@@ -2267,19 +2175,18 @@ function castCone() {
 
       if (!Phaser.Geom.Intersects.RectangleToRectangle(object.getBounds(), objectB.getBounds())) continue; //find objects intersections
 
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
+      var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
+          _step3;
 
       try {
-        for (var _iterator3 = map.getSegments(this)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var segmentA = _step3.value;
-          var _iteratorNormalCompletion4 = true;
-          var _didIteratorError4 = false;
-          var _iteratorError4 = undefined;
+
+          var _iterator4 = _createForOfIteratorHelper(mapB.getSegments(this)),
+              _step4;
 
           try {
-            for (var _iterator4 = mapB.getSegments(this)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
               var segmentB = _step4.value;
               var intersection = [];
               if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
@@ -2297,33 +2204,15 @@ function castCone() {
               }
             }
           } catch (err) {
-            _didIteratorError4 = true;
-            _iteratorError4 = err;
+            _iterator4.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-                _iterator4.return();
-              }
-            } finally {
-              if (_didIteratorError4) {
-                throw _iteratorError4;
-              }
-            }
+            _iterator4.f();
           }
         }
       } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _iterator3.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-            _iterator3.return();
-          }
-        } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
-          }
-        }
+        _iterator3.f();
       }
     }
   } //sort target points by angle
@@ -2369,6 +2258,8 @@ function castCone() {
   }
 
   this.setAngle(originalAngle);
+  this.intersections = intersections;
+  if (this.autoSlice) this.slicedIntersections = this.slice(intersections, false);
   return intersections;
 }
 
@@ -2386,14 +2277,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCone", function() { return setCone; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setConeDeg", function() { return setConeDeg; });
 /**
- * Set ray's cone angle in radians.
+ * Set ray's cone angle (width) in radians.
  *
- * @function Ray.setAngle
+ * @method Raycaster.Ray#setCone
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.7.0
  *
- * @param {float} [cone] - Ray's cone angle in radians.
+ * @param {float} [cone = 0] - Ray's cone angle in radians.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 function setCone() {
   var cone = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -2401,14 +2294,16 @@ function setCone() {
   return this;
 }
 /**
- * Set ray's cone angle in degrees.
+ * Set ray's cone angle (width) in degrees.
  *
- * @function Ray.setAngleDeg
+ * @method Raycaster.Ray#setConeDeg
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.7.0
  *
- * @param {float} [cone] - Ray's cone angle in degrees.
+ * @param {float} [cone = 0] - Ray's cone angle in degrees.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 
 function setConeDeg() {
@@ -2430,22 +2325,26 @@ function setConeDeg() {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "config", function() { return config; });
 /**
- * Configure ray on creation.
+ * Configure ray.
  *
- * @function Ray.config
+ * @method Raycaster.Ray#config
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
  * @param {object} [options] - Ray's congfiguration options. May include:
- * - {Phaser.Types.Math.Vector2Like} [origin] = {x:0, y:0} - Ray's position.
- * - {float} [angle] = 0 - Ray's angle in radians.
- * - {float} [angleDeg] = 0 - Ray's angle in degrees.
- * - {float} [cone] = 0 - Ray's cone angle in radians.
- * - {float} [coneDeg] = 0 - Ray's cone angle in degrees.
- * - {integer} [range] = Phaser.Math.MAX_SAFE_INTEGER - Ray's range.
- * - {integer} [detectionRange] = Phaser.Math.MAX_SAFE_INTEGER - Maximum distance between ray's position and tested objects bounding boxes.
- * - {boolean} [ignoreNotIntersectedRays] = true - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target.
+ * @param {Phaser.Geom.Point} [options.origin = {x:0, y:0}] - Ray's position.
+ * @param {float} [options.angle = 0] - Ray's angle in radians.
+ * @param {float} [options.angleDeg = 0] - Ray's angle in degrees.
+ * @param {float} [options.cone = 0] - Ray's cone angle in radians.
+ * @param {float} [options.coneDeg = 0] - Ray's cone angle in degrees.
+ * @param {integer} [options.range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
+ * @param {integer} [options.collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's maximum collision range of ray's field of view.
+ * @param {integer} [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
+ * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
+ * @param {boolean} [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 function config(options) {
   this.object = options.object; //origin
@@ -2458,14 +2357,53 @@ function config(options) {
 
   if (options.cone !== undefined) this.cone = options.cone; //cone angle deg
 
-  if (options.coneDeg !== undefined) this.cone = Phaser.Math.DegToRad(options.coneDeg); //range (0 = max)
+  if (options.coneDeg !== undefined) this.cone = Phaser.Math.DegToRad(options.coneDeg); //ray range (0 = max)
 
-  if (options.range !== undefined) this.range = options.range; //detection range (0 = max)
+  if (options.rayRange !== undefined) this.rayRange = options.rayRange; //collision range (0 = max)
 
-  if (options.detectionRange !== undefined) this.detectionRange = options.detectionRange;
-  if (options.ignoreNotIntersectedRays !== undefined) this.ignoreNotIntersectedRays = options.ignoreNotIntersectedRays == true;
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+  if (options.collisionRange !== undefined) this.collisionRange = options.collisionRange; //detection range (0 = max)
+
+  if (options.detectionRange !== undefined) this.detectionRange = options.detectionRange; //ignore not intersected rays
+
+  if (options.ignoreNotIntersectedRays !== undefined) this.ignoreNotIntersectedRays = options.ignoreNotIntersectedRays == true; //auto slice
+
+  if (options.autoSlice !== undefined) this.autoSlice = options.autoSlice == true;
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
+  return this;
+}
+
+/***/ }),
+
+/***/ "./src/ray/enableArcadePhysics.js":
+/*!****************************************!*\
+  !*** ./src/ray/enableArcadePhysics.js ***!
+  \****************************************/
+/*! exports provided: enableArcadePhysics */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "enableArcadePhysics", function() { return enableArcadePhysics; });
+/**
+ * Add to ray arcade physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}.
+ *
+ * @method Raycaster.Ray#enableArcadePhysics
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.8.0
+ *
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+function enableArcadePhysics() {
+  if (this.body !== undefined) return this;
+  this.arcadePhysicsCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y, this.collisionRange);
+  this.arcadePhysicsCircle._ray = this;
+
+  this._raycaster.scene.physics.add.existing(this.arcadePhysicsCircle);
+
+  this.body = this.arcadePhysicsCircle.body;
+  this.body.setCircle(this.collisionRange).setAllowGravity(false).setImmovable(true);
   return this;
 }
 
@@ -2482,21 +2420,193 @@ function config(options) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setOrigin", function() { return setOrigin; });
 /**
- * Set ray's position.
+ * Set ray's source position.
  *
- * @function Ray.setOrigin
+ * @method Raycaster.Ray#setOrigin
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
  * @param {integer} x - X coordinate.
  * @param {integer} y - Y coordinate.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 function setOrigin(x, y) {
   this.origin.setTo(x, y);
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
+
+  if (this.body !== undefined) {
+    this.arcadePhysicsCircle.x = x;
+    this.arcadePhysicsCircle.y = y;
+  }
+
   return this;
+}
+
+/***/ }),
+
+/***/ "./src/ray/overlap.js":
+/*!****************************!*\
+  !*** ./src/ray/overlap.js ***!
+  \****************************/
+/*! exports provided: overlap, processOverlap, testOverlap */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "overlap", function() { return overlap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "processOverlap", function() { return processOverlap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testOverlap", function() { return testOverlap; });
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+/**
+ * Get game objects overlaping field of view.
+ *
+ * @method Raycaster.Ray#overlap
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.8.0
+ *
+ * @param {object|object[]} [objects] - Game object / array off game objects to test.
+ *
+ * @return {object[]} Array of game objects that overlaps with field of view.
+ */
+function overlap(objects) {
+  var targets = [];
+  var bodies = false;
+  var overlapCircle = new Phaser.Geom.Circle(this.origin.x, this.origin.y, this.collisionRange); //get bodies in range
+
+  if (objects === undefined) {
+    objects = this._raycaster.scene.physics.overlapCirc(this.origin.x, this.origin.y, this.collisionRange, true, true);
+    bodies = true;
+  } //get object's body
+  else if (!Array.isArray(objects)) {
+      objects = [objects];
+    } //if objects are bodies
+
+
+  if (bodies) {
+    var _iterator = _createForOfIteratorHelper(objects),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var body = _step.value;
+        if (body === this.body) continue;
+        var hitbox = void 0; //get physics body hitbox
+
+        if (body.isCircle) {
+          hitbox = new Phaser.Geom.Circle(body.position.x + body.halfWidth, body.position.y + body.halfWidth, body.halfWidth);
+        } else {
+          hitbox = new Phaser.Geom.Rectangle(body.x, body.y, body.width, body.height);
+        }
+
+        if (this.testOverlap(hitbox)) targets.push(body.gameObject);
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+  } //if objects are game objects
+  else {
+      var _iterator2 = _createForOfIteratorHelper(objects),
+          _step2;
+
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var object = _step2.value;
+
+          var _hitbox = void 0; //get physics body hitbox
+
+
+          if (object.body.isCircle) {
+            _hitbox = new Phaser.Geom.Circle(object.body.position.x + object.body.halfWidth, object.body.position.y + object.body.halfWidth, object.body.halfWidth);
+            if (!Phaser.Geom.Intersects.CircleToCircle(overlapCircle, _hitbox)) continue;
+          } else {
+            _hitbox = new Phaser.Geom.Rectangle(object.body.x, object.body.y, object.body.width, object.body.height);
+            if (!Phaser.Geom.Intersects.CircleToRectangle(overlapCircle, _hitbox)) continue;
+          }
+
+          if (this.testOverlap(_hitbox)) targets.push(object);
+        }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
+      }
+    }
+
+  return targets;
+}
+/**
+ * Process callback for arcade physics collider / overlap.
+ *
+ * @method Raycaster.Ray#processOverlap
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.8.0
+ *
+ * @param {object} object1 - Game object passed by collider / overlap.
+ * @param {object} object2 - Game object passed by collider / overlap.
+ *
+ * @return {boolean} Return true if game object is overlapping ray's field of view.
+ */
+
+function processOverlap(object1, object2) {
+  var target;
+  if (object1._ray === this) target = object2;else if (object2._ray === this) target = obj1;else return false;
+  return this.overlap(target).length > 0;
+}
+/**
+ * Test if hitbox overlaps with field of view. Method used in {@link Raycaster.Ray#overlap Ray.overlap}.
+ *
+ * @method Raycaster.Ray#testOverlap
+ * @memberof Raycaster.Ray
+ * @instance
+ * @private
+ * @since 0.8.0
+ *
+ * @param {object} hitbox - Game object's hitbox generated inside {@link Raycaster.Ray#overlap Ray.overlap}.
+ *
+ * @return {boolean} True if hitbox overlaps with {@link Raycaster.Ray Raycaster.Ray} field of view.
+ */
+
+function testOverlap(hitbox) {
+  var overlap = false; //iterate through field of view slices to check collisions with target
+
+  var _iterator3 = _createForOfIteratorHelper(this.slicedIntersections),
+      _step3;
+
+  try {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+      var slice = _step3.value;
+
+      //if hitbox is a circle
+      if (hitbox.type == 0) {
+        overlap = Phaser.Geom.Intersects.TriangleToCircle(slice, hitbox);
+      } //if hitbox is a rectangle
+      else {
+          overlap = Phaser.Geom.Intersects.RectangleToTriangle(hitbox, slice);
+        }
+
+      if (overlap) {
+        return true;
+      }
+    }
+  } catch (err) {
+    _iterator3.e(err);
+  } finally {
+    _iterator3.f();
+  }
+
+  return false;
 }
 
 /***/ }),
@@ -2505,39 +2615,45 @@ function setOrigin(x, y) {
 /*!**************************!*\
   !*** ./src/ray/range.js ***!
   \**************************/
-/*! exports provided: setRange, setDetectionRange, boundsInRange */
+/*! exports provided: setRayRange, setDetectionRange, setCollisionRange, boundsInRange */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRange", function() { return setRange; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setRayRange", function() { return setRayRange; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDetectionRange", function() { return setDetectionRange; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCollisionRange", function() { return setCollisionRange; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "boundsInRange", function() { return boundsInRange; });
 /**
  * Set ray's range.
  *
- * @function Ray.setRange
+ * @method Raycaster.Ray#setRayRange
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
- * @param {integer} [range] = Phaser.Math.MAX_SAFE_INTEGER - Ray's range.
+ * @param {integer} [rayRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
-function setRange() {
-  var range = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Phaser.Math.MAX_SAFE_INTEGER;
-  this.range = range;
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+function setRayRange() {
+  var rayRange = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Phaser.Math.MAX_SAFE_INTEGER;
+  this.rayRange = rayRange;
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   return this;
 }
 /**
- * Set ray's range.
+ * Set ray's maximum detection range. Objects outside detection range won't be tested.
+ * Ray tests all objects when set to 0.
  *
- * @function Ray.setRange
+ * @method Raycaster.Ray#setDetectionRange
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
- * @param {integer} [detectionRange] = Phaser.Math.MAX_SAFE_INTEGER - Maximum distance between ray's position and tested objects bounding boxes.
+ * @param {integer} [detectionRange = 0] - Maximum distance between ray's position and tested objects bounding boxes.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 
 function setDetectionRange() {
@@ -2547,13 +2663,40 @@ function setDetectionRange() {
   return this;
 }
 /**
+ * Set ray's field of view maximum collision range. Objects outside collision range won't be tested by {@link Raycaster.Ray#overlap Raycaster.Ray.overlap} method.
+ * Determines ray's physics body radius.
+ *
+ * @method Raycaster.Ray#setCollisionRange
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.8.0
+ *
+ * @param {integer} [collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's collision range and physics body radius.
+ *
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+
+function setCollisionRange() {
+  var collisionRange = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Phaser.Math.MAX_SAFE_INTEGER;
+  this.collisionRange = collisionRange;
+
+  if (this.body) {
+    this.arcadePhysicsCircle.setRadius(this.collisionRange);
+    this.body.setCircle(this.collisionRange);
+  }
+
+  return this;
+}
+/**
  * Test if object's bounding box is in ray's detection range.
  *
- * @function Ray.boundsInRange
+ * @method Raycaster.Ray#boundsInRange
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
  * @param {object} object - Tested object
- * @param {Phaser.Geom. Rectangle} / {boolean} [bounds] = false - Tested object's bounds. If not passed bounds will be generated.
+ * @param {(Phaser.Geom.Rectangle|boolean)} [bounds = false] - Tested object's bounds. If not passed bounds will be generated automatically.
  *
  * @return {boolean} Information if object is in ray's detection range.
  */
@@ -2582,10 +2725,10 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * @classdesc
  *
- * Ray class responible for casting ray's and testing their collisions with mapped objects.
+ * Ray class responsible for casting ray's and testing their collisions with mapped objects.
  *
- * @class Ray
- * @memberof Raycaster
+ * @namespace Raycaster.Ray
+ * @class Raycaster.Ray
  * @constructor
  * @since 6.0.0
  *
@@ -2593,16 +2736,146 @@ __webpack_require__.r(__webpack_exports__);
  * @param {Raycaster} [raycaster] - Parent raycaster object.
  */
 function Ray(options, raycaster) {
-  this.origin = new Phaser.Geom.Point();
-  this._ray = new Phaser.Geom.Line();
-  this.angle = 0;
-  this.cone = 0;
-  this.range = Phaser.Math.MAX_SAFE_INTEGER;
-  this.detectionRange = 0;
-  this.detectionRangeCircle = new Phaser.Geom.Circle();
-  this.ignoreNotIntersectedRays = true;
-  this.intersections = [];
+  /**
+  * Reference to parent Raycaster object.
+  *
+  * @name Raycaster.Ray#_raycaster
+  * @type {Raycaster}
+  * @private
+  * @since 0.6.0
+  */
   this._raycaster = raycaster ? raycaster : false;
+  /**
+  * Ray's source position.
+  *
+  * @name Raycaster.Ray#origin
+  * @type {Phaser.Geom.Point}
+  * @since 0.6.0
+  */
+
+  this.origin = new Phaser.Geom.Point();
+  /**
+  * Ray's representation used to calculating intersections.
+  *
+  * @name Raycaster.Ray#_ray
+  * @type {Phaser.Geom.Line}
+  * @private
+  * @since 0.6.0
+  */
+
+  this._ray = new Phaser.Geom.Line();
+  /**
+  * Ray's angle in radians.
+  *
+  * @name Raycaster.Ray#angle
+  * @type {float}
+  * @default 0
+  * @since 0.6.0
+  */
+
+  this.angle = 0;
+  /**
+  * Ray's cone width angle in radians.
+  *
+  * @name Raycaster.Ray#cone
+  * @type {float}
+  * @default 0
+  * @since 0.7.0
+  */
+
+  this.cone = 0;
+  /**
+  * Ray's maximum range
+  *
+  * @name Raycaster.Ray#rayRange
+  * @type {integer}
+  * @default Phaser.Math.MAX_SAFE_INTEGER
+  * @since 0.6.0
+  */
+
+  this.rayRange = Phaser.Math.MAX_SAFE_INTEGER;
+  /**
+  * Ray's maximum detection range. Objects outside detection range won't be tested.
+  * Ray tests all objects when set to 0.
+  *
+  * @name Raycaster.Ray#detectionRange
+  * @type {integer}
+  * @default
+  * @since 0.6.0
+  */
+
+  this.detectionRange = 0;
+  /**
+  * Ray's representation of detection range used in calculating if objects are in range.
+  *
+  * @name Raycaster.Ray#detectionRangeCircle
+  * @type {Phaser.Geom.Circle}
+  * @private
+  * @since 0.6.0
+  */
+
+  this.detectionRangeCircle = new Phaser.Geom.Circle();
+  /**
+  * Ray's maximum collision range of ray's field of view. Radius of {@link Raycaster.Ray#collisionRangeCircle Ray.body}.
+  *
+  * @name Raycaster.Ray#collisionRange
+  * @type {integer}
+  * @default Phaser.Math.MAX_SAFE_INTEGER
+  * @since 0.8.0
+  */
+
+  this.collisionRange = Phaser.Math.MAX_SAFE_INTEGER;
+  /**
+  * If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
+  *
+  * @name Raycaster.Ray#ignoreNotIntersectedRays
+  * @type {boolean}
+  * @default true
+  * @since 0.6.0
+  */
+
+  this.ignoreNotIntersectedRays = true;
+  /**
+  * If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
+  *
+  * @name Raycaster.Ray#autoSlice
+  * @type {boolean}
+  * @default false
+  * @since 0.8.0
+  */
+
+  this.autoSlice = false;
+  /**
+  * Array of intersections from last raycast representing field of view.
+  *
+  * @name Raycaster.Ray#intersections
+  * @type {object[]}
+  * @default []
+  * @since 0.8.0
+  */
+
+  this.intersections = [];
+  /**
+  * Array of triangles representing slices of field of view from last raycast.
+  *
+  * @name Raycaster.Ray#slicedIntersections
+  * @type {Phaser.Geom.Triangle[]}
+  * @default []
+  * @since 0.8.0
+  */
+
+  this.slicedIntersections = [];
+  /**
+  * Physics body for testing field of view collisions.
+  *
+  * @name Raycaster.Ray#body
+  * @type {(object|bolean)}
+  * @default false
+  * @since 0.8.0
+  */
+  //this.body = false;
+  //this.arcadePhysicsCircle;
+
   this.config(options);
 }
 ;
@@ -2610,7 +2883,7 @@ Ray.prototype = {
   config: __webpack_require__(/*! ./config.js */ "./src/ray/config.js").config,
   setRay: __webpack_require__(/*! ./ray.js */ "./src/ray/ray.js").setRay,
   setOrigin: __webpack_require__(/*! ./origin.js */ "./src/ray/origin.js").setOrigin,
-  setRange: __webpack_require__(/*! ./range.js */ "./src/ray/range.js").setRange,
+  setRayRange: __webpack_require__(/*! ./range.js */ "./src/ray/range.js").setRayRange,
   setAngle: __webpack_require__(/*! ./angle.js */ "./src/ray/angle.js").setAngle,
   setAngleDeg: __webpack_require__(/*! ./angle.js */ "./src/ray/angle.js").setAngleDeg,
   setCone: __webpack_require__(/*! ./cone.js */ "./src/ray/cone.js").setCone,
@@ -2619,7 +2892,13 @@ Ray.prototype = {
   boundsInRange: __webpack_require__(/*! ./range.js */ "./src/ray/range.js").boundsInRange,
   cast: __webpack_require__(/*! ./cast.js */ "./src/ray/cast.js").cast,
   castCircle: __webpack_require__(/*! ./castCircle.js */ "./src/ray/castCircle.js").castCircle,
-  castCone: __webpack_require__(/*! ./castCone.js */ "./src/ray/castCone.js").castCone
+  castCone: __webpack_require__(/*! ./castCone.js */ "./src/ray/castCone.js").castCone,
+  slice: __webpack_require__(/*! ./slice.js */ "./src/ray/slice.js").slice,
+  setCollisionRange: __webpack_require__(/*! ./range.js */ "./src/ray/range.js").setCollisionRange,
+  enableArcadePhysics: __webpack_require__(/*! ./enableArcadePhysics.js */ "./src/ray/enableArcadePhysics.js").enableArcadePhysics,
+  overlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").overlap,
+  processOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").processOverlap,
+  testOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").testOverlap
 };
 
 /***/ }),
@@ -2637,24 +2916,71 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Set ray's position, direction (angle) and range.
  *
- * @function Ray.setAngle
+ * @method Raycaster.Ray#setRay
+ * @memberof Raycaster.Ray
+ * @instance
  * @since 0.6.0
  *
  * @param {integer} x - X coordinate.
  * @param {integer} y - Y coordinate.
  * @param {float} [angle] - Ray's angle in radians.
- * @param {integer} [range] = Phaser.Math.MAX_SAFE_INTEGER - Ray's range.
+ * @param {integer} [range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
  *
- * @return {object} Ray object.
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 function setRay(x, y, angle) {
-  var range = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Phaser.Math.MAX_SAFE_INTEGER;
+  var rayRange = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : Phaser.Math.MAX_SAFE_INTEGER;
   this.origin.setTo(x, y);
   this.angle = Phaser.Math.Angle.Normalize(angle);
-  this.range = range;
-  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.range);
+  this.rayRange = rayRange;
+  Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
   return this;
+}
+
+/***/ }),
+
+/***/ "./src/ray/slice.js":
+/*!**************************!*\
+  !*** ./src/ray/slice.js ***!
+  \**************************/
+/*! exports provided: slice */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "slice", function() { return slice; });
+/**
+ * Slice ray's field of view represented by polygon or array of points into array of triangles.
+ *
+ * @method Raycaster.Ray#slice
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.8.0
+ *
+ * @param {(object[]|Phaser.Geom.Polygon)} [fov = {Ray#fov}] - Array of points or polygon representing field of view. If not passed, filed of view from last raycaste will be used.
+ * @param {boolean} [closed = true|{Ray#fov}] - Define if field of view polygon is closed (first and last vertices sholud be connected). If fov was not passed, value depends of last type of casting.
+ *
+ * @return {Phaser.Geom.Triangle[]} Array of triangles representing slices of field of view.
+ */
+function slice() {
+  var intersections = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.intersections;
+  var closed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+  //if intersections is Phaser.Geom.Polygon object
+  if (!Array.isArray(intersections)) {
+    if (intersections.type === 4) intersections = intersections.points;else return [];
+  }
+
+  if (intersections.length === 0) return [];
+  var slices = [];
+
+  for (var i = 0, iLength = intersections.length - 1; i < iLength; i++) {
+    slices.push(new Phaser.Geom.Triangle(this.origin.x, this.origin.y, intersections[i].x, intersections[i].y, intersections[i + 1].x, intersections[i + 1].y));
+  }
+
+  if (closed) slices.push(new Phaser.Geom.Triangle(this.origin.x, this.origin.y, intersections[0].x, intersections[0].y, intersections[intersections.length - 1].x, intersections[intersections.length - 1].y));
+  return slices;
 }
 
 /***/ }),
@@ -2669,6 +2995,12 @@ function setRay(x, y, angle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Raycaster", function() { return Raycaster; });
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /**
 * @author       Marcin Walczak <mail@marcinwalczak.pl>
 * @copyright    2020 Marcin Walczak
@@ -2678,22 +3010,72 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * @classdesc
  *
- * Raycaster class responible for creating ray objects and managing mapped objects.
- *
+ * Raycaster class responsible for creating ray objects and managing mapped objects.
+ * 
+ * @namespace Raycaster
  * @class Raycaster
  * @constructor
  * @since 6.0.0
  *
- * @param {object} options - Ray specific configuration settings.
+ * @param {object} [options] - Raycaster's configuration options. May include:
+ * @param {Phaser.Scene} [options.scene] - Scene in which Raycaster will be used.
+ * @param {integer} [options.mapSegmentCount = 0] - Number of segments of circle maps. If set to 0, map will be teste
+ * @param {(object|object[])} [options.objects] - Game object or array of game objects to map.
+ * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box.
+ * @param {boolean} [options.autoUpdate = true] - If set true, automatically update dynamic maps on scene update event.
  */
 function Raycaster(options) {
-  this.version = '0.7.3';
+  /**
+  * Plugin version.
+  *
+  * @name Raycaster#version
+  * @type {string}
+  * @readonly
+  * @since 0.6.0
+  */
+  this.version = '0.8.0';
+  /**
+  * Raycaster's scene
+  *
+  * @name Raycaster#version
+  * @type {string}
+  * @private
+  * @since 0.6.0
+  */
+
   this.scene;
   this.graphics;
+  /**
+  * Raycaster's bounding box.
+  *
+  * @name Raycaster#boundingBox
+  * @type {Phaser.Geom.Rectangle}
+  * @default false
+  * @private
+  * @since 0.6.0
+  */
+
   this.boundingBox = false;
+  /**
+  * Array of mapped game objects.
+  *
+  * @name Raycaster#mappedObjects
+  * @type {object[]}
+  * @since 0.6.0
+  */
+
   this.mappedObjects = [];
   this.sortedPoints = [];
-  this.mapSegmentCount = 0; //quantity of segments of map of circle
+  /**
+  * Number of segments of circle maps.
+  *
+  * @name Raycaster#mapSegmentCount
+  * @type {integer}
+  * @default 0
+  * @since 0.6.0
+  */
+
+  this.mapSegmentCount = 0;
 
   if (options !== undefined) {
     if (options.boundingBox === undefined && options.scene !== undefined && options.scene.physics !== undefined) options.boundingBox = options.scene.physics.world.bounds;
@@ -2706,7 +3088,22 @@ function Raycaster(options) {
   return this;
 }
 Raycaster.prototype = {
-  //set options
+  /**
+  * Configure raycaster.
+  *
+  * @method Raycaster#setOptions
+  * @memberof Raycaster
+  * @instance
+  * @since 0.6.0
+  *
+  * @param {object} [options] - Raycaster's congfiguration options. May include:
+  * @param {Phaser.Scene} [options.scene] - Scene in which Raycaster will be used.
+  * @param {integer} [options.mapSegmentCount = 0] - Number of segments of circle maps.
+  * @param {(object|object[])} [options.objects] - Game object or array of game objects to map.
+  * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box.
+  *
+  * @return {Raycaster} {@link Raycaster Raycaster} instance
+  */
   setOptions: function setOptions(options) {
     if (options.scene !== undefined) {
       this.scene = options.scene;
@@ -2726,7 +3123,22 @@ Raycaster.prototype = {
     if (options.boundingBox !== undefined) this.setBoundingBox(options.boundingBox.x, options.boundingBox.y, options.boundingBox.width, options.boundingBox.height);
     return this;
   },
-  //set bounding box
+
+  /**
+  * Set Raycatser's bounding box.
+  *
+  * @method Raycaster#setBoundingBox
+  * @memberof Raycaster
+  * @instance
+  * @since 0.6.0
+  *
+  * @param {integer} x - The X coordinate of the top left corner of bounding box.
+  * @param {integer} y - The Y coordinate of the top left corner of bounding box.
+  * @param {integer} width - The width of bounding box.
+  * @param {integer} height - The height of bounding box.
+  *
+  * @return {Raycaster} {@link Raycaster Raycaster} instance
+  */
   setBoundingBox: function setBoundingBox(x, y, width, height) {
     this.boundingBox = {
       rectangle: new Phaser.Geom.Rectangle(x, y, width, height),
@@ -2741,7 +3153,21 @@ Raycaster.prototype = {
       if (i + 1 < length) this.boundingBox.segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y));else this.boundingBox.segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
     }
   },
-  //map object
+
+  /**
+  * Map game objects
+  *
+  * @method Raycaster#mapGameObjects
+  * @memberof Raycaster
+  * @instance
+  * @since 0.6.0
+  *
+  * @param {object|object[]} objects - Game object or array of game objects to map.
+  * @param {boolean} [dynamic = false] - {@link Raycaster.Map Raycaster.Map} dynamic flag (determines map will be updated automatically).
+  * @param {object} [options] - Additional options for {@link Raycaster.Map Raycaster.Map}
+  *
+  * @return {Raycaster} {@link Raycaster Raycaster} instance
+  */
   mapGameObjects: function mapGameObjects(objects) {
     var dynamic = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -2758,12 +3184,11 @@ Raycaster.prototype = {
       return this;
     }
 
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iterator = _createForOfIteratorHelper(objects),
+        _step;
 
     try {
-      for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var object = _step.value;
         if (this.mappedObjects.includes(object)) continue;
         if (!object.data) object.setDataEnabled();
@@ -2781,23 +3206,26 @@ Raycaster.prototype = {
         this.mappedObjects.push(object);
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
 
     return this;
   },
-  //remove mapped Objects
+
+  /**
+  * Remove game object's {@link Raycaster.Map Raycaster.Map} maps.
+  *
+  * @method Raycaster#removeMappedObjects
+  * @memberof Raycaster
+  * @instance
+  * @since 0.6.0
+  *
+  * @param {(object|object[])} objects - Game object or array of game objects which maps will be removed.
+  *
+  * @return {Raycaster} {@link Raycaster Raycaster} instance
+  */
   removeMappedObjects: function removeMappedObjects(objects) {
     if (!Array.isArray(objects)) {
       var index = this.mappedObjects.indexOf(objects);
@@ -2805,12 +3233,11 @@ Raycaster.prototype = {
       return this;
     }
 
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
+    var _iterator2 = _createForOfIteratorHelper(objects),
+        _step2;
 
     try {
-      for (var _iterator2 = objects[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
         var object = _step2.value;
 
         var _index = this.mappedObjects.indexOf(object);
@@ -2818,23 +3245,26 @@ Raycaster.prototype = {
         if (_index >= 0) this.mappedObjects.splice(_index, 1);
       }
     } catch (err) {
-      _didIteratorError2 = true;
-      _iteratorError2 = err;
+      _iterator2.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-          _iterator2.return();
-        }
-      } finally {
-        if (_didIteratorError2) {
-          throw _iteratorError2;
-        }
-      }
+      _iterator2.f();
     }
 
     return this;
   },
-  //enable maps
+
+  /**
+  * Enable game object's {@link Raycaster.Map Raycaster.Map} maps.
+  *
+  * @method Raycaster#enableMaps
+  * @memberof Raycaster
+  * @instance
+  * @since 0.7.2
+  *
+  * @param {(object|object[])} objects - Game object or array of game objects which maps will be enabled.
+  *
+  * @return {Raycaster} {@link Raycaster Raycaster} instance
+  */
   enableMaps: function enableMaps(objects) {
     if (!Array.isArray(objects)) {
       if (objects.data) {
@@ -2845,12 +3275,11 @@ Raycaster.prototype = {
       return this;
     }
 
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
+    var _iterator3 = _createForOfIteratorHelper(objects),
+        _step3;
 
     try {
-      for (var _iterator3 = objects[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
         var object = _step3.value;
 
         if (object.data) {
@@ -2860,23 +3289,26 @@ Raycaster.prototype = {
         }
       }
     } catch (err) {
-      _didIteratorError3 = true;
-      _iteratorError3 = err;
+      _iterator3.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-          _iterator3.return();
-        }
-      } finally {
-        if (_didIteratorError3) {
-          throw _iteratorError3;
-        }
-      }
+      _iterator3.f();
     }
 
     return this;
   },
-  //disable maps
+
+  /**
+  * Disable game object's {@link Raycaster.Map Raycaster.Map} maps.
+  *
+  * @method Raycaster#disableMaps
+  * @memberof Raycaster
+  * @instance
+  * @since 0.7.2
+  *
+  * @param {(object|object[])} objects - Game object or array of game objects which maps will be disabled.
+  *
+  * @return {Raycaster} {@link Raycaster Raycaster} instance
+  */
   disableMaps: function disableMaps(objects) {
     if (!Array.isArray(objects)) {
       if (objects.data) {
@@ -2887,12 +3319,11 @@ Raycaster.prototype = {
       return this;
     }
 
-    var _iteratorNormalCompletion4 = true;
-    var _didIteratorError4 = false;
-    var _iteratorError4 = undefined;
+    var _iterator4 = _createForOfIteratorHelper(objects),
+        _step4;
 
     try {
-      for (var _iterator4 = objects[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
         var object = _step4.value;
 
         if (object.data) {
@@ -2902,54 +3333,56 @@ Raycaster.prototype = {
         }
       }
     } catch (err) {
-      _didIteratorError4 = true;
-      _iteratorError4 = err;
+      _iterator4.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-          _iterator4.return();
-        }
-      } finally {
-        if (_didIteratorError4) {
-          throw _iteratorError4;
-        }
-      }
+      _iterator4.f();
     }
 
     return this;
   },
-  //scene update event listener
+
+  /**
+  * Updates all {@link Raycaster.Map Raycaster.Map} dynamic maps. Fired on Phaser.Scene update event.
+  *
+  * @method Raycaster#update
+  * @memberof Raycaster
+  * @instance
+  * @since 0.6.0
+  *
+  */
   update: function update() {
     //update dynamic maps
     if (this.mappedObjects.length > 0) {
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
+      var _iterator5 = _createForOfIteratorHelper(this.mappedObjects),
+          _step5;
 
       try {
-        for (var _iterator5 = this.mappedObjects[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
           var mapppedObject = _step5.value;
           if (mapppedObject.data === undefined) continue;
           var map = mapppedObject.data.get('raycasterMap');
           if (map.dynamic) map.updateMap();
         }
       } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
+        _iterator5.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-            _iterator5.return();
-          }
-        } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
-          }
-        }
+        _iterator5.f();
       }
     }
   },
-  //ray factory
+
+  /**
+  * Create {@link Raycaster.Ray Raycaster.Ray} object.
+  *
+  * @method Raycaster#createRay
+  * @memberof Raycaster
+  * @instance
+  * @since 0.6.0
+  *
+  * @param {object} [options] - Ray options:
+  *
+  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+  */
   createRay: function createRay() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     return new this.Ray(options, this);
