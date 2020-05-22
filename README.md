@@ -34,7 +34,7 @@ npm install phaser-raycaster
 ### 1. Include plugin in your project:
 ```html
 <!--CDN-->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.7.3/dist/phaser-raycaster.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.8.0/dist/phaser-raycaster.min.js"></script>
 ```
 ```
 # NPM
@@ -126,4 +126,30 @@ this.ray.setCone(90);
 
 //cast rays in a cone
 let intersections = this.ray.castCone();
+```
+
+### 7. Collisions (arcade physics only)
+```javascript
+//enable auto slicing filed of view
+this.ray.autoSlice = true;
+//set collision (field of view) range
+this.ray.setCollisionRange(200);
+//cast ray
+this.ray.castCircle();
+
+//get all game objects in field of view (which bodies overlap ray's field of view)
+let visibleObjects = this.ray.overlap();
+
+//get objects in field of view
+visibleObjects = this.ray.overlap(group.getChildren());
+
+//check if object is in field of view
+visibleObjects = this.ray.overlap(gameObject);
+
+//add overlap collider (require passing ray.processOverlap as process callback)
+this.physics.add.overlap(this.ray, targets, function(rayFoVCircle, target){
+    /*
+    * what to do in game objects in line of sight
+    */
+}, this.ray.processOverlap.bind(this.ray));
 ```
