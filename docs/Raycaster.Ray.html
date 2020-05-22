@@ -356,7 +356,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
-				 <a href="ray_ray-core.js.html#sunlight-1-line-15">line 15</a>
+				 <a href="ray_ray-core.js.html#sunlight-1-line-24">line 24</a>
 			</li>
 		</ul>
 	</dd>
@@ -451,7 +451,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
-				 <a href="ray_ray-core.js.html#sunlight-1-line-32">line 32</a>
+				 <a href="ray_ray-core.js.html#sunlight-1-line-41">line 41</a>
 			</li>
 		</ul>
 	</dd>
@@ -546,7 +546,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
-				 <a href="ray_ray-core.js.html#sunlight-1-line-41">line 41</a>
+				 <a href="ray_ray-core.js.html#sunlight-1-line-50">line 50</a>
 			</li>
 		</ul>
 	</dd>
@@ -566,8 +566,8 @@
         
             
 <hr>
-<dt class="name" id="range">
-    <h4 id="range"><span class="type-signature"></span>range<span class="type-signature"> :Phaser.Geom.Point</span></h4>
+<dt class="name" id="rayRange">
+    <h4 id="rayRange"><span class="type-signature"></span>rayRange<span class="type-signature"> :integer</span></h4>
 
     
 </dt>
@@ -583,7 +583,7 @@
         <ul>
             <li>
                 
-<span class="param-type">Phaser.Geom.Point</span>
+<span class="param-type">integer</span>
 
 
 
@@ -641,7 +641,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
-				 <a href="ray_ray-core.js.html#sunlight-1-line-50">line 50</a>
+				 <a href="ray_ray-core.js.html#sunlight-1-line-59">line 59</a>
 			</li>
 		</ul>
 	</dd>
@@ -662,7 +662,7 @@
             
 <hr>
 <dt class="name" id="detectionRange">
-    <h4 id="detectionRange"><span class="type-signature"></span>detectionRange<span class="type-signature"> :Phaser.Geom.Point</span></h4>
+    <h4 id="detectionRange"><span class="type-signature"></span>detectionRange<span class="type-signature"> :integer</span></h4>
 
     
 </dt>
@@ -678,7 +678,7 @@
         <ul>
             <li>
                 
-<span class="param-type">Phaser.Geom.Point</span>
+<span class="param-type">integer</span>
 
 
 
@@ -729,7 +729,102 @@
 		<ul class="dummy">
 			<li>
 				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
-				 <a href="ray_ray-core.js.html#sunlight-1-line-59">line 59</a>
+				 <a href="ray_ray-core.js.html#sunlight-1-line-68">line 68</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="collisionRange">
+    <h4 id="collisionRange"><span class="type-signature"></span>collisionRange<span class="type-signature"> :integer</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Ray's maximum collision range of ray's field of view. Radius of Ray.body.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">integer</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
+	<dd class="tag-since">
+		<ul class="dummy">
+			<li>0.8.0</li>
+		</ul>
+	</dd>
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>Phaser.Math.MAX_SAFE_INTEGER</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
+				 <a href="ray_ray-core.js.html#sunlight-1-line-87">line 87</a>
 			</li>
 		</ul>
 	</dd>
@@ -824,7 +919,390 @@
 		<ul class="dummy">
 			<li>
 				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
-				 <a href="ray_ray-core.js.html#sunlight-1-line-78">line 78</a>
+				 <a href="ray_ray-core.js.html#sunlight-1-line-96">line 96</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="autoSlice">
+    <h4 id="autoSlice"><span class="type-signature"></span>autoSlice<span class="type-signature"> :boolean</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        If set true, ray will automatically slice intersections into array of triangles and store it in <a href="Raycaster.Ray.html#slicedIntersections">Ray.slicedIntersections</a>.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">boolean</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
+	<dd class="tag-since">
+		<ul class="dummy">
+			<li>0.8.0</li>
+		</ul>
+	</dd>
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>false</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
+				 <a href="ray_ray-core.js.html#sunlight-1-line-105">line 105</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="intersections">
+    <h4 id="intersections"><span class="type-signature"></span>intersections<span class="type-signature"> :Array.&lt;object></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Array of intersections from last raycast representing field of view.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Array.&lt;object></span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
+	<dd class="tag-since">
+		<ul class="dummy">
+			<li>0.8.0</li>
+		</ul>
+	</dd>
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>[]</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
+				 <a href="ray_ray-core.js.html#sunlight-1-line-114">line 114</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="slicedIntersections">
+    <h4 id="slicedIntersections"><span class="type-signature"></span>slicedIntersections<span class="type-signature"> :Array.&lt;Phaser.Geom.Triangle></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Array of triangles representing slices of field of view from last raycast.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Array.&lt;Phaser.Geom.Triangle></span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
+	<dd class="tag-since">
+		<ul class="dummy">
+			<li>0.8.0</li>
+		</ul>
+	</dd>
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>[]</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
+				 <a href="ray_ray-core.js.html#sunlight-1-line-123">line 123</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="body">
+    <h4 id="body"><span class="type-signature"></span>body<span class="type-signature"> :object|bolean</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Physics body for testing field of view collisions.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">object</span>
+|
+
+<span class="param-type">bolean</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
+	<dd class="tag-since">
+		<ul class="dummy">
+			<li>0.8.0</li>
+		</ul>
+	</dd>
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>undefined</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
+				 <a href="ray_ray-core.js.html#sunlight-1-line-133">line 133</a>
 			</li>
 		</ul>
 	</dd>
@@ -1193,6 +1671,46 @@
 
         <tr>
             
+                <td class="name"><code>collisionRange</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Phaser.Math.MAX_SAFE_INTEGER
+                
+                </td>
+            
+
+            <td class="description last">Ray's maximum collision range of ray's field of view.</td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>detectionRange</code></td>
             
 
@@ -1267,6 +1785,46 @@
             
 
             <td class="description last">If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>autoSlice</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">If set true, ray will automatically slice intersections into array of triangles and store it in <a href="Raycaster.Ray.html#slicedIntersections">Ray.slicedIntersections</a>.</td>
         </tr>
 
     
@@ -3046,7 +3604,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="setRange"><span class="type-signature"></span>setRange( [range])</h4>
+    <h4 class="name" id="setRayRange"><span class="type-signature"></span>setRayRange( [rayRange])</h4>
     
     
 </dt>
@@ -3093,7 +3651,7 @@
 
         <tr>
             
-                <td class="name"><code>range</code></td>
+                <td class="name"><code>rayRange</code></td>
             
 
             <td class="type">
@@ -3424,6 +3982,195 @@
             
 <hr>
 <dt>
+    <h4 class="name" id="setCollisionRange"><span class="type-signature"></span>setCollisionRange( [collisionRange])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Set ray's field of view maximum collision range. Objects outside collision range won't be tested by Raycaster.Ray.overlap method.Determines ray's physics body radius.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>collisionRange</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    Phaser.Math.MAX_SAFE_INTEGER
+                
+                </td>
+            
+
+            <td class="description last">Ray's collision range and physics body radius.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
+	<dd class="tag-since">
+		<ul class="dummy">
+			<li>0.8.0</li>
+		</ul>
+	</dd>
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ray_range.js.html">ray/range.js</a>,
+				 <a href="ray_range.js.html#sunlight-1-line-38">line 38</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <a href="Raycaster.Ray.html">Raycaster.Ray</a> instance
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Raycaster.Ray.html">Raycaster.Ray</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id="boundsInRange"><span class="type-signature"></span>boundsInRange(object [, bounds])</h4>
     
     
@@ -3595,7 +4342,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="ray_range.js.html">ray/range.js</a>,
-				 <a href="ray_range.js.html#sunlight-1-line-38">line 38</a>
+				 <a href="ray_range.js.html#sunlight-1-line-60">line 60</a>
 			</li>
 		</ul>
 	</dd>
@@ -4082,7 +4829,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a>
 	
-		on 2020-04-26T21:01:01+02:00
+		on 2020-05-22T23:10:43+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
