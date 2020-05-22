@@ -16,6 +16,7 @@
             "../src/ray/angle.js",
             "../src/ray/range.js",
             "../src/ray/cone.js",
+            "../src/ray/overlap.js",
             //map
             "../src/map/map-core.js",
             "../src/map/config.js",

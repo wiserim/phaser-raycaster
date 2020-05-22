@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Phaser-raycaster Source: ray/range.js</title>
+	<title>Phaser-raycaster Source: ray/overlap.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,95 +65,140 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: ray/range.js</h1>
+		<h1 class="page-title">Source: ray/overlap.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">/**
- * Set ray's range.
+ * Get game objects overlaping field of view.
  *
- * @method Raycaster.Ray#setRayRange
- * @memberof Raycaster.Ray
- * @instance
- * @since 0.6.0
- *
- * @param {integer} [rayRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
- *
- * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
- */
-export function setRayRange(rayRange = Phaser.Math.MAX_SAFE_INTEGER) {
-    this.rayRange = rayRange;
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
-    return this;
-}
-
-/**
- * Set ray's maximum detection range. Objects outside detection range won't be tested.
- * Ray tests all objects when set to 0.
- *
- * @method Raycaster.Ray#setDetectionRange
- * @memberof Raycaster.Ray
- * @instance
- * @since 0.6.0
- *
- * @param {integer} [detectionRange = 0] - Maximum distance between ray's position and tested objects bounding boxes.
- *
- * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
- */
-export function setDetectionRange(detectionRange = 0) {
-    this.detectionRange = detectionRange;
-    this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
-    return this;
-}
-
-/**
- * Set ray's field of view maximum collision range. Objects outside collision range won't be tested by {@link Raycaster.Ray#overlap Raycaster.Ray.overlap} method.
- * Determines ray's physics body radius.
- *
- * @method Raycaster.Ray#setCollisionRange
+ * @method Raycaster.Ray#overlap
  * @memberof Raycaster.Ray
  * @instance
  * @since 0.8.0
  *
- * @param {integer} [collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's collision range and physics body radius.
+ * @param {object|object[]} [objects] - Game object / array off game objects to test.
  *
- * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ * @return {object[]} Array of game objects that overlaps with field of view.
  */
-export function setCollisionRange(collisionRange = Phaser.Math.MAX_SAFE_INTEGER) {
-    this.collisionRange = collisionRange;
-    if(this.body) {
-        this.arcadePhysicsCircle.setRadius(this.collisionRange);
-        this.body.setCircle(this.collisionRange);
+export function overlap(objects) {
+    let targets = [];
+    let bodies = false;
+    let overlapCircle = new Phaser.Geom.Circle(this.origin.x, this.origin.y, this.collisionRange);
+
+    //get bodies in range
+    if(objects === undefined) {
+        objects = this._raycaster.scene.physics.overlapCirc(this.origin.x, this.origin.y, this.collisionRange, true, true);
+        bodies = true;
     }
-    return this;
+    //get object's body
+    else if(!Array.isArray(objects)) {
+        objects = [objects];
+    }
+    //if objects are bodies
+    if(bodies) {
+        for(let body of objects) {
+            if(body === this.body)
+                continue;
+            
+            let hitbox;
+            //get physics body hitbox
+            if(body.isCircle) {
+                hitbox = new Phaser.Geom.Circle(body.position.x + body.halfWidth, body.position.y + body.halfWidth, body.halfWidth);
+            }
+            else {
+                hitbox = new Phaser.Geom.Rectangle(body.x, body.y, body.width, body.height);
+            }
+
+            if(this.testOverlap(hitbox))
+                targets.push(body.gameObject);
+        }
+    }
+    //if objects are game objects
+    else {
+        for(let object of objects) {
+            if(object.body === undefined)
+                continue;
+
+            let hitbox;
+            //get physics body hitbox
+            if(object.body.isCircle) {
+                hitbox = new Phaser.Geom.Circle(object.body.position.x + object.body.halfWidth, object.body.position.y + object.body.halfWidth, object.body.halfWidth);
+                if(!Phaser.Geom.Intersects.CircleToCircle(overlapCircle, hitbox))
+                    continue;
+            }
+            else {
+                hitbox = new Phaser.Geom.Rectangle(object.body.x, object.body.y, object.body.width, object.body.height);
+                if(!Phaser.Geom.Intersects.CircleToRectangle(overlapCircle, hitbox))
+                    continue;
+            }
+
+            if(this.testOverlap(hitbox))
+                targets.push(object);
+        }
+    }
+
+    return targets;
 }
 
 /**
- * Test if object's bounding box is in ray's detection range.
+ * Process callback for arcade physics collider / overlap.
  *
- * @method Raycaster.Ray#boundsInRange
+ * @method Raycaster.Ray#processOverlap
  * @memberof Raycaster.Ray
  * @instance
- * @since 0.6.0
+ * @since 0.8.0
  *
- * @param {object} object - Tested object
- * @param {(Phaser.Geom.Rectangle|boolean)} [bounds = false] - Tested object's bounds. If not passed bounds will be generated automatically.
+ * @param {object} object1 - Game object passed by collider / overlap.
+ * @param {object} object2 - Game object passed by collider / overlap.
  *
- * @return {boolean} Information if object is in ray's detection range.
+ * @return {boolean} Return true if game object is overlapping ray's field of view.
  */
-export function boundsInRange(object, bounds = false) {
-    if(!this.detectionRange)
-        return true;
+export function processOverlap(object1, object2) {
+    let target;
 
-    let objectBounds;
-    if(bounds)
-        objectBounds = bounds;
+    if(object1._ray === this)
+        target = object2;
+    else if(object2._ray === this)
+        target = obj1;
     else
-        objectBounds = object.getBounds();
+        return false;
 
-    if(Phaser.Geom.Intersects.CircleToRectangle(this.detectionRangeCircle, objectBounds))
-        return true;
+    return (this.overlap(target).length > 0);
+}   
+
+/**
+ * Test if hitbox overlaps with field of view. Method used in {@link Raycaster.Ray#overlap Ray.overlap}.
+ *
+ * @method Raycaster.Ray#testOverlap
+ * @memberof Raycaster.Ray
+ * @instance
+ * @private
+ * @since 0.8.0
+ *
+ * @param {object} hitbox - Game object's hitbox generated inside {@link Raycaster.Ray#overlap Ray.overlap}.
+ *
+ * @return {boolean} True if hitbox overlaps with {@link Raycaster.Ray Raycaster.Ray} field of view.
+ */
+export function testOverlap(hitbox) {
+    let overlap = false;
+
+    //iterate through field of view slices to check collisions with target
+    for(let slice of this.slicedIntersections) {
+        //if hitbox is a circle
+        if(hitbox.type == 0) {
+            overlap = Phaser.Geom.Intersects.TriangleToCircle(slice, hitbox);
+        }
+        //if hitbox is a rectangle
+        else {
+            overlap = Phaser.Geom.Intersects.RectangleToTriangle(hitbox, slice);
+        }
+
+        if(overlap) {
+            return true;
+        }
+    }
 
     return false;
 }
