@@ -1,6 +1,25 @@
 # Change Log
 
-## Version 0.7.3 - 21.04.2020
+## Version 0.8.0 - 2020.05.22
+
+### New features
+
+* `Ray.intersections` is new property that stores intersections calculated by last casting.
+* `Ray.slicedIntersections` is new property that stores intersections calculated by last casting sliced into array of `Phaser.Geom.Triangle` objects.
+* `Ray.autoSlice` is new property that determine if after casting, intesections should be sliced.
+* `Ray.slice` is new method that allows to slice array of intersections into array of `Phaser.Geom.Triangle` objects.
+* `Ray.enableArcadeBody` is new method that creates arcade physics body for raycaster.
+* `Ray.overlap` is new method that allows to if game objects wih physics bodies overlap ray's field of view.
+* `Ray` can be addet to arcade physics collider / overlap.
+
+### Updates
+
+* `Ray.range` was renamed to `Ray.rayRange`.
+* `Ray.setRange` was renamed to `Ray.setRayRange`.
+
+---
+
+## Version 0.7.3 - 2020.04.21
 
 ### New features
 
@@ -8,7 +27,7 @@
 
 ---
 
-## Version 0.7.2 - 29.03.2020
+## Version 0.7.2 - 2020.03.29
 
 ### New features
 
@@ -18,7 +37,7 @@
 
 ---
 
-## Version 0.7.1 - 25.03.2020
+## Version 0.7.1 - 2020.03.25
 
 ### New features
 
@@ -34,7 +53,7 @@
 
 ---
 
-## Version 0.7.0 - 6.03.2020
+## Version 0.7.0 - 2020.03.06
 
 ### New features
 
@@ -44,7 +63,7 @@
 
 ---
 
-## Version 0.6.4 - 23.02.2020
+## Version 0.6.4 - 2020.02.23
 
 ### Updates
 
@@ -52,7 +71,7 @@
 
 ---
 
-## Version 0.6.3 - 23.02.2020
+## Version 0.6.3 - 2020.02.23
 
 ### Bug fixes
 
@@ -60,7 +79,7 @@
 
 ---
 
-## Version 0.6.2 - 23.02.2020
+## Version 0.6.2 - 2020.02.23
 
 ### Bug fixes
 
@@ -68,7 +87,7 @@
 
 ---
 
-## Version 0.6.1 - 22.02.2020
+## Version 0.6.1 - 2020.02.22
 
 ### New features
 
