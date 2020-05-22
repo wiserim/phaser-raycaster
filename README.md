@@ -132,6 +132,8 @@ let intersections = this.ray.castCone();
 ```javascript
 //enable auto slicing filed of view
 this.ray.autoSlice = true;
+//enable arcade physics body
+this.ray.enablePhysicsBody();
 //set collision (field of view) range
 this.ray.setCollisionRange(200);
 //cast ray
