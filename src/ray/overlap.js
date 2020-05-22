@@ -46,6 +46,9 @@ export function overlap(objects) {
     //if objects are game objects
     else {
         for(let object of objects) {
+            if(object.body === undefined)
+                continue;
+
             let hitbox;
             //get physics body hitbox
             if(object.body.isCircle) {

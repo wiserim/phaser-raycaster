@@ -135,7 +135,7 @@ export function Ray(options, raycaster) {
     *
     * @name Raycaster.Ray#body
     * @type {(object|bolean)}
-    * @default false
+    * @default undefined
     * @since 0.8.0
     */
     //this.body = false;
