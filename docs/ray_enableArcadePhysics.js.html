@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Phaser-raycaster Source: ray/angle.js</title>
+	<title>Phaser-raycaster Source: ray/enableArcadePhysics.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,44 +65,36 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: ray/angle.js</h1>
+		<h1 class="page-title">Source: ray/enableArcadePhysics.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">/**
- * Set ray's angle (direction) in radians.
+ * Add to ray arcade physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}.
  *
- * @method Raycaster.Ray#setAngle
+ * @method Raycaster.Ray#enableArcadePhysics
  * @memberof Raycaster.Ray
  * @instance
- * @since 0.6.0
- *
- * @param {float} [angle = 0] - Ray's angle in radians.
+ * @since 0.8.0
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
-export function setAngle(angle = 0) {
-    this.angle = Phaser.Math.Angle.Normalize(angle);
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
-    return this;
-}
+export function enableArcadePhysics() {
+    
+    if(this.body !== undefined)
+        return this;
 
-/**
- * Set ray's angle (direction) in degrees.
- *
- * @method Raycaster.Ray#setAngleDeg
- * @memberof Raycaster.Ray
- * @instance
- * @since 0.6.1
- *
- * @param {float} [angle = 0] - Ray's angle in degrees.
- *
- * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
- */
-export function setAngleDeg(angle = 0) {
-    this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(angle));
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
+    this.arcadePhysicsCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y, this.collisionRange);
+    this.arcadePhysicsCircle._ray = this;
+    this._raycaster.scene.physics.add.existing(this.arcadePhysicsCircle);
+
+    this.body = this.arcadePhysicsCircle.body;
+    this.body
+        .setCircle(this.collisionRange)
+        .setAllowGravity(false)
+        .setImmovable(true);
+
     return this;
 }
 </pre>
