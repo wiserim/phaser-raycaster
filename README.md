@@ -12,7 +12,8 @@ Code examples are available on CodePen: [LINK](https://codepen.io/collection/AOO
 
 **Features:**
 * works with arcade physics,
-* cast rays in a single direction, 360 degrees circle or in a cone,
+* raycasting in a single direction, 360 degrees circle or in a cone,
+* visibility detection (collision detection with game objects),
 * test rays on mapped game objects (containers, lines, rectangles, polygons, circles, sprites and tilemaps),
 * provides closest intersection points between rays and tested objects,
 * tests can be made on all mapped objects or only selected ones,
