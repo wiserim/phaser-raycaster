@@ -17,6 +17,7 @@
  * @param {integer} [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
  * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
  * @param {boolean} [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
+ * @param {boolean} [options.round = false] - If set true, point where ray hit will be rounded.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
@@ -57,6 +58,10 @@ export function config(options) {
     //ignore not intersected rays
     if(options.ignoreNotIntersectedRays !== undefined)
         this.ignoreNotIntersectedRays = (options.ignoreNotIntersectedRays == true)
+    
+    //round
+    if(options.round !== undefined)
+        this.round = (options.round == true)
 
     //auto slice
     if(options.autoSlice !== undefined)

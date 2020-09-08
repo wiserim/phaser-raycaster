@@ -81,7 +81,7 @@ export function castCircle(options = {}) {
         rayTargets.sort(function(a, b){
             //if rays towards points have the same angles promote closer one
             if(a.angle == b.angle) {
-                if(Phaser.Math.Distance.Between(this.origin.x, this.origin.y, a.point.x, a.point.y) < Phaser.Math.Distance.Between(this.origin.x, this.origin.y, b.point.x, b.point.y))
+                if(Phaser.Math.Distance.Between(this.origin.x, this.origin.y, a.point.x, a.point.y) > Phaser.Math.Distance.Between(this.origin.x, this.origin.y, b.point.x, b.point.y))
                     return 1;
                 else
                     return -1;
@@ -90,34 +90,59 @@ export function castCircle(options = {}) {
             return a.angle - b.angle;
         }.bind(this));
 
+        let previousTarget = {
+            angle: false
+        };
+
         //cast rays
         for(let target of rayTargets){
+            //if current target is the same as previous one skip loop
+            if(target.angle === previousTarget.angle) {
+                continue;
+            }
+
+            previousTarget = target;
+
             this.setAngle(target.angle);
             let intersection = this.cast({
                 objects: testedObjects,
                 target: target.point
             });
+
             if(intersection){
                 //if intersection hits target point cast two additional rays
-                if(Phaser.Geom.Point.Equals(target.point, intersection)) {
+                let castSides = false;
+                if(this.round) {
+                    let roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
+                    castSides = Phaser.Geom.Point.Equals(roundedTarget, intersection)
+                }
+                else {
+                    castSides = Phaser.Geom.Point.Equals(target.point, intersection);
+                }
+                if(castSides) {
                     this.setAngle(target.angle - 0.0001);
                     let intersectionA = this.cast({
                         objects: testedObjects
                     });
-                    if(intersectionA)
+
+                    if(intersectionA) {
                         intersections.push(intersectionA);
-                    
+                    }
+
                     intersections.push(intersection);
 
                     this.setAngle(target.angle + 0.0001);
                     let intersectionB = this.cast({
                         objects: testedObjects
                     });
-                    if(intersectionB)
+
+                    if(intersectionB) {
                         intersections.push(intersectionB);
+                    }
 
                     continue;
                 }
+
                 intersections.push(intersection);
             }
         }

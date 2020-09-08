@@ -103,6 +103,15 @@ export function Ray(options, raycaster) {
     */
     this.ignoreNotIntersectedRays = true;
     /**
+    * If set true, ray's hit points will be rounded.
+    *
+    * @name Raycaster.Ray#round
+    * @type {boolean}
+    * @default false
+    * @since 0.8.1
+    */
+    this.round = false;
+    /**
     * If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
     *
     * @name Raycaster.Ray#autoSlice

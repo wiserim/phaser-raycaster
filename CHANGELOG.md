@@ -1,5 +1,17 @@
 # Change Log
 
+## Version 0.8.1 - 2020.09.08
+
+### New features
+
+* `Ray.round` is new property that determines if ray's hit point will be rounded.
+
+### Updates
+
+* Slight ray casting optimisation: raycaster will cast ray at each angle only once.
+
+---
+
 ## Version 0.8.0 - 2020.05.22
 
 ### New features

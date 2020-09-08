@@ -146,7 +146,21 @@ export function cast(options = {}) {
         }
     }
 
-    if(!closestIntersection)
-        return (this.ignoreNotIntersectedRays) ? false : this._ray.getPointB();
-    return new Phaser.Geom.Point(closestIntersection.x, closestIntersection.y);
+    let result;
+    if(!closestIntersection) {
+        if(this.ignoreNotIntersectedRays)
+            return false;
+
+        result = this._ray.getPointB();
+    }
+    else {
+        result = new Phaser.Geom.Point(closestIntersection.x, closestIntersection.y);
+    }
+
+    if(this.round) {
+        result.x = Math.round(result.x);
+        result.y = Math.round(result.y);
+    }
+    
+    return result;
 }

@@ -307,6 +307,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /*Map methods for circles*/
 
 /**
@@ -413,58 +419,39 @@ function updateMap() {
 
   if (rotation !== 0) {
     var newPoints = [];
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+
+    var _iterator = _createForOfIteratorHelper(points),
+        _step;
 
     try {
-      for (var _iterator = points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var point = _step.value;
         var vector = new Phaser.Geom.Line(this.object.x, this.object.y, this.object.x + (point.x + this.object.radius) * this.object.scaleX, this.object.y + (point.y + this.object.radius) * this.object.scaleY);
         Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
         newPoints.push(vector.getPointB());
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
 
     points = newPoints;
   } //if rotation === 0
   else {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iterator2 = _createForOfIteratorHelper(points),
+          _step2;
 
       try {
-        for (var _iterator2 = points[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var _point = _step2.value;
           _point.x = _point.x * this.object.scaleX + offset.x;
           _point.y = _point.y * this.object.scaleY + offset.y;
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
     } //set segments
 
@@ -493,6 +480,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /*Map methods for containers*/
 
 /**
@@ -531,24 +524,22 @@ function getPoints() {
       }
     });
 
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iterator = _createForOfIteratorHelper(this.object.list),
+        _step;
 
     try {
-      for (var _iterator = this.object.list[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var child = _step.value;
 
         if (child.type === 'Arc') {
           var map = child.data.get('raycasterMap');
 
           if (map._points.length == 0) {
-            var _iteratorNormalCompletion2 = true;
-            var _didIteratorError2 = false;
-            var _iteratorError2 = undefined;
+            var _iterator2 = _createForOfIteratorHelper(map.getPoints(tempRay, true)),
+                _step2;
 
             try {
-              for (var _iterator2 = map.getPoints(tempRay, true)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
                 var point = _step2.value;
 
                 var _vector = new Phaser.Geom.Line(0, 0, point.x, point.y);
@@ -557,27 +548,17 @@ function getPoints() {
                 points.push(new Phaser.Geom.Point(_vector.getPointB().x + offset.x, _vector.getPointB().y + offset.y));
               }
             } catch (err) {
-              _didIteratorError2 = true;
-              _iteratorError2 = err;
+              _iterator2.e(err);
             } finally {
-              try {
-                if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-                  _iterator2.return();
-                }
-              } finally {
-                if (_didIteratorError2) {
-                  throw _iteratorError2;
-                }
-              }
+              _iterator2.f();
             }
           }
         } else if (child.type === 'Container') {
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
+          var _iterator3 = _createForOfIteratorHelper(child.data.get('raycasterMap').getPoints(tempRay, true)),
+              _step3;
 
           try {
-            for (var _iterator3 = child.data.get('raycasterMap').getPoints(tempRay, true)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
               var _point = _step3.value;
 
               if (this.object.rotation !== 0) {
@@ -589,34 +570,16 @@ function getPoints() {
               else points.push(new Phaser.Geom.Point(_point.x * this.object.scaleX + offset.x, _point.y * this.object.scaleX + offset.y));
             }
           } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
+            _iterator3.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-                _iterator3.return();
-              }
-            } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
-              }
-            }
+            _iterator3.f();
           }
         }
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
   }
 
@@ -678,12 +641,12 @@ function updateMap() {
 
 
     var childPoints = [];
-    var _iteratorNormalCompletion4 = true;
-    var _didIteratorError4 = false;
-    var _iteratorError4 = undefined;
+
+    var _iterator4 = _createForOfIteratorHelper(map.getPoints()),
+        _step4;
 
     try {
-      for (var _iterator4 = map.getPoints()[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
         var point = _step4.value;
 
         //calculate positions after container's rotation
@@ -698,26 +661,16 @@ function updateMap() {
       } //add child segments
 
     } catch (err) {
-      _didIteratorError4 = true;
-      _iteratorError4 = err;
+      _iterator4.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-          _iterator4.return();
-        }
-      } finally {
-        if (_didIteratorError4) {
-          throw _iteratorError4;
-        }
-      }
+      _iterator4.f();
     }
 
-    var _iteratorNormalCompletion5 = true;
-    var _didIteratorError5 = false;
-    var _iteratorError5 = undefined;
+    var _iterator5 = _createForOfIteratorHelper(map.getSegments()),
+        _step5;
 
     try {
-      for (var _iterator5 = map.getSegments()[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+      for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
         var segment = _step5.value;
 
         //calculate positions after container's rotation
@@ -733,18 +686,9 @@ function updateMap() {
         else segments.push(new Phaser.Geom.Line(segment.getPointA().x * container.scaleX + offset.x, segment.getPointA().y * container.scaleY + offset.y, segment.getPointB().x * container.scaleX + offset.x, segment.getPointB().y * container.scaleY + offset.y));
       }
     } catch (err) {
-      _didIteratorError5 = true;
-      _iteratorError5 = err;
+      _iterator5.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-          _iterator5.return();
-        }
-      } finally {
-        if (_didIteratorError5) {
-          throw _iteratorError5;
-        }
-      }
+      _iterator5.f();
     }
   }.bind(this)); //get children intersections
 
@@ -758,19 +702,18 @@ function updateMap() {
 
       if (!Phaser.Geom.Intersects.RectangleToRectangle(childA.getBounds(), childB.getBounds())) continue; //find objects intersections
 
-      var _iteratorNormalCompletion6 = true;
-      var _didIteratorError6 = false;
-      var _iteratorError6 = undefined;
+      var _iterator6 = _createForOfIteratorHelper(mapA.getSegments()),
+          _step6;
 
       try {
-        for (var _iterator6 = mapA.getSegments()[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+        for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
           var segmentA = _step6.value;
-          var _iteratorNormalCompletion7 = true;
-          var _didIteratorError7 = false;
-          var _iteratorError7 = undefined;
+
+          var _iterator7 = _createForOfIteratorHelper(mapB.getSegments()),
+              _step7;
 
           try {
-            for (var _iterator7 = mapB.getSegments()[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
               var segmentB = _step7.value;
               var intersection = [];
               if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue; //calculate positions after container's rotation
@@ -783,33 +726,15 @@ function updateMap() {
               else points.push(new Phaser.Geom.Point(intersection.x * container.scaleX + offset.x, intersection.y * container.scaleX + offset.y));
             }
           } catch (err) {
-            _didIteratorError7 = true;
-            _iteratorError7 = err;
+            _iterator7.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion7 && _iterator7.return != null) {
-                _iterator7.return();
-              }
-            } finally {
-              if (_didIteratorError7) {
-                throw _iteratorError7;
-              }
-            }
+            _iterator7.f();
           }
         }
       } catch (err) {
-        _didIteratorError6 = true;
-        _iteratorError6 = err;
+        _iterator6.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
-            _iterator6.return();
-          }
-        } finally {
-          if (_didIteratorError6) {
-            throw _iteratorError6;
-          }
-        }
+        _iterator6.f();
       }
     }
   }
@@ -1074,6 +999,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /*Map methods for polygons*/
 
 /**
@@ -1137,55 +1068,35 @@ function updateMap() {
   var rotation = this.object.rotation;
 
   if (rotation !== 0) {
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iterator = _createForOfIteratorHelper(this.object.geom.points),
+        _step;
 
     try {
-      for (var _iterator = this.object.geom.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var point = _step.value;
         var vector = new Phaser.Geom.Line(this.object.x, this.object.y, point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y);
         Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
         points.push(vector.getPointB());
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
   } //if rotation === 0
   else {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iterator2 = _createForOfIteratorHelper(this.object.geom.points),
+          _step2;
 
       try {
-        for (var _iterator2 = this.object.geom.points[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var _point = _step2.value;
           points.push(new Phaser.Geom.Point(_point.x * this.object.scaleX + offset.x, _point.y * this.object.scaleY + offset.y));
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
     } //set segments
 
@@ -1302,6 +1213,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCollisionTiles", function() { return setCollisionTiles; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /*Map methods for tilemaps*/
 
 /**
@@ -1322,55 +1239,37 @@ function getPoints() {
   if (!this.active) return [];
   if (!ray || ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER)) return this._points;
   var points = [];
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+
+  var _iterator = _createForOfIteratorHelper(this._points),
+      _step;
 
   try {
-    for (var _iterator = this._points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
       var point = _step.value;
       if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, point.x, point.y) <= ray.detectionRange) points.push(point);
     } //get intersections between tilemap's segments and ray's detection range edge
 
   } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
+    _iterator.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return != null) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
+    _iterator.f();
   }
 
   var segments = this.getSegments(ray);
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
+
+  var _iterator2 = _createForOfIteratorHelper(segments),
+      _step2;
 
   try {
-    for (var _iterator2 = segments[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var segment = _step2.value;
       if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x1, segment.y1) > ray.detectionRange) points.push(new Phaser.Geom.Point(segment.x1, segment.y1));
       if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x2, segment.y2) > ray.detectionRange) points.push(new Phaser.Geom.Point(segment.x2, segment.y2));
     }
   } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
+    _iterator2.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-        _iterator2.return();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
-      }
-    }
+    _iterator2.f();
   }
 
   return points;
@@ -1395,12 +1294,12 @@ function getSegments() {
   if (!this.active) return [];
   if (!ray || ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER)) return this._segments;
   var segments = [];
-  var _iteratorNormalCompletion3 = true;
-  var _didIteratorError3 = false;
-  var _iteratorError3 = undefined;
+
+  var _iterator3 = _createForOfIteratorHelper(this._segments),
+      _step3;
 
   try {
-    for (var _iterator3 = this._segments[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
       var segment = _step3.value;
 
       if (Phaser.Geom.Intersects.LineToCircle(segment, ray.detectionRangeCircle)) {
@@ -1408,18 +1307,9 @@ function getSegments() {
       }
     }
   } catch (err) {
-    _didIteratorError3 = true;
-    _iteratorError3 = err;
+    _iterator3.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-        _iterator3.return();
-      }
-    } finally {
-      if (_didIteratorError3) {
-        throw _iteratorError3;
-      }
-    }
+    _iterator3.f();
   }
 
   return segments;
@@ -1514,12 +1404,11 @@ function updateMap() {
   } //add bottom horizontal segments
 
 
-  var _iteratorNormalCompletion4 = true;
-  var _didIteratorError4 = false;
-  var _iteratorError4 = undefined;
+  var _iterator4 = _createForOfIteratorHelper(this.object.layer.data[this.object.layer.data.length - 1]),
+      _step4;
 
   try {
-    for (var _iterator4 = this.object.layer.data[this.object.layer.data.length - 1][Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
       var _tile = _step4.value;
 
       if (this.collisionTiles.includes(_tile.index)) {
@@ -1547,18 +1436,9 @@ function updateMap() {
     } //add segment if exist
 
   } catch (err) {
-    _didIteratorError4 = true;
-    _iteratorError4 = err;
+    _iterator4.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-        _iterator4.return();
-      }
-    } finally {
-      if (_didIteratorError4) {
-        throw _iteratorError4;
-      }
-    }
+    _iterator4.f();
   }
 
   if (horizontal) {
@@ -1578,12 +1458,12 @@ function updateMap() {
 
   var vertical = false;
   var verticalsLastColumn = [];
-  var _iteratorNormalCompletion5 = true;
-  var _didIteratorError5 = false;
-  var _iteratorError5 = undefined;
+
+  var _iterator5 = _createForOfIteratorHelper(this.object.layer.data),
+      _step5;
 
   try {
-    for (var _iterator5 = this.object.layer.data[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
       var _row = _step5.value;
       var _tile2 = _row[_row.length - 1]; //if tile blocks ray
 
@@ -1607,18 +1487,9 @@ function updateMap() {
       }
     }
   } catch (err) {
-    _didIteratorError5 = true;
-    _iteratorError5 = err;
+    _iterator5.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-        _iterator5.return();
-      }
-    } finally {
-      if (_didIteratorError5) {
-        throw _iteratorError5;
-      }
-    }
+    _iterator5.f();
   }
 
   verticals.push(verticalsLastColumn); //add vertical segments
@@ -1626,9 +1497,9 @@ function updateMap() {
   for (var _i = 0, _verticals = verticals; _i < _verticals.length; _i++) {
     var column = _verticals[_i];
     if (!column) continue;
-    var _iteratorNormalCompletion6 = true;
-    var _didIteratorError6 = false;
-    var _iteratorError6 = undefined;
+
+    var _iterator6 = _createForOfIteratorHelper(column),
+        _step6;
 
     try {
       var _loop = function _loop() {
@@ -1646,12 +1517,11 @@ function updateMap() {
           return point.x == x && point.y == y2;
         })) points.push(new Phaser.Geom.Point(x, y)); //get intersections between horizontal segments and vertical
 
-        var _iteratorNormalCompletion7 = true;
-        var _didIteratorError7 = false;
-        var _iteratorError7 = undefined;
+        var _iterator7 = _createForOfIteratorHelper(horizontals),
+            _step7;
 
         try {
-          for (var _iterator7 = horizontals[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
             var horizontalSegment = _step7.value;
             if (segment.x1 == horizontalSegment.x1 || segment.x1 == horizontalSegment.x2 || segment.x2 == horizontalSegment.x1 || segment.x2 == horizontalSegment.x2) continue;
             if (segment.y1 == horizontalSegment.y1 || segment.y1 == horizontalSegment.y2 || segment.y2 == horizontalSegment.y1 || segment.y2 == horizontalSegment.y2) continue;
@@ -1662,37 +1532,19 @@ function updateMap() {
             }
           }
         } catch (err) {
-          _didIteratorError7 = true;
-          _iteratorError7 = err;
+          _iterator7.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return != null) {
-              _iterator7.return();
-            }
-          } finally {
-            if (_didIteratorError7) {
-              throw _iteratorError7;
-            }
-          }
+          _iterator7.f();
         }
       };
 
-      for (var _iterator6 = column[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+      for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
         _loop();
       }
     } catch (err) {
-      _didIteratorError6 = true;
-      _iteratorError6 = err;
+      _iterator6.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
-          _iterator6.return();
-        }
-      } finally {
-        if (_didIteratorError6) {
-          throw _iteratorError6;
-        }
-      }
+      _iterator6.f();
     }
   }
 
@@ -1814,6 +1666,12 @@ function setAngleDeg() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cast", function() { return cast; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /**
  * Cast ray to find closest intersection with tested mapped objects.
  *
@@ -1837,12 +1695,11 @@ function cast() {
     var _intersections = [];
     Phaser.Geom.Intersects.GetLineToRectangle(this._ray, this._raycaster.boundingBox.rectangle, _intersections);
     if (_intersections.length === 1) closestIntersection = _intersections[0];else if (_intersections.length > 1) {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iterator = _createForOfIteratorHelper(_intersections),
+          _step;
 
       try {
-        for (var _iterator = _intersections[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var intersection = _step.value;
           var distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, intersection.x, intersection.y);
 
@@ -1852,18 +1709,9 @@ function cast() {
           }
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
     } //if ray target is declared
     else if (options.target) {
@@ -1882,23 +1730,21 @@ function cast() {
     if (this._raycaster) options.objects = this._raycaster.mappedObjects;else return intersections;
   }
 
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
+  var _iterator2 = _createForOfIteratorHelper(options.objects),
+      _step2;
 
   try {
-    for (var _iterator2 = options.objects[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var object = _step2.value;
       //check if object is intersected by ray
       if (!Phaser.Geom.Intersects.GetLineToRectangle(this._ray, object.getBounds())) continue;
       var map = object.data.get('raycasterMap'); //check intersections
 
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
+      var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
+          _step3;
 
       try {
-        for (var _iterator3 = map.getSegments(this)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var segment = _step3.value;
           var _intersection2 = []; //if target point is segmemt point
 
@@ -1919,18 +1765,9 @@ function cast() {
         } //check arc intersections if its not
 
       } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _iterator3.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-            _iterator3.return();
-          }
-        } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
-          }
-        }
+        _iterator3.f();
       }
 
       if (map.type === 'Arc') {
@@ -1943,12 +1780,12 @@ function cast() {
         if (options.target) {
           var points = map.getPoints(this);
           var isTangent = false;
-          var _iteratorNormalCompletion4 = true;
-          var _didIteratorError4 = false;
-          var _iteratorError4 = undefined;
+
+          var _iterator4 = _createForOfIteratorHelper(points),
+              _step4;
 
           try {
-            for (var _iterator4 = points[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
               var point = _step4.value;
 
               if (Phaser.Geom.Point.Equals(options.target, point)) {
@@ -1964,18 +1801,9 @@ function cast() {
               }
             }
           } catch (err) {
-            _didIteratorError4 = true;
-            _iteratorError4 = err;
+            _iterator4.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-                _iterator4.return();
-              }
-            } finally {
-              if (_didIteratorError4) {
-                throw _iteratorError4;
-              }
-            }
+            _iterator4.f();
           }
 
           if (isTangent) continue;
@@ -2000,12 +1828,11 @@ function cast() {
         var circle = new Phaser.Geom.Circle(offset.x, offset.y, map.object.radius * map.object.scaleX);
 
         if (Phaser.Geom.Intersects.GetLineToCircle(this._ray, circle, circleIntersections)) {
-          var _iteratorNormalCompletion5 = true;
-          var _didIteratorError5 = false;
-          var _iteratorError5 = undefined;
+          var _iterator5 = _createForOfIteratorHelper(circleIntersections),
+              _step5;
 
           try {
-            for (var _iterator5 = circleIntersections[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
               var _intersection = _step5.value;
 
               //get closest intersection
@@ -2017,39 +1844,34 @@ function cast() {
               }
             }
           } catch (err) {
-            _didIteratorError5 = true;
-            _iteratorError5 = err;
+            _iterator5.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-                _iterator5.return();
-              }
-            } finally {
-              if (_didIteratorError5) {
-                throw _iteratorError5;
-              }
-            }
+            _iterator5.f();
           }
         }
       }
     }
   } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
+    _iterator2.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-        _iterator2.return();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
-      }
-    }
+    _iterator2.f();
   }
 
-  if (!closestIntersection) return this.ignoreNotIntersectedRays ? false : this._ray.getPointB();
-  return new Phaser.Geom.Point(closestIntersection.x, closestIntersection.y);
+  var result;
+
+  if (!closestIntersection) {
+    if (this.ignoreNotIntersectedRays) return false;
+    result = this._ray.getPointB();
+  } else {
+    result = new Phaser.Geom.Point(closestIntersection.x, closestIntersection.y);
+  }
+
+  if (this.round) {
+    result.x = Math.round(result.x);
+    result.y = Math.round(result.y);
+  }
+
+  return result;
 }
 
 /***/ }),
@@ -2064,6 +1886,12 @@ function cast() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "castCircle", function() { return castCircle; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /**
  * Cast ray in all directions to find closest intersections with tested mapped objects.
  *
@@ -2089,12 +1917,11 @@ function castCircle() {
     if (this._raycaster) options.objects = this._raycaster.mappedObjects;else return intersections; //if bounding box is defined add bounding box points to 
 
     if (this._raycaster && this._raycaster.boundingBox) {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iterator = _createForOfIteratorHelper(this._raycaster.boundingBox.points),
+          _step;
 
       try {
-        for (var _iterator = this._raycaster.boundingBox.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var point = _step.value;
           rayTargets.push({
             point: point,
@@ -2102,18 +1929,9 @@ function castCircle() {
           });
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
     }
 
@@ -2125,12 +1943,11 @@ function castCircle() {
       var map = object.data.get('raycasterMap');
       maps.push(map); //get points and angles
 
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iterator2 = _createForOfIteratorHelper(map.getPoints(this)),
+          _step2;
 
       try {
-        for (var _iterator2 = map.getPoints(this)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var _point = _step2.value;
           rayTargets.push({
             point: _point,
@@ -2139,18 +1956,9 @@ function castCircle() {
         } //get objects intersections
 
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
 
       for (var j = i + 1, jLength = options.objects.length; j < jLength; j++) {
@@ -2159,19 +1967,18 @@ function castCircle() {
 
         if (!Phaser.Geom.Intersects.RectangleToRectangle(object.getBounds(), objectB.getBounds())) continue; //find objects intersections
 
-        var _iteratorNormalCompletion3 = true;
-        var _didIteratorError3 = false;
-        var _iteratorError3 = undefined;
+        var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
+            _step3;
 
         try {
-          for (var _iterator3 = map.getSegments(this)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
             var segmentA = _step3.value;
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
+
+            var _iterator4 = _createForOfIteratorHelper(mapB.getSegments(this)),
+                _step4;
 
             try {
-              for (var _iterator4 = mapB.getSegments(this)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+              for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
                 var segmentB = _step4.value;
                 var intersection = [];
                 if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
@@ -2181,33 +1988,15 @@ function castCircle() {
                 });
               }
             } catch (err) {
-              _didIteratorError4 = true;
-              _iteratorError4 = err;
+              _iterator4.e(err);
             } finally {
-              try {
-                if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-                  _iterator4.return();
-                }
-              } finally {
-                if (_didIteratorError4) {
-                  throw _iteratorError4;
-                }
-              }
+              _iterator4.f();
             }
           }
         } catch (err) {
-          _didIteratorError3 = true;
-          _iteratorError3 = err;
+          _iterator3.e(err);
         } finally {
-          try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-              _iterator3.return();
-            }
-          } finally {
-            if (_didIteratorError3) {
-              throw _iteratorError3;
-            }
-          }
+          _iterator3.f();
         }
       }
     } //sort target points by angle
@@ -2216,19 +2005,28 @@ function castCircle() {
     rayTargets.sort(function (a, b) {
       //if rays towards points have the same angles promote closer one
       if (a.angle == b.angle) {
-        if (Phaser.Math.Distance.Between(this.origin.x, this.origin.y, a.point.x, a.point.y) < Phaser.Math.Distance.Between(this.origin.x, this.origin.y, b.point.x, b.point.y)) return 1;else return -1;
+        if (Phaser.Math.Distance.Between(this.origin.x, this.origin.y, a.point.x, a.point.y) > Phaser.Math.Distance.Between(this.origin.x, this.origin.y, b.point.x, b.point.y)) return 1;else return -1;
       }
 
       return a.angle - b.angle;
-    }.bind(this)); //cast rays
+    }.bind(this));
+    var previousTarget = {
+      angle: false
+    }; //cast rays
 
-    var _iteratorNormalCompletion5 = true;
-    var _didIteratorError5 = false;
-    var _iteratorError5 = undefined;
+    var _iterator5 = _createForOfIteratorHelper(rayTargets),
+        _step5;
 
     try {
-      for (var _iterator5 = rayTargets[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+      for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
         var target = _step5.value;
+
+        //if current target is the same as previous one skip loop
+        if (target.angle === previousTarget.angle) {
+          continue;
+        }
+
+        previousTarget = target;
         this.setAngle(target.angle);
 
         var _intersection = this.cast({
@@ -2238,18 +2036,35 @@ function castCircle() {
 
         if (_intersection) {
           //if intersection hits target point cast two additional rays
-          if (Phaser.Geom.Point.Equals(target.point, _intersection)) {
+          var castSides = false;
+
+          if (this.round) {
+            var roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
+            castSides = Phaser.Geom.Point.Equals(roundedTarget, _intersection);
+          } else {
+            castSides = Phaser.Geom.Point.Equals(target.point, _intersection);
+          }
+
+          if (castSides) {
             this.setAngle(target.angle - 0.0001);
             var intersectionA = this.cast({
               objects: testedObjects
             });
-            if (intersectionA) intersections.push(intersectionA);
+
+            if (intersectionA) {
+              intersections.push(intersectionA);
+            }
+
             intersections.push(_intersection);
             this.setAngle(target.angle + 0.0001);
             var intersectionB = this.cast({
               objects: testedObjects
             });
-            if (intersectionB) intersections.push(intersectionB);
+
+            if (intersectionB) {
+              intersections.push(intersectionB);
+            }
+
             continue;
           }
 
@@ -2257,18 +2072,9 @@ function castCircle() {
         }
       }
     } catch (err) {
-      _didIteratorError5 = true;
-      _iteratorError5 = err;
+      _iterator5.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-          _iterator5.return();
-        }
-      } finally {
-        if (_didIteratorError5) {
-          throw _iteratorError5;
-        }
-      }
+      _iterator5.f();
     }
   }
 
@@ -2290,6 +2096,12 @@ function castCircle() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "castCone", function() { return castCone; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /**
  * Cast ray in a cone to find closest intersections with tested mapped objects.
  *
@@ -2338,12 +2150,11 @@ function castCone() {
     if (this._raycaster) options.objects = this._raycaster.mappedObjects;else return intersections; //if bounding box is defined add bounding box points to 
 
     if (this._raycaster && this._raycaster.boundingBox) {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      var _iterator = _createForOfIteratorHelper(this._raycaster.boundingBox.points),
+          _step;
 
       try {
-        for (var _iterator = this._raycaster.boundingBox.points[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var point = _step.value;
           var angle = Phaser.Math.Angle.Between(this.origin.x, this.origin.y, point.x, point.y);
           var angleOffsetDeg = Phaser.Math.Angle.ShortestBetween(Phaser.Math.RadToDeg(angle), Phaser.Math.RadToDeg(originalAngle));
@@ -2357,18 +2168,9 @@ function castCone() {
           }
         }
       } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
+        _iterator.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
+        _iterator.f();
       }
     }
   }
@@ -2381,12 +2183,11 @@ function castCone() {
     var map = object.data.get('raycasterMap');
     maps.push(map); //get points and angles
 
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
+    var _iterator2 = _createForOfIteratorHelper(map.getPoints(this)),
+        _step2;
 
     try {
-      for (var _iterator2 = map.getPoints(this)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
         var _point = _step2.value;
 
         var _angle2 = Phaser.Math.Angle.Between(this.origin.x, this.origin.y, _point.x, _point.y);
@@ -2403,18 +2204,9 @@ function castCone() {
       } //get objects intersections
 
     } catch (err) {
-      _didIteratorError2 = true;
-      _iteratorError2 = err;
+      _iterator2.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-          _iterator2.return();
-        }
-      } finally {
-        if (_didIteratorError2) {
-          throw _iteratorError2;
-        }
-      }
+      _iterator2.f();
     }
 
     for (var j = i + 1, jLength = options.objects.length; j < jLength; j++) {
@@ -2423,19 +2215,18 @@ function castCone() {
 
       if (!Phaser.Geom.Intersects.RectangleToRectangle(object.getBounds(), objectB.getBounds())) continue; //find objects intersections
 
-      var _iteratorNormalCompletion3 = true;
-      var _didIteratorError3 = false;
-      var _iteratorError3 = undefined;
+      var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
+          _step3;
 
       try {
-        for (var _iterator3 = map.getSegments(this)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
           var segmentA = _step3.value;
-          var _iteratorNormalCompletion4 = true;
-          var _didIteratorError4 = false;
-          var _iteratorError4 = undefined;
+
+          var _iterator4 = _createForOfIteratorHelper(mapB.getSegments(this)),
+              _step4;
 
           try {
-            for (var _iterator4 = mapB.getSegments(this)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
               var segmentB = _step4.value;
               var intersection = [];
               if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
@@ -2453,33 +2244,15 @@ function castCone() {
               }
             }
           } catch (err) {
-            _didIteratorError4 = true;
-            _iteratorError4 = err;
+            _iterator4.e(err);
           } finally {
-            try {
-              if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-                _iterator4.return();
-              }
-            } finally {
-              if (_didIteratorError4) {
-                throw _iteratorError4;
-              }
-            }
+            _iterator4.f();
           }
         }
       } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
+        _iterator3.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-            _iterator3.return();
-          }
-        } finally {
-          if (_didIteratorError3) {
-            throw _iteratorError3;
-          }
-        }
+        _iterator3.f();
       }
     }
   } //sort target points by angle
@@ -2488,14 +2261,24 @@ function castCone() {
   rayTargets.sort(function (a, b) {
     //if rays towards points have the same angles promote closer one
     if (a.angle == b.angle) {
-      if (Phaser.Math.Distance.Between(this.origin.x, this.origin.y, a.point.x, a.point.y) < Phaser.Math.Distance.Between(this.origin.x, this.origin.y, b.point.x, b.point.y)) return 1;else return -1;
+      if (Phaser.Math.Distance.Between(this.origin.x, this.origin.y, a.point.x, a.point.y) > Phaser.Math.Distance.Between(this.origin.x, this.origin.y, b.point.x, b.point.y)) return 1;else return -1;
     }
 
     return a.angleOffsetDeg - b.angleOffsetDeg;
-  }.bind(this)); //cast rays
+  }.bind(this));
+  var previousTarget = {
+    angle: false
+  }; //cast rays
 
   for (var _i = 0, _rayTargets = rayTargets; _i < _rayTargets.length; _i++) {
     var target = _rayTargets[_i];
+
+    //if current target is the same as previous one skip loop
+    if (target.angle === previousTarget.angle) {
+      continue;
+    }
+
+    previousTarget = target;
     this.setAngle(target.angle);
 
     var _intersection = this.cast({
@@ -2505,18 +2288,35 @@ function castCone() {
 
     if (_intersection) {
       //if intersection hits target point cast two additional rays
-      if (Phaser.Geom.Point.Equals(target.point, _intersection)) {
+      var castSides = false;
+
+      if (this.round) {
+        var roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
+        castSides = Phaser.Geom.Point.Equals(roundedTarget, _intersection);
+      } else {
+        castSides = Phaser.Geom.Point.Equals(target.point, _intersection);
+      }
+
+      if (castSides) {
         this.setAngle(target.angle - 0.0001);
         var intersectionA = this.cast({
           objects: testedObjects
         });
-        if (intersectionA) intersections.push(intersectionA);
+
+        if (intersectionA) {
+          intersections.push(intersectionA);
+        }
+
         intersections.push(_intersection);
         this.setAngle(target.angle + 0.0001);
         var intersectionB = this.cast({
           objects: testedObjects
         });
-        if (intersectionB) intersections.push(intersectionB);
+
+        if (intersectionB) {
+          intersections.push(intersectionB);
+        }
+
         continue;
       }
 
@@ -2610,6 +2410,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param {integer} [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
  * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
  * @param {boolean} [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
+ * @param {boolean} [options.round = false] - If set true, point where ray hit will be rounded.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
@@ -2632,7 +2433,9 @@ function config(options) {
 
   if (options.detectionRange !== undefined) this.detectionRange = options.detectionRange; //ignore not intersected rays
 
-  if (options.ignoreNotIntersectedRays !== undefined) this.ignoreNotIntersectedRays = options.ignoreNotIntersectedRays == true; //auto slice
+  if (options.ignoreNotIntersectedRays !== undefined) this.ignoreNotIntersectedRays = options.ignoreNotIntersectedRays == true; //round
+
+  if (options.round !== undefined) this.round = options.round == true; //auto slice
 
   if (options.autoSlice !== undefined) this.autoSlice = options.autoSlice == true;
   Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
@@ -2726,6 +2529,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "overlap", function() { return overlap; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "processOverlap", function() { return processOverlap; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testOverlap", function() { return testOverlap; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /**
  * Get game objects overlaping field of view.
  *
@@ -2753,12 +2562,11 @@ function overlap(objects) {
 
 
   if (bodies) {
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iterator = _createForOfIteratorHelper(objects),
+        _step;
 
     try {
-      for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var body = _step.value;
         if (body === this.body) continue;
         var hitbox = void 0; //get physics body hitbox
@@ -2772,27 +2580,17 @@ function overlap(objects) {
         if (this.testOverlap(hitbox)) targets.push(body.gameObject);
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
   } //if objects are game objects
   else {
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      var _iterator2 = _createForOfIteratorHelper(objects),
+          _step2;
 
       try {
-        for (var _iterator2 = objects[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var object = _step2.value;
           if (object.body === undefined) continue;
 
@@ -2810,18 +2608,9 @@ function overlap(objects) {
           if (this.testOverlap(_hitbox)) targets.push(object);
         }
       } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
+        _iterator2.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
+        _iterator2.f();
       }
     }
 
@@ -2863,12 +2652,11 @@ function processOverlap(object1, object2) {
 function testOverlap(hitbox) {
   var overlap = false; //iterate through field of view slices to check collisions with target
 
-  var _iteratorNormalCompletion3 = true;
-  var _didIteratorError3 = false;
-  var _iteratorError3 = undefined;
+  var _iterator3 = _createForOfIteratorHelper(this.slicedIntersections),
+      _step3;
 
   try {
-    for (var _iterator3 = this.slicedIntersections[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
       var slice = _step3.value;
 
       //if hitbox is a circle
@@ -2884,18 +2672,9 @@ function testOverlap(hitbox) {
       }
     }
   } catch (err) {
-    _didIteratorError3 = true;
-    _iteratorError3 = err;
+    _iterator3.e(err);
   } finally {
-    try {
-      if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-        _iterator3.return();
-      }
-    } finally {
-      if (_didIteratorError3) {
-        throw _iteratorError3;
-      }
-    }
+    _iterator3.f();
   }
 
   return false;
@@ -3128,6 +2907,16 @@ function Ray(options, raycaster) {
 
   this.ignoreNotIntersectedRays = true;
   /**
+  * If set true, ray's hit points will be rounded.
+  *
+  * @name Raycaster.Ray#round
+  * @type {boolean}
+  * @default false
+  * @since 0.8.1
+  */
+
+  this.round = false;
+  /**
   * If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
   *
   * @name Raycaster.Ray#autoSlice
@@ -3287,6 +3076,12 @@ function slice() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Raycaster", function() { return Raycaster; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 /**
 * @author       Marcin Walczak <mail@marcinwalczak.pl>
 * @copyright    2020 Marcin Walczak
@@ -3470,12 +3265,11 @@ Raycaster.prototype = {
       return this;
     }
 
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+    var _iterator = _createForOfIteratorHelper(objects),
+        _step;
 
     try {
-      for (var _iterator = objects[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var object = _step.value;
         if (this.mappedObjects.includes(object)) continue;
         if (!object.data) object.setDataEnabled();
@@ -3493,18 +3287,9 @@ Raycaster.prototype = {
         this.mappedObjects.push(object);
       }
     } catch (err) {
-      _didIteratorError = true;
-      _iteratorError = err;
+      _iterator.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion && _iterator.return != null) {
-          _iterator.return();
-        }
-      } finally {
-        if (_didIteratorError) {
-          throw _iteratorError;
-        }
-      }
+      _iterator.f();
     }
 
     return this;
@@ -3529,12 +3314,11 @@ Raycaster.prototype = {
       return this;
     }
 
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
+    var _iterator2 = _createForOfIteratorHelper(objects),
+        _step2;
 
     try {
-      for (var _iterator2 = objects[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
         var object = _step2.value;
 
         var _index = this.mappedObjects.indexOf(object);
@@ -3542,18 +3326,9 @@ Raycaster.prototype = {
         if (_index >= 0) this.mappedObjects.splice(_index, 1);
       }
     } catch (err) {
-      _didIteratorError2 = true;
-      _iteratorError2 = err;
+      _iterator2.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-          _iterator2.return();
-        }
-      } finally {
-        if (_didIteratorError2) {
-          throw _iteratorError2;
-        }
-      }
+      _iterator2.f();
     }
 
     return this;
@@ -3581,12 +3356,11 @@ Raycaster.prototype = {
       return this;
     }
 
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
+    var _iterator3 = _createForOfIteratorHelper(objects),
+        _step3;
 
     try {
-      for (var _iterator3 = objects[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
         var object = _step3.value;
 
         if (object.data) {
@@ -3596,18 +3370,9 @@ Raycaster.prototype = {
         }
       }
     } catch (err) {
-      _didIteratorError3 = true;
-      _iteratorError3 = err;
+      _iterator3.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-          _iterator3.return();
-        }
-      } finally {
-        if (_didIteratorError3) {
-          throw _iteratorError3;
-        }
-      }
+      _iterator3.f();
     }
 
     return this;
@@ -3635,12 +3400,11 @@ Raycaster.prototype = {
       return this;
     }
 
-    var _iteratorNormalCompletion4 = true;
-    var _didIteratorError4 = false;
-    var _iteratorError4 = undefined;
+    var _iterator4 = _createForOfIteratorHelper(objects),
+        _step4;
 
     try {
-      for (var _iterator4 = objects[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
         var object = _step4.value;
 
         if (object.data) {
@@ -3650,18 +3414,9 @@ Raycaster.prototype = {
         }
       }
     } catch (err) {
-      _didIteratorError4 = true;
-      _iteratorError4 = err;
+      _iterator4.e(err);
     } finally {
-      try {
-        if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-          _iterator4.return();
-        }
-      } finally {
-        if (_didIteratorError4) {
-          throw _iteratorError4;
-        }
-      }
+      _iterator4.f();
     }
 
     return this;
@@ -3679,30 +3434,20 @@ Raycaster.prototype = {
   update: function update() {
     //update dynamic maps
     if (this.mappedObjects.length > 0) {
-      var _iteratorNormalCompletion5 = true;
-      var _didIteratorError5 = false;
-      var _iteratorError5 = undefined;
+      var _iterator5 = _createForOfIteratorHelper(this.mappedObjects),
+          _step5;
 
       try {
-        for (var _iterator5 = this.mappedObjects[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+        for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
           var mapppedObject = _step5.value;
           if (mapppedObject.data === undefined) continue;
           var map = mapppedObject.data.get('raycasterMap');
           if (map.dynamic) map.updateMap();
         }
       } catch (err) {
-        _didIteratorError5 = true;
-        _iteratorError5 = err;
+        _iterator5.e(err);
       } finally {
-        try {
-          if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-            _iterator5.return();
-          }
-        } finally {
-          if (_didIteratorError5) {
-            throw _iteratorError5;
-          }
-        }
+        _iterator5.f();
       }
     }
   },
