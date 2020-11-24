@@ -143,12 +143,22 @@ export function Ray(options, raycaster) {
     * Physics body for testing field of view collisions.
     *
     * @name Raycaster.Ray#body
-    * @type {(object|bolean)}
+    * @type {object}
     * @default undefined
     * @since 0.8.0
     */
     //this.body = false;
-    //this.arcadePhysicsCircle;
+    /**
+    * Physics body type.
+    *
+    * @name Raycaster.Ray#body
+    * @type {(bolean|'arcade'|'matter')}
+    * @default false
+    * @since 0.8.0
+    */
+    this.bodyType = false;
+
+    //this.collisionCircle;
 
     this.config(options);
 };
@@ -169,8 +179,9 @@ Ray.prototype = {
     castCone: require('./castCone.js').castCone,
     slice: require('./slice.js').slice,
     setCollisionRange: require('./range.js').setCollisionRange,
-    enableArcadePhysics: require('./enableArcadePhysics.js').enableArcadePhysics,
+    enablePhysics: require('./enablePhysics.js').enablePhysics,
     overlap: require('./overlap.js').overlap,
     processOverlap: require('./overlap.js').processOverlap,
-    testOverlap: require('./overlap.js').testOverlap
+    testArcadeOverlap: require('./overlap.js').testArcadeOverlap,
+    testMatterOverlap: require('./overlap.js').testMatterOverlap
 };

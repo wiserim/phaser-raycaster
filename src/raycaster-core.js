@@ -1,5 +1,5 @@
 /**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
+* @author       Marcin Walczak <contact@marcin-walczak.pl>
 * @copyright    2020 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
@@ -30,7 +30,7 @@ export function Raycaster(options) {
     * @readonly
     * @since 0.6.0
     */
-    this.version = '0.8.0';
+    this.version = '0.9.0';
     /**
     * Raycaster's scene
     *
@@ -72,8 +72,22 @@ export function Raycaster(options) {
     this.mapSegmentCount = 0;
 
     if(options !== undefined) {
-        if(options.boundingBox === undefined && options.scene !== undefined && options.scene.physics !== undefined)
-            options.boundingBox = options.scene.physics.world.bounds;
+        if(options.boundingBox === undefined && options.scene !== undefined) {
+            if(options.scene.physics !== undefined)
+                options.boundingBox = options.scene.physics.world.bounds;
+            else if(options.scene.matter !== undefined) {
+                let walls = options.scene.matter.world.walls;
+
+                if(walls.top !== null) {
+                    options.boundingBox = new Phaser.Geom.Rectangle(
+                        walls.top.vertices[3].x,
+                        walls.top.vertices[3].y,
+                        walls.bottom.vertices[1].x - walls.top.vertices[3].x,
+                        walls.bottom.vertices[1].y - walls.top.vertices[3].y
+                    );
+                }
+            }
+        }
 
         this.setOptions(options);
 
@@ -171,7 +185,7 @@ Raycaster.prototype = {
     * @instance
     * @since 0.6.0
     *
-    * @param {object|object[]} objects - Game object or array of game objects to map.
+    * @param {object|object[]} objects - Game object / matter body or array of game objects / matter bodies to map.
     * @param {boolean} [dynamic = false] - {@link Raycaster.Map Raycaster.Map} dynamic flag (determines map will be updated automatically).
     * @param {object} [options] - Additional options for {@link Raycaster.Map Raycaster.Map}
     *
@@ -181,29 +195,12 @@ Raycaster.prototype = {
         options.dynamic = dynamic;
         options.segmentCount = (options.segmentCount !== undefined) ? options.segmentCount : this.segmentCount;
 
-        if(!Array.isArray(objects)) {
-            if(this.mappedObjects.includes(objects))
-                return this;
-
-            if(!objects.data)
-                objects.setDataEnabled();
-
-            options.object = objects;
-
-            let map = new this.Map(options);
-
-            objects.data.set('raycasterMap', map);
-            this.mappedObjects.push(objects);
-
-            return this;
-        }
+        if(!Array.isArray(objects))
+            objects = [objects];
         
         for(let object of objects) {
             if(this.mappedObjects.includes(object))
                 continue;
-
-            if(!object.data)
-                object.setDataEnabled();
 
             let config = {};
             for(let option in options) {
@@ -211,9 +208,16 @@ Raycaster.prototype = {
             }
             config.object = object;
             
-            let map = new this.Map(config);
+            let map = new this.Map(config, this);
 
-            object.data.set('raycasterMap', map);
+            if(object.type === 'body' || object.type === 'composite') {
+                object.raycasterMap = map;
+            }
+            else if(!object.data) {
+                object.setDataEnabled();
+                object.data.set('raycasterMap', map);
+            }
+
             this.mappedObjects.push(object);
         }
         return this;
@@ -232,12 +236,8 @@ Raycaster.prototype = {
     * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
     removeMappedObjects: function(objects) {
-        if(!Array.isArray(objects)) {
-            let index = this.mappedObjects.indexOf(objects);
-            if(index >= 0)
-                this.mappedObjects.splice(index, 1)
-            return this;
-        }
+        if(!Array.isArray(objects))
+            objects = [objects];
 
         for(let object of objects) {
             let index = this.mappedObjects.indexOf(object);
@@ -261,22 +261,21 @@ Raycaster.prototype = {
     * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
     enableMaps: function(objects) {
-        if(!Array.isArray(objects)) {
-            if(objects.data) {
-                let map = objects.data.get('raycasterMap');
-                if(map)
-                    map.active = true;
-            }
-                
-            return this;
-        }
+        if(!Array.isArray(objects))
+            objects = [objects];
         
         for(let object of objects) {
-            if(object.data) {
-                let map = object.data.get('raycasterMap');
-                if(map)
-                    map.active = true;
+            let map;
+
+            if(object.type === 'body' || object.type === 'composite') {
+                map = object.raycasterMap;
             }
+            else if(object.data) {
+                map = object.data.get('raycasterMap');
+            }
+
+            if(map)
+                map.active = true;
         }
 
         return this;
@@ -295,22 +294,21 @@ Raycaster.prototype = {
     * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
     disableMaps: function(objects) {
-        if(!Array.isArray(objects)) {
-            if(objects.data) {
-                let map = objects.data.get('raycasterMap');
-                if(map)
-                    map.active = false;
-            }
-                
-            return this;
-        }
+        if(!Array.isArray(objects))
+            objects = [objects];
         
         for(let object of objects) {
-            if(object.data) {
-                let map = object.data.get('raycasterMap');
-                if(map)
-                    map.active = false;
+            let map;
+
+            if(object.type === 'body' || object.type === 'composite') {
+                map = object.raycasterMap;
             }
+            else if(object.data) {
+                map = object.data.get('raycasterMap');
+            }
+
+            if(map)
+                map.active = false;
         }
 
         return this;
@@ -329,10 +327,18 @@ Raycaster.prototype = {
         //update dynamic maps
         if(this.mappedObjects.length > 0)
             for(let mapppedObject of this.mappedObjects) {
-                if(mapppedObject.data === undefined)
+                let map;
+
+                if(mapppedObject.type === 'body' || mapppedObject.type === 'composite') {
+                    map = mapppedObject.raycasterMap;
+                }
+                else if(mapppedObject.data) {
+                    map = mapppedObject.data.get('raycasterMap');
+                }
+
+                if(!map)
                     continue;
 
-                let map = mapppedObject.data.get('raycasterMap')
                 if(map.dynamic)
                     map.updateMap();
             }

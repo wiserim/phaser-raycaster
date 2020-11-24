@@ -19,6 +19,6 @@ export function setRay(x, y, angle, rayRange = Phaser.Math.MAX_SAFE_INTEGER) {
     this.rayRange = rayRange;
 
     Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
-    this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
+    this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
     return this;
 }

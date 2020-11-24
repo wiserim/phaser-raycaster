@@ -18,6 +18,8 @@
  * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
  * @param {boolean} [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
  * @param {boolean} [options.round = false] - If set true, point where ray hit will be rounded.
+ * @param {(boolean|'arcade'|'matter')} [options.enablePhysics = false] - Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. If set true, arcade physics body will be added.
+ * @param {boolean} [options. = false] - If set true, point where ray hit will be rounded.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
@@ -66,6 +68,10 @@ export function config(options) {
     //auto slice
     if(options.autoSlice !== undefined)
         this.autoSlice = (options.autoSlice == true)
+
+    //enable physics
+    if(options.enablePhysics !== undefined && options.enablePhysics)
+        this.enablePhysics(options.enablePhysics);
     
     Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);

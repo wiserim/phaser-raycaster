@@ -13,6 +13,8 @@
  */
 export function setSegmentCount(count) {
     this.segmentCount = count;
-        this.updateMap();
-        return this;
+    this.circle = count ? false : true;
+
+    this.updateMap();
+    return this;
 }

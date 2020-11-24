@@ -1,5 +1,27 @@
 # Change Log
 
+## Version 0.9.0 - 2020.11.24
+
+### New features
+
+* Added matter physics support.
+* `Raycaster.mapGameObjects` now accepts matter bodies.
+* `Map` can now map matter bodies.
+* `Map.getBoundingBox` is new methods that allows to get map bounding box.
+* `Map.forceConvex` is new property that force using matter body's convex body (hull) for mapping.
+* `Map.forceVerticesMapping` is new property that force using circle matter body's vertices for mapping.
+* `Ray.enablePhysics` is new method that creates arcade / matter physics body for ray.
+* `Ray.bodyType` is new property which define if ray's body use arcade or matter physics.
+
+
+### Updates
+
+* `Ray.enableArcadeBody` was replaced by `Ray.enablePhysics`.
+* `Ray.processOverlap` now also accepts matter bodies and matter CollisionInfo objects.
+* `Map` contains now reference to `Raycaster` object.
+
+---
+
 ## Version 0.8.1 - 2020.09.08
 
 ### New features
@@ -20,9 +42,9 @@
 * `Ray.slicedIntersections` is new property that stores intersections calculated by last casting sliced into array of `Phaser.Geom.Triangle` objects.
 * `Ray.autoSlice` is new property that determine if after casting, intesections should be sliced.
 * `Ray.slice` is new method that allows to slice array of intersections into array of `Phaser.Geom.Triangle` objects.
-* `Ray.enableArcadeBody` is new method that creates arcade physics body for raycaster.
+* `Ray.enableArcadeBody` is new method that creates arcade physics body for ray.
 * `Ray.overlap` is new method that allows to if game objects wih physics bodies overlap ray's field of view.
-* `Ray` can be addet to arcade physics collider / overlap.
+* `Ray` can be added to arcade physics collider / overlap.
 
 ### Updates
 

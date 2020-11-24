@@ -16,9 +16,13 @@ export function setOrigin(x, y) {
     Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
 
-    if(this.body !== undefined) {
-        this.arcadePhysicsCircle.x = x;
-        this.arcadePhysicsCircle.y = y;
+    if(this.bodyType === 'matter' && this.collisionRange !== Phaser.Math.MAX_SAFE_INTEGER) {
+        this.collisionCircle.x = x;
+        this.collisionCircle.y = y;
+    }
+    else if(this.bodyType === 'arcade') {
+        this.collisionCircle.x = x;
+        this.collisionCircle.y = y;
     }
 
     return this;
