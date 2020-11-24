@@ -11,7 +11,16 @@
  * @param {object} options - Map specific configuration settings.
  * @param {Raycaster} [raycaster] - Parent raycaster object.
  */
-export function Map(options) {
+export function Map(options, raycaster) {
+    /**
+    * Reference to parent Raycaster object.
+    *
+    * @name Raycaster.Map#_raycaster
+    * @type {Raycaster}
+    * @private
+    * @since 0.9.0
+    */
+    this._raycaster = raycaster ? raycaster : false;
     /**
     * Mapped object's type
     *
@@ -39,6 +48,15 @@ export function Map(options) {
     * @since 0.6.0
     */
     this.dynamic;
+    /**
+    * If set true, map will be treated by ray as circle. Set automaticalyy on map update.
+    *
+    * @name Raycaster.Map#circle
+    * @type {boolean}
+    * @default false
+    * @since 0.9.0
+    */
+    this.circle = false;
     /**
     * Reference to mapped object.
     *
@@ -93,6 +111,17 @@ export function Map(options) {
     */
     this.getSegments;
     /**
+    * Get mapped object's bounding box.
+    *
+    * @method Raycaster.Map#getBoundingBox
+    * @memberof Raycaster.Map
+    * @instance
+    * @since 0.9.0
+    *
+    * @return {Phaser.Geom.Rectangle} - Mapped object's bounding box.
+    */
+    this.getBoundingBox;
+    /**
     * Update object's map of points and segments.
     *
     * @method Raycaster.Map#updateMap
@@ -103,7 +132,6 @@ export function Map(options) {
     * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
     */
     this.updateMap;
-    this.getIntersections;
 
     this.config(options);
     this.updateMap();

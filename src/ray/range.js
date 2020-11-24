@@ -32,6 +32,7 @@ export function setRayRange(rayRange = Phaser.Math.MAX_SAFE_INTEGER) {
 export function setDetectionRange(detectionRange = 0) {
     this.detectionRange = detectionRange;
     this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
+
     return this;
 }
 
@@ -49,11 +50,45 @@ export function setDetectionRange(detectionRange = 0) {
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function setCollisionRange(collisionRange = Phaser.Math.MAX_SAFE_INTEGER) {
+    let oldRangeMax = this.collisionRange == Phaser.Math.MAX_SAFE_INTEGER;
     this.collisionRange = collisionRange;
-    if(this.body) {
-        this.arcadePhysicsCircle.setRadius(this.collisionRange);
+    this.collisionCircle.setRadius(this.collisionRange);
+
+    if(this.bodyType === 'matter') {
+        if(this.collisionRange == Phaser.Math.MAX_SAFE_INTEGER) {
+            let bounds = this._raycaster.boundingBox;
+
+            this._raycaster.scene.matter.body.set(this.body, {
+                shape: {
+                    type: 'rectangle',
+                    x: bounds.rectangle.centerX,
+                    y: bounds.rectangle.centerY,
+                    width: bounds.rectangle.width,
+                    height: bounds.rectangle.height,
+                    circleRadius:0
+                }
+            });
+        }
+        else if(oldRangeMax) {
+            this._raycaster.scene.matter.body.set(this.body, {
+                shape: {
+                    type: 'circle',
+                    x: this.collisionCircle.x,
+                    y: this.collisionCircle.y
+                },
+                circleRadius: this.collisionRange,
+                isStatic: false
+            });
+        }
+        else {
+            this.collisionCircle.setRadius(this.collisionRange);
+        }
+        this._raycaster.scene.matter.body.set(this.body, 'circleRadius', this.collisionRange)
+    }
+    else if(this.bodyType === 'arcade') {
         this.body.setCircle(this.collisionRange);
     }
+
     return this;
 }
 
@@ -77,8 +112,12 @@ export function boundsInRange(object, bounds = false) {
     let objectBounds;
     if(bounds)
         objectBounds = bounds;
-    else
-        objectBounds = object.getBounds();
+    else {
+        if(object.type === 'body' || object.type === 'composite')
+            objectBounds = object.raycasterMap.getBoundingBox();
+        else
+            objectBounds = object.data.get('raycasterMap').getBoundingBox();
+    }
 
     if(Phaser.Geom.Intersects.CircleToRectangle(this.detectionRangeCircle, objectBounds))
         return true;

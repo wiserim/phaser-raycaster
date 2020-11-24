@@ -50,12 +50,17 @@ export function cast(options = {}) {
     }
     
     for(let object of options.objects) {
+        let map;
+        
+        if(object.type === 'body' || object.type === 'composite')
+            map = object.raycasterMap;
+        else
+            map = object.data.get('raycasterMap');
+
         //check if object is intersected by ray
-        if(!Phaser.Geom.Intersects.GetLineToRectangle(this._ray, object.getBounds()))
+        if(!Phaser.Geom.Intersects.GetLineToRectangle(this._ray, map.getBoundingBox()))
             continue;
 
-        let map = object.data.get('raycasterMap');
-        
         //check intersections
         for(let segment of map.getSegments(this)) {
             let intersection = [];
@@ -83,9 +88,9 @@ export function cast(options = {}) {
             }
         }
 
-        //check arc intersections if its not
-        if(map.type === 'Arc') {
-           //if arc has generated points (besides tangent points to ray)
+        //check if map is circular
+        if(map.circle) {
+           //if circular map has generated points (besides tangent points to ray)
             if(map._points.length > 0) {
                 continue;
             }

@@ -182,6 +182,33 @@ module.exports = PhaserRaycaster;
 
 /***/ }),
 
+/***/ "./src/map/boundingBox.js":
+/*!********************************!*\
+  !*** ./src/map/boundingBox.js ***!
+  \********************************/
+/*! exports provided: getBoundingBox */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBoundingBox", function() { return getBoundingBox; });
+/**
+* Get mapped object's bounding box.
+*
+* @method Raycaster.Map#matterBody.getBoundingBox
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.9.0
+*
+* @return {Phaser.Geom.Rectangle} - Mapped object's bounding box.
+*/
+function getBoundingBox() {
+  return this.object.getBounds();
+}
+
+/***/ }),
+
 /***/ "./src/map/config.js":
 /*!***************************!*\
   !*** ./src/map/config.js ***!
@@ -200,11 +227,15 @@ var polygon = __webpack_require__(/*! ./map-polygon-methods.js */ "./src/map/map
 
 var arc = __webpack_require__(/*! ./map-circle-methods.js */ "./src/map/map-circle-methods.js");
 
-var segmentCount = __webpack_require__(/*! ./segmentsCount.js */ "./src/map/segmentsCount.js");
-
 var container = __webpack_require__(/*! ./map-container-methods.js */ "./src/map/map-container-methods.js");
 
 var tilemap = __webpack_require__(/*! ./map-tilemap-methods.js */ "./src/map/map-tilemap-methods.js");
+
+var matterBody = __webpack_require__(/*! ./map-matterBody-methods.js */ "./src/map/map-matterBody-methods.js");
+
+var segmentCount = __webpack_require__(/*! ./segmentsCount.js */ "./src/map/segmentsCount.js");
+
+var boundingBox = __webpack_require__(/*! ./boundingBox.js */ "./src/map/boundingBox.js");
 /**
  * Configure map.
  *
@@ -217,8 +248,10 @@ var tilemap = __webpack_require__(/*! ./map-tilemap-methods.js */ "./src/map/map
  * @param {object} options.object - Game object to map
  * @param {string} [options.type] - Map type. If not defined, it will be determined based on object.
  * @param {boolean} [options.dynamic = false] - If set true, map will be dynamic (updated on scene update event).
- * @param {integer} [options.segmentCount] - Circle map's segment count. If set to 0, map won't be generating segments and relay only on tangent points calculated for currently testing ray.
  * @param {boolean} [options.active = true] - If set true, map will be active (will provide points, segments and will be updated).
+ * @param {integer} [options.segmentCount] - Circle map's segment count. If set to 0, map won't be generating segments and relay only on tangent points calculated for currently testing ray.
+ * @param {boolean} [options.forceConvex] - If set true, matter body map will use convex body (hull) for non-covex bodies.
+ * @param {boolean} [options.forceVerticesMapping] - If set true, matter body map will use only vertices for mapping circle bodies.
  * 
  * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
  */
@@ -228,20 +261,24 @@ function config(options) {
   this.object = options.object; //object type
 
   if (options.type === undefined) options.type = options.object.type;
+  if (options.type === 'body' || options.type === 'composite') options.type = 'MatterBody';
   this.type = options.type;
 
   switch (options.type) {
     case 'Polygon':
       this.getPoints = polygon.getPoints;
       this.getSegments = polygon.getSegments;
+      this.getBoundingBox = boundingBox.getBoundingBox;
       this.updateMap = polygon.updateMap;
       break;
 
     case 'Arc':
       //circle segments count
       this.segmentCount = options.segmentCount ? options.segmentCount : 0;
+      this.circle = options.segmentCount ? false : true;
       this.getPoints = arc.getPoints;
       this.getSegments = arc.getSegments;
+      this.getBoundingBox = boundingBox.getBoundingBox;
       this.updateMap = arc.updateMap;
       this.setSegmentCount = segmentCount.setSegmentCount;
       break;
@@ -249,6 +286,7 @@ function config(options) {
     case 'Line':
       this.getPoints = line.getPoints;
       this.getSegments = line.getSegments;
+      this.getBoundingBox = boundingBox.getBoundingBox;
       this.updateMap = line.updateMap;
       break;
 
@@ -263,6 +301,7 @@ function config(options) {
       this.collisionTiles = options.collisionTiles ? options.collisionTiles : [];
       this.getPoints = tilemap.getPoints;
       this.getSegments = tilemap.getSegments;
+      this.getBoundingBox = boundingBox.getBoundingBox;
       this.updateMap = tilemap.updateMap;
       this.setCollisionTiles = tilemap.setCollisionTiles; //reset tilemap origin
 
@@ -274,15 +313,29 @@ function config(options) {
       this.collisionTiles = options.collisionTiles ? options.collisionTiles : [];
       this.getPoints = tilemap.getPoints;
       this.getSegments = tilemap.getSegments;
+      this.getBoundingBox = boundingBox.getBoundingBox;
       this.updateMap = tilemap.updateMap;
       this.setCollisionTiles = tilemap.setCollisionTiles; //reset tilemap origin
 
       this.object.setOrigin(0, 0);
       break;
 
+    case 'MatterBody':
+      //force convex body (hull) mapping
+      this.forceConvex = options.forceConvex ? true : false; //force mapping by vertices
+
+      this.forceVerticesMapping = options.forceVerticesMapping ? true : false;
+      this.circle = false;
+      this.getPoints = matterBody.getPoints;
+      this.getSegments = matterBody.getSegments;
+      this.getBoundingBox = matterBody.getBoundingBox;
+      this.updateMap = matterBody.updateMap;
+      break;
+
     default:
       this.getPoints = rectangle.getPoints;
       this.getSegments = rectangle.getSegments;
+      this.getBoundingBox = boundingBox.getBoundingBox;
       this.updateMap = rectangle.updateMap;
   } //dynamic map
 
@@ -770,7 +823,16 @@ __webpack_require__.r(__webpack_exports__);
  * @param {object} options - Map specific configuration settings.
  * @param {Raycaster} [raycaster] - Parent raycaster object.
  */
-function Map(options) {
+function Map(options, raycaster) {
+  /**
+  * Reference to parent Raycaster object.
+  *
+  * @name Raycaster.Map#_raycaster
+  * @type {Raycaster}
+  * @private
+  * @since 0.9.0
+  */
+  this._raycaster = raycaster ? raycaster : false;
   /**
   * Mapped object's type
   *
@@ -779,6 +841,7 @@ function Map(options) {
   * @readonly
   * @since 0.6.0
   */
+
   this.type;
   /**
   * If set true, map will be tested by ray. Otherwise it will be ignored.
@@ -800,6 +863,16 @@ function Map(options) {
   */
 
   this.dynamic;
+  /**
+  * If set true, map will be treated by ray as circle. Set automaticalyy on map update.
+  *
+  * @name Raycaster.Map#circle
+  * @type {boolean}
+  * @default false
+  * @since 0.9.0
+  */
+
+  this.circle = false;
   /**
   * Reference to mapped object.
   *
@@ -859,6 +932,18 @@ function Map(options) {
 
   this.getSegments;
   /**
+  * Get mapped object's bounding box.
+  *
+  * @method Raycaster.Map#getBoundingBox
+  * @memberof Raycaster.Map
+  * @instance
+  * @since 0.9.0
+  *
+  * @return {Phaser.Geom.Rectangle} - Mapped object's bounding box.
+  */
+
+  this.getBoundingBox;
+  /**
   * Update object's map of points and segments.
   *
   * @method Raycaster.Map#updateMap
@@ -870,7 +955,6 @@ function Map(options) {
   */
 
   this.updateMap;
-  this.getIntersections;
   this.config(options);
   this.updateMap();
   return this;
@@ -984,6 +1068,228 @@ function updateMap() {
   return this;
 }
 ;
+
+/***/ }),
+
+/***/ "./src/map/map-matterBody-methods.js":
+/*!*******************************************!*\
+  !*** ./src/map/map-matterBody-methods.js ***!
+  \*******************************************/
+/*! exports provided: getPoints, getSegments, updateMap, getBoundingBox */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBoundingBox", function() { return getBoundingBox; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+/*Map methods for matter body*/
+
+/**
+* Get array of mapped matter body's vertices used as rays targets.
+*
+* @method Raycaster.Map#matterBody.getPoints
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.9.0
+*
+* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+*
+* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+*/
+function getPoints() {
+  var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+  if (!this.active) return [];
+  var body = this.object.type === 'body' || this.object.type === 'composite' ? this.object : this.object.body; //calculate tangent rays
+
+  if (ray && !this.forceVerticesMapping && body.circleRadius > 0) {
+    var points = [];
+    var rayA = new Phaser.Geom.Line();
+    var rayB = new Phaser.Geom.Line();
+    var c = new Phaser.Geom.Line(ray.origin.x, ray.origin.y, body.position.x, body.position.y);
+    var rayLength = Math.sqrt(Math.pow(Phaser.Geom.Line.Length(c), 2) - Math.pow(body.circleRadius * body.scale.x, 2)); //ray angle
+
+    var angle = Phaser.Geom.Line.Angle(c);
+    var dAngle = Math.asin(body.circleRadius * body.scale.x / Phaser.Geom.Line.Length(c));
+    Phaser.Geom.Line.SetToAngle(rayA, ray.origin.x, ray.origin.y, angle - dAngle, rayLength);
+    Phaser.Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength); //adding tangent points
+
+    points.push(rayA.getPointB());
+    points.push(rayB.getPointB());
+    return points;
+  }
+
+  return this._points;
+}
+;
+/**
+* Get array of mapped matter body's segments used to test object's intersection with ray.
+*
+* @method Raycaster.Map#matterBody.getSegments
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.9.0
+*
+* @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+*/
+
+function getSegments() {
+  if (!this.active) return [];
+  return this._segments;
+}
+;
+/**
+* Update matter body's map of points and segments.
+*
+* @method Raycaster.Map#matterBody.updateMap
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.9.0
+*
+* @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
+*/
+
+function updateMap() {
+  if (!this.active) return this;
+  var points = [];
+  var segments = [];
+  var body = this.object.type === 'body' || this.object.type === 'composite' ? this.object : this.object.body;
+  var bodies = [body];
+  var generateBounds = false;
+
+  if (body.circleRadius > 0 && !this.forceVerticesMapping) {
+    this.circle = true;
+    this._points = points;
+    this._segments = segments;
+    return this;
+  }
+
+  this.circle = false;
+  if (body.type == 'composite') bodies = body.bodies;
+
+  if (body.bounds === undefined && body.type == 'composite' || body.type == 'composite' && this.dynamic) {
+    generateBounds = true;
+  }
+
+  var _iterator = _createForOfIteratorHelper(bodies),
+      _step;
+
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var bodyItem = _step.value;
+
+      //if convex body
+      if (bodyItem.parts.length === 1 || this.forceConvex) {
+        var vertices = bodyItem.parts[0].vertices;
+        points.push(new Phaser.Geom.Point(vertices[0].x, vertices[0].y));
+
+        for (var i = 1, length = vertices.length; i < length; i++) {
+          var pointA = new Phaser.Geom.Point(vertices[i - 1].x, vertices[i - 1].y);
+          var pointB = new Phaser.Geom.Point(vertices[i].x, vertices[i].y);
+          points.push(pointB); //add segment
+
+          var _segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
+
+          segments.push(_segment);
+        } //closing segment
+
+
+        var segment = new Phaser.Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
+        segments.push(segment);
+      } //if concave body
+      else if (bodyItem.parts.length > 1) {
+          var _loop = function _loop(_i, _length) {
+            var vertices = bodyItem.parts[_i].vertices;
+            var pointA = new Phaser.Geom.Point(vertices[0].x, vertices[0].y);
+            if (points.find(function (point) {
+              return point.x == pointA.x && point.y == pointA.y;
+            }) === undefined) points.push(pointA);
+
+            var _loop2 = function _loop2(j, _length2) {
+              var pointB = new Phaser.Geom.Point(vertices[j].x, vertices[j].y); //check if segment was already added
+
+              var segmentIndex = segments.findIndex(function (segment) {
+                return segment.x1 == pointA.x && segment.y1 == pointA.y && segment.x2 == pointB.x && segment.y2 == pointB.y || segment.x1 == pointB.x && segment.y1 == pointB.y && segment.x2 == pointA.x && segment.y2 == pointA.y;
+              });
+
+              if (segmentIndex !== -1) {
+                segments.splice(segmentIndex, 1);
+                pointA = pointB;
+                return "continue";
+              }
+
+              if (points.find(function (point) {
+                return point.x == pointB.x && point.y == pointB.y;
+              }) === undefined) points.push(pointB); //add segment
+
+              var segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
+              segments.push(segment);
+              pointA = pointB;
+            };
+
+            for (var j = 1, _length2 = vertices.length; j < _length2; j++) {
+              var _ret = _loop2(j, _length2);
+
+              if (_ret === "continue") continue;
+            } //closing segment
+
+
+            var closingSegment = new Phaser.Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
+            var segmentIndex = segments.findIndex(function (segment) {
+              return segment.x1 == closingSegment.x1 && segment.y1 == closingSegment.y1 && segment.x2 == closingSegment.x2 && segment.y2 == closingSegment.y2 || segment.x1 == closingSegment.x2 && segment.y1 == closingSegment.y2 && segment.x2 == closingSegment.x1 && segment.y2 == closingSegment.y1;
+            });
+            if (segmentIndex === undefined) segments.push(closingSegment);
+          };
+
+          for (var _i = 1, _length = bodyItem.parts.length; _i < _length; _i++) {
+            _loop(_i, _length);
+          }
+        }
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+
+  this._points = points;
+  this._segments = segments;
+
+  if (generateBounds) {
+    var bounds = this._raycaster.scene.matter.composite.bounds(body);
+
+    body.bounds = bounds;
+  }
+
+  return this;
+}
+;
+/**
+* Get matter body's bounding box.
+*
+* @method Raycaster.Map#matterBody.getBoundingBox
+* @memberof Raycaster.Map
+* @instance
+* @private
+* @since 0.9.0
+*
+* @return {Phaser.Geom.Rectangle} - Matter body's bounding box.
+*/
+
+function getBoundingBox() {
+  var bounds = this.object.type === 'body' || this.object.type === 'composite' ? this.object.bounds : this.object.body.bounds;
+  return new Phaser.Geom.Rectangle(bounds.min.x, bounds.min.y, bounds.max.x - bounds.min.x, bounds.max.y - bounds.min.y);
+}
 
 /***/ }),
 
@@ -1599,6 +1905,7 @@ __webpack_require__.r(__webpack_exports__);
  */
 function setSegmentCount(count) {
   this.segmentCount = count;
+  this.circle = count ? false : true;
   this.updateMap();
   return this;
 }
@@ -1736,9 +2043,10 @@ function cast() {
   try {
     for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var object = _step2.value;
-      //check if object is intersected by ray
-      if (!Phaser.Geom.Intersects.GetLineToRectangle(this._ray, object.getBounds())) continue;
-      var map = object.data.get('raycasterMap'); //check intersections
+      var map = void 0;
+      if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap'); //check if object is intersected by ray
+
+      if (!Phaser.Geom.Intersects.GetLineToRectangle(this._ray, map.getBoundingBox())) continue; //check intersections
 
       var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
           _step3;
@@ -1762,7 +2070,7 @@ function cast() {
             closestDistance = _distance4;
             closestIntersection = _intersection2;
           }
-        } //check arc intersections if its not
+        } //check if map is circular
 
       } catch (err) {
         _iterator3.e(err);
@@ -1770,8 +2078,8 @@ function cast() {
         _iterator3.f();
       }
 
-      if (map.type === 'Arc') {
-        //if arc has generated points (besides tangent points to ray)
+      if (map.circle) {
+        //if circular map has generated points (besides tangent points to ray)
         if (map._points.length > 0) {
           continue;
         } //check if target point is a circle tangent point to ray
@@ -1940,7 +2248,8 @@ function castCircle() {
 
       if (!this.boundsInRange(object)) continue;
       testedObjects.push(object);
-      var map = object.data.get('raycasterMap');
+      var map = void 0;
+      if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap');
       maps.push(map); //get points and angles
 
       var _iterator2 = _createForOfIteratorHelper(map.getPoints(this)),
@@ -1963,9 +2272,12 @@ function castCircle() {
 
       for (var j = i + 1, jLength = options.objects.length; j < jLength; j++) {
         var objectB = options.objects[j];
-        var mapB = objectB.data.get('raycasterMap'); //check if bounding boxes overlap
+        var mapB = void 0;
+        if (objectB.type === 'body' || objectB.type === 'composite') mapB = objectB.raycasterMap;else {
+          mapB = objectB.data.get('raycasterMap');
+        } //check if bounding boxes overlap
 
-        if (!Phaser.Geom.Intersects.RectangleToRectangle(object.getBounds(), objectB.getBounds())) continue; //find objects intersections
+        if (!Phaser.Geom.Intersects.RectangleToRectangle(map.getBoundingBox(), mapB.getBoundingBox())) continue; //find objects intersections
 
         var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
             _step3;
@@ -2180,7 +2492,8 @@ function castCone() {
 
     if (!this.boundsInRange(object)) continue;
     testedObjects.push(object);
-    var map = object.data.get('raycasterMap');
+    var map = void 0;
+    if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap');
     maps.push(map); //get points and angles
 
     var _iterator2 = _createForOfIteratorHelper(map.getPoints(this)),
@@ -2211,9 +2524,10 @@ function castCone() {
 
     for (var j = i + 1, jLength = options.objects.length; j < jLength; j++) {
       var objectB = options.objects[j];
-      var mapB = objectB.data.get('raycasterMap'); //check if bounding boxes overlap
+      var mapB = void 0;
+      if (objectB.type === 'body' || objectB.type === 'composite') mapB = objectB.raycasterMap;else mapB = objectB.data.get('raycasterMap'); //check if bounding boxes overlap
 
-      if (!Phaser.Geom.Intersects.RectangleToRectangle(object.getBounds(), objectB.getBounds())) continue; //find objects intersections
+      if (!Phaser.Geom.Intersects.RectangleToRectangle(map.getBoundingBox(), mapB.getBoundingBox())) continue; //find objects intersections
 
       var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
           _step3;
@@ -2411,6 +2725,8 @@ __webpack_require__.r(__webpack_exports__);
  * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
  * @param {boolean} [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
  * @param {boolean} [options.round = false] - If set true, point where ray hit will be rounded.
+ * @param {(boolean|'arcade'|'matter')} [options.enablePhysics = false] - Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. If set true, arcade physics body will be added.
+ * @param {boolean} [options. = false] - If set true, point where ray hit will be rounded.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
@@ -2437,7 +2753,9 @@ function config(options) {
 
   if (options.round !== undefined) this.round = options.round == true; //auto slice
 
-  if (options.autoSlice !== undefined) this.autoSlice = options.autoSlice == true;
+  if (options.autoSlice !== undefined) this.autoSlice = options.autoSlice == true; //enable physics
+
+  if (options.enablePhysics !== undefined && options.enablePhysics) this.enablePhysics(options.enablePhysics);
   Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
   return this;
@@ -2445,35 +2763,75 @@ function config(options) {
 
 /***/ }),
 
-/***/ "./src/ray/enableArcadePhysics.js":
-/*!****************************************!*\
-  !*** ./src/ray/enableArcadePhysics.js ***!
-  \****************************************/
-/*! exports provided: enableArcadePhysics */
+/***/ "./src/ray/enablePhysics.js":
+/*!**********************************!*\
+  !*** ./src/ray/enablePhysics.js ***!
+  \**********************************/
+/*! exports provided: enablePhysics */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "enableArcadePhysics", function() { return enableArcadePhysics; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "enablePhysics", function() { return enablePhysics; });
 /**
- * Add to ray arcade physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}.
+ * Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. Physics body can be added only once.
  *
- * @method Raycaster.Ray#enableArcadePhysics
+ * @method Raycaster.Ray#enablePhysics
  * @memberof Raycaster.Ray
  * @instance
  * @since 0.8.0
  *
+ * @param {'arcade'|'matter'} [type = 'arcade'] - Physics type
+ * 
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
-function enableArcadePhysics() {
+function enablePhysics() {
+  var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'arcade';
   if (this.body !== undefined) return this;
-  this.arcadePhysicsCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y, this.collisionRange);
-  this.arcadePhysicsCircle._ray = this;
 
-  this._raycaster.scene.physics.add.existing(this.arcadePhysicsCircle);
+  if (type === 'matter') {
+    this.bodyType = 'matter';
+    this.collisionCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y, this.collisionRange);
+    this.collisionCircle._ray = this;
 
-  this.body = this.arcadePhysicsCircle.body;
-  this.body.setCircle(this.collisionRange).setAllowGravity(false).setImmovable(true);
+    if (this.collisionRange == Phaser.Math.MAX_SAFE_INTEGER) {
+      var bounds = this._raycaster.boundingBox;
+
+      this._raycaster.scene.matter.add.gameObject(this.collisionCircle, {
+        shape: {
+          type: 'rectangle',
+          x: bounds.rectangle.centerX,
+          y: bounds.rectangle.centerY,
+          width: bounds.rectangle.width,
+          height: bounds.rectangle.height
+        },
+        label: 'phaser-raycaster-ray-body',
+        isSensor: true,
+        ignoreGravity: true
+      });
+    } else {
+      this._raycaster.scene.matter.add.gameObject(this.collisionCircle, {
+        shape: {
+          type: 'circle'
+        },
+        label: 'phaser-raycaster-ray-body',
+        isSensor: true,
+        ignoreGravity: true
+      });
+    }
+
+    this.body = this.collisionCircle.body;
+    this.body._ray = this;
+  } else {
+    this.bodyType = 'arcade';
+
+    this._raycaster.scene.physics.add.existing(this.collisionCircle);
+
+    this.body = this.collisionCircle.body;
+    this.body.setCircle(collisionRange).setAllowGravity(false).setImmovable(true);
+    this.body._ray = this;
+  }
+
   return this;
 }
 
@@ -2507,9 +2865,12 @@ function setOrigin(x, y) {
   Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
 
-  if (this.body !== undefined) {
-    this.arcadePhysicsCircle.x = x;
-    this.arcadePhysicsCircle.y = y;
+  if (this.bodyType === 'matter' && this.collisionRange !== Phaser.Math.MAX_SAFE_INTEGER) {
+    this.collisionCircle.x = x;
+    this.collisionCircle.y = y;
+  } else if (this.bodyType === 'arcade') {
+    this.collisionCircle.x = x;
+    this.collisionCircle.y = y;
   }
 
   return this;
@@ -2521,14 +2882,15 @@ function setOrigin(x, y) {
 /*!****************************!*\
   !*** ./src/ray/overlap.js ***!
   \****************************/
-/*! exports provided: overlap, processOverlap, testOverlap */
+/*! exports provided: overlap, processOverlap, testArcadeOverlap, testMatterOverlap */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "overlap", function() { return overlap; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "processOverlap", function() { return processOverlap; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testOverlap", function() { return testOverlap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testArcadeOverlap", function() { return testArcadeOverlap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testMatterOverlap", function() { return testMatterOverlap; });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2549,96 +2911,144 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  */
 function overlap(objects) {
   var targets = [];
-  var bodies = false;
-  var overlapCircle = new Phaser.Geom.Circle(this.origin.x, this.origin.y, this.collisionRange); //get bodies in range
+  var overlapCircle = new Phaser.Geom.Circle(this.origin.x, this.origin.y, this.collisionRange); //matter physics
 
-  if (objects === undefined) {
-    objects = this._raycaster.scene.physics.overlapCirc(this.origin.x, this.origin.y, this.collisionRange, true, true);
-    bodies = true;
-  } //get object's body
-  else if (!Array.isArray(objects)) {
-      objects = [objects];
-    } //if objects are bodies
+  if (this.bodyType === 'matter') {
+    var isCollisionInfo = false;
 
+    if (objects === undefined) {
+      objects = this._raycaster.scene.matter.query.collides(this.body, this._raycaster.scene.matter.getMatterBodies());
 
-  if (bodies) {
-    var _iterator = _createForOfIteratorHelper(objects),
-        _step;
-
-    try {
-      for (_iterator.s(); !(_step = _iterator.n()).done;) {
-        var body = _step.value;
-        if (body === this.body) continue;
-        var hitbox = void 0; //get physics body hitbox
-
-        if (body.isCircle) {
-          hitbox = new Phaser.Geom.Circle(body.position.x + body.halfWidth, body.position.y + body.halfWidth, body.halfWidth);
-        } else {
-          hitbox = new Phaser.Geom.Rectangle(body.x, body.y, body.width, body.height);
-        }
-
-        if (this.testOverlap(hitbox)) targets.push(body.gameObject);
-      }
-    } catch (err) {
-      _iterator.e(err);
-    } finally {
-      _iterator.f();
-    }
-  } //if objects are game objects
-  else {
-      var _iterator2 = _createForOfIteratorHelper(objects),
-          _step2;
+      var _iterator = _createForOfIteratorHelper(objects),
+          _step;
 
       try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var object = _step2.value;
-          if (object.body === undefined) continue;
-
-          var _hitbox = void 0; //get physics body hitbox
-
-
-          if (object.body.isCircle) {
-            _hitbox = new Phaser.Geom.Circle(object.body.position.x + object.body.halfWidth, object.body.position.y + object.body.halfWidth, object.body.halfWidth);
-            if (!Phaser.Geom.Intersects.CircleToCircle(overlapCircle, _hitbox)) continue;
-          } else {
-            _hitbox = new Phaser.Geom.Rectangle(object.body.x, object.body.y, object.body.width, object.body.height);
-            if (!Phaser.Geom.Intersects.CircleToRectangle(overlapCircle, _hitbox)) continue;
-          }
-
-          if (this.testOverlap(_hitbox)) targets.push(object);
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var object = _step.value;
+          var body = object.bodyA === this.body ? object.bodyB : object.bodyA;
+          if (this.testMatterOverlap(body)) targets.push(body);
         }
       } catch (err) {
-        _iterator2.e(err);
+        _iterator.e(err);
       } finally {
-        _iterator2.f();
+        _iterator.f();
       }
+    } //get object's body
+    else {
+        if (!Array.isArray(objects)) objects = [objects];
+
+        var _iterator2 = _createForOfIteratorHelper(objects),
+            _step2;
+
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var _object = _step2.value;
+            if (_object === this.body) continue;
+            if (this.testMatterOverlap(_object)) targets.push(_object);
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
+        }
+      }
+  } //arcade physics
+  else {
+      //get bodies in range
+      if (objects === undefined) {
+        objects = this._raycaster.scene.physics.overlapCirc(this.origin.x, this.origin.y, this.collisionRange, true, true);
+        bodies = true;
+      } //get object's body
+      else if (!Array.isArray(objects)) {
+          objects = [objects];
+        } //if objects are bodies
+
+
+      if (bodies) {
+        var _iterator3 = _createForOfIteratorHelper(objects),
+            _step3;
+
+        try {
+          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+            var _body = _step3.value;
+            if (_body === this.body) continue;
+            var hitbox = void 0; //get physics body hitbox
+
+            if (_body.isCircle) {
+              hitbox = new Phaser.Geom.Circle(_body.position.x + _body.halfWidth, _body.position.y + _body.halfWidth, _body.halfWidth);
+            } else {
+              hitbox = new Phaser.Geom.Rectangle(_body.x, _body.y, _body.width, _body.height);
+            }
+
+            if (this.testOverlap(hitbox)) targets.push(_body.gameObject);
+          }
+        } catch (err) {
+          _iterator3.e(err);
+        } finally {
+          _iterator3.f();
+        }
+      } //if objects are game objects
+      else {
+          var _iterator4 = _createForOfIteratorHelper(objects),
+              _step4;
+
+          try {
+            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+              var _object2 = _step4.value;
+              if (_object2.body === undefined) continue;
+
+              var _hitbox = void 0; //get physics body hitbox
+
+
+              if (_object2.body.isCircle) {
+                _hitbox = new Phaser.Geom.Circle(_object2.body.position.x + _object2.body.halfWidth, _object2.body.position.y + _object2.body.halfWidth, _object2.body.halfWidth);
+                if (!Phaser.Geom.Intersects.CircleToCircle(overlapCircle, _hitbox)) continue;
+              } else {
+                _hitbox = new Phaser.Geom.Rectangle(_object2.body.x, _object2.body.y, _object2.body.width, _object2.body.height);
+                if (!Phaser.Geom.Intersects.CircleToRectangle(overlapCircle, _hitbox)) continue;
+              }
+
+              if (this.testArcadeOverlap(_hitbox)) targets.push(_object2);
+            }
+          } catch (err) {
+            _iterator4.e(err);
+          } finally {
+            _iterator4.f();
+          }
+        }
     }
 
   return targets;
 }
 /**
- * Process callback for arcade physics collider / overlap.
+ * Process callback for physics collider / overlap.
  *
  * @method Raycaster.Ray#processOverlap
  * @memberof Raycaster.Ray
  * @instance
  * @since 0.8.0
  *
- * @param {object} object1 - Game object passed by collider / overlap.
- * @param {object} object2 - Game object passed by collider / overlap.
+ * @param {object} object1 - Game object or matter body passed by collider / overlap or matter CollisionInfo object.
+ * @param {object} object2 - Game object or matter body passed by collider / overlap. Ignored if matter CollisionInfo object was passed as first argument.
  *
  * @return {boolean} Return true if game object is overlapping ray's field of view.
  */
 
 function processOverlap(object1, object2) {
-  var target;
-  if (object1._ray === this) target = object2;else if (object2._ray === this) target = obj1;else return false;
+  var target; //check if it's matter collisionInfo object
+
+  if (object1.bodyA !== undefined && object1.bodyB !== undefined) {
+    object2 = object1.bodyB;
+    object1 = object1.bodyA;
+  }
+
+  if (object1._ray !== undefined && object1._ray === this) target = object2;else if (object2._ray !== undefined && object2._ray === this) target = obj1;else return false;
   return this.overlap(target).length > 0;
 }
 /**
  * Test if hitbox overlaps with field of view. Method used in {@link Raycaster.Ray#overlap Ray.overlap}.
  *
- * @method Raycaster.Ray#testOverlap
+ * @method Raycaster.Ray#testArcadeOverlap
  * @memberof Raycaster.Ray
  * @instance
  * @private
@@ -2649,15 +3059,15 @@ function processOverlap(object1, object2) {
  * @return {boolean} True if hitbox overlaps with {@link Raycaster.Ray Raycaster.Ray} field of view.
  */
 
-function testOverlap(hitbox) {
+function testArcadeOverlap(hitbox) {
   var overlap = false; //iterate through field of view slices to check collisions with target
 
-  var _iterator3 = _createForOfIteratorHelper(this.slicedIntersections),
-      _step3;
+  var _iterator5 = _createForOfIteratorHelper(this.slicedIntersections),
+      _step5;
 
   try {
-    for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-      var slice = _step3.value;
+    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+      var slice = _step5.value;
 
       //if hitbox is a circle
       if (hitbox.type == 0) {
@@ -2672,9 +3082,100 @@ function testOverlap(hitbox) {
       }
     }
   } catch (err) {
-    _iterator3.e(err);
+    _iterator5.e(err);
   } finally {
-    _iterator3.f();
+    _iterator5.f();
+  }
+
+  return false;
+}
+/**
+ * Test if matter body overlaps with field of view. Method used in {@link Raycaster.Ray#overlap Ray.overlap}.
+ *
+ * @method Raycaster.Ray#testMatterOverlap
+ * @memberof Raycaster.Ray
+ * @instance
+ * @private
+ * @since 0.9.0
+ *
+ * @param {object} body - Matter body.
+ *
+ * @return {boolean} True if body overlaps with {@link Raycaster.Ray Raycaster.Ray} field of view.
+ */
+
+function testMatterOverlap(object) {
+  var overlap = false;
+  var body;
+  if (object.type === 'body') body = object;else if (object.body !== undefined) body = object.body;else return false; //if body is concave, ignore convex body
+
+  var parts = body.parts.length > 1 ? body.parts.splice(1) : body.parts; //iterate through bodies
+
+  var _iterator6 = _createForOfIteratorHelper(parts),
+      _step6;
+
+  try {
+    for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+      var part = _step6.value;
+      var pointA = part.vertices[0];
+
+      for (var i = 1, length = part.vertices.length; i < length; i++) {
+        var pointB = part.vertices[i];
+
+        var _segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y); //iterate through field of view slices to check collisions with target
+
+
+        var _iterator7 = _createForOfIteratorHelper(this.slicedIntersections),
+            _step7;
+
+        try {
+          for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+            var slice = _step7.value;
+
+            var _overlap = Phaser.Geom.Intersects.TriangleToLine(slice, _segment); //additional checking if slice contain segment's points due to TriangleToLine bug.
+
+
+            if (!_overlap) _overlap = Phaser.Geom.Triangle.ContainsPoint(slice, _segment.getPointA());
+            if (!_overlap) _overlap = Phaser.Geom.Triangle.ContainsPoint(slice, _segment.getPointB());
+
+            if (_overlap) {
+              return true;
+            }
+          }
+        } catch (err) {
+          _iterator7.e(err);
+        } finally {
+          _iterator7.f();
+        }
+
+        pointA = pointB;
+      } //closing segment
+
+
+      var segment = new Phaser.Geom.Line(part.vertices[part.vertices.length - 1].x, part.vertices[part.vertices.length - 1].y, part.vertices[0].x, part.vertices[0].y); //iterate through field of view slices to check collisions with target
+
+      var _iterator8 = _createForOfIteratorHelper(this.slicedIntersections),
+          _step8;
+
+      try {
+        for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
+          var _slice = _step8.value;
+
+          var _overlap2 = Phaser.Geom.Intersects.TriangleToLine(_slice, segment);
+
+          if (_overlap2) {
+            return true;
+          }
+        }
+      } catch (err) {
+        _iterator8.e(err);
+      } finally {
+        _iterator8.f();
+      }
+    }
+  } catch (err) {
+    _iterator6.e(err);
+  } finally {
+    _iterator6.f();
   }
 
   return false;
@@ -2749,10 +3250,40 @@ function setDetectionRange() {
 
 function setCollisionRange() {
   var collisionRange = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : Phaser.Math.MAX_SAFE_INTEGER;
+  var oldRangeMax = this.collisionRange == Phaser.Math.MAX_SAFE_INTEGER;
   this.collisionRange = collisionRange;
+  this.collisionCircle.setRadius(this.collisionRange);
 
-  if (this.body) {
-    this.arcadePhysicsCircle.setRadius(this.collisionRange);
+  if (this.bodyType === 'matter') {
+    if (this.collisionRange == Phaser.Math.MAX_SAFE_INTEGER) {
+      var bounds = this._raycaster.boundingBox;
+
+      this._raycaster.scene.matter.body.set(this.body, {
+        shape: {
+          type: 'rectangle',
+          x: bounds.rectangle.centerX,
+          y: bounds.rectangle.centerY,
+          width: bounds.rectangle.width,
+          height: bounds.rectangle.height,
+          circleRadius: 0
+        }
+      });
+    } else if (oldRangeMax) {
+      this._raycaster.scene.matter.body.set(this.body, {
+        shape: {
+          type: 'circle',
+          x: this.collisionCircle.x,
+          y: this.collisionCircle.y
+        },
+        circleRadius: this.collisionRange,
+        isStatic: false
+      });
+    } else {
+      this.collisionCircle.setRadius(this.collisionRange);
+    }
+
+    this._raycaster.scene.matter.body.set(this.body, 'circleRadius', this.collisionRange);
+  } else if (this.bodyType === 'arcade') {
     this.body.setCircle(this.collisionRange);
   }
 
@@ -2776,7 +3307,9 @@ function boundsInRange(object) {
   var bounds = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
   if (!this.detectionRange) return true;
   var objectBounds;
-  if (bounds) objectBounds = bounds;else objectBounds = object.getBounds();
+  if (bounds) objectBounds = bounds;else {
+    if (object.type === 'body' || object.type === 'composite') objectBounds = object.raycasterMap.getBoundingBox();else objectBounds = object.data.get('raycasterMap').getBoundingBox();
+  }
   if (Phaser.Geom.Intersects.CircleToRectangle(this.detectionRangeCircle, objectBounds)) return true;
   return false;
 }
@@ -2950,12 +3483,22 @@ function Ray(options, raycaster) {
   * Physics body for testing field of view collisions.
   *
   * @name Raycaster.Ray#body
-  * @type {(object|bolean)}
+  * @type {object}
   * @default undefined
   * @since 0.8.0
   */
   //this.body = false;
-  //this.arcadePhysicsCircle;
+
+  /**
+  * Physics body type.
+  *
+  * @name Raycaster.Ray#body
+  * @type {(bolean|'arcade'|'matter')}
+  * @default false
+  * @since 0.8.0
+  */
+
+  this.bodyType = false; //this.collisionCircle;
 
   this.config(options);
 }
@@ -2976,10 +3519,11 @@ Ray.prototype = {
   castCone: __webpack_require__(/*! ./castCone.js */ "./src/ray/castCone.js").castCone,
   slice: __webpack_require__(/*! ./slice.js */ "./src/ray/slice.js").slice,
   setCollisionRange: __webpack_require__(/*! ./range.js */ "./src/ray/range.js").setCollisionRange,
-  enableArcadePhysics: __webpack_require__(/*! ./enableArcadePhysics.js */ "./src/ray/enableArcadePhysics.js").enableArcadePhysics,
+  enablePhysics: __webpack_require__(/*! ./enablePhysics.js */ "./src/ray/enablePhysics.js").enablePhysics,
   overlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").overlap,
   processOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").processOverlap,
-  testOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").testOverlap
+  testArcadeOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").testArcadeOverlap,
+  testMatterOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").testMatterOverlap
 };
 
 /***/ }),
@@ -3083,7 +3627,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 /**
-* @author       Marcin Walczak <mail@marcinwalczak.pl>
+* @author       Marcin Walczak <contact@marcin-walczak.pl>
 * @copyright    2020 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
@@ -3114,7 +3658,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.8.0';
+  this.version = '0.9.0';
   /**
   * Raycaster's scene
   *
@@ -3159,7 +3703,16 @@ function Raycaster(options) {
   this.mapSegmentCount = 0;
 
   if (options !== undefined) {
-    if (options.boundingBox === undefined && options.scene !== undefined && options.scene.physics !== undefined) options.boundingBox = options.scene.physics.world.bounds;
+    if (options.boundingBox === undefined && options.scene !== undefined) {
+      if (options.scene.physics !== undefined) options.boundingBox = options.scene.physics.world.bounds;else if (options.scene.matter !== undefined) {
+        var walls = options.scene.matter.world.walls;
+
+        if (walls.top !== null) {
+          options.boundingBox = new Phaser.Geom.Rectangle(walls.top.vertices[3].x, walls.top.vertices[3].y, walls.bottom.vertices[1].x - walls.top.vertices[3].x, walls.bottom.vertices[1].y - walls.top.vertices[3].y);
+        }
+      }
+    }
+
     this.setOptions(options);
     if (options.autoUpdate === undefined || options.autoUpdate) //automatically update event
       this.scene.events.on('update', this.update.bind(this));
@@ -3243,7 +3796,7 @@ Raycaster.prototype = {
   * @instance
   * @since 0.6.0
   *
-  * @param {object|object[]} objects - Game object or array of game objects to map.
+  * @param {object|object[]} objects - Game object / matter body or array of game objects / matter bodies to map.
   * @param {boolean} [dynamic = false] - {@link Raycaster.Map Raycaster.Map} dynamic flag (determines map will be updated automatically).
   * @param {object} [options] - Additional options for {@link Raycaster.Map Raycaster.Map}
   *
@@ -3254,16 +3807,7 @@ Raycaster.prototype = {
     var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     options.dynamic = dynamic;
     options.segmentCount = options.segmentCount !== undefined ? options.segmentCount : this.segmentCount;
-
-    if (!Array.isArray(objects)) {
-      if (this.mappedObjects.includes(objects)) return this;
-      if (!objects.data) objects.setDataEnabled();
-      options.object = objects;
-      var map = new this.Map(options);
-      objects.data.set('raycasterMap', map);
-      this.mappedObjects.push(objects);
-      return this;
-    }
+    if (!Array.isArray(objects)) objects = [objects];
 
     var _iterator = _createForOfIteratorHelper(objects),
         _step;
@@ -3272,7 +3816,6 @@ Raycaster.prototype = {
       for (_iterator.s(); !(_step = _iterator.n()).done;) {
         var object = _step.value;
         if (this.mappedObjects.includes(object)) continue;
-        if (!object.data) object.setDataEnabled();
         var config = {};
 
         for (var option in options) {
@@ -3280,10 +3823,15 @@ Raycaster.prototype = {
         }
 
         config.object = object;
+        var map = new this.Map(config, this);
 
-        var _map = new this.Map(config);
+        if (object.type === 'body' || object.type === 'composite') {
+          object.raycasterMap = map;
+        } else if (!object.data) {
+          object.setDataEnabled();
+          object.data.set('raycasterMap', map);
+        }
 
-        object.data.set('raycasterMap', _map);
         this.mappedObjects.push(object);
       }
     } catch (err) {
@@ -3308,11 +3856,7 @@ Raycaster.prototype = {
   * @return {Raycaster} {@link Raycaster Raycaster} instance
   */
   removeMappedObjects: function removeMappedObjects(objects) {
-    if (!Array.isArray(objects)) {
-      var index = this.mappedObjects.indexOf(objects);
-      if (index >= 0) this.mappedObjects.splice(index, 1);
-      return this;
-    }
+    if (!Array.isArray(objects)) objects = [objects];
 
     var _iterator2 = _createForOfIteratorHelper(objects),
         _step2;
@@ -3320,10 +3864,8 @@ Raycaster.prototype = {
     try {
       for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
         var object = _step2.value;
-
-        var _index = this.mappedObjects.indexOf(object);
-
-        if (_index >= 0) this.mappedObjects.splice(_index, 1);
+        var index = this.mappedObjects.indexOf(object);
+        if (index >= 0) this.mappedObjects.splice(index, 1);
       }
     } catch (err) {
       _iterator2.e(err);
@@ -3347,14 +3889,7 @@ Raycaster.prototype = {
   * @return {Raycaster} {@link Raycaster Raycaster} instance
   */
   enableMaps: function enableMaps(objects) {
-    if (!Array.isArray(objects)) {
-      if (objects.data) {
-        var map = objects.data.get('raycasterMap');
-        if (map) map.active = true;
-      }
-
-      return this;
-    }
+    if (!Array.isArray(objects)) objects = [objects];
 
     var _iterator3 = _createForOfIteratorHelper(objects),
         _step3;
@@ -3362,12 +3897,15 @@ Raycaster.prototype = {
     try {
       for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
         var object = _step3.value;
+        var map = void 0;
 
-        if (object.data) {
-          var _map2 = object.data.get('raycasterMap');
-
-          if (_map2) _map2.active = true;
+        if (object.type === 'body' || object.type === 'composite') {
+          map = object.raycasterMap;
+        } else if (object.data) {
+          map = object.data.get('raycasterMap');
         }
+
+        if (map) map.active = true;
       }
     } catch (err) {
       _iterator3.e(err);
@@ -3391,14 +3929,7 @@ Raycaster.prototype = {
   * @return {Raycaster} {@link Raycaster Raycaster} instance
   */
   disableMaps: function disableMaps(objects) {
-    if (!Array.isArray(objects)) {
-      if (objects.data) {
-        var map = objects.data.get('raycasterMap');
-        if (map) map.active = false;
-      }
-
-      return this;
-    }
+    if (!Array.isArray(objects)) objects = [objects];
 
     var _iterator4 = _createForOfIteratorHelper(objects),
         _step4;
@@ -3406,12 +3937,15 @@ Raycaster.prototype = {
     try {
       for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
         var object = _step4.value;
+        var map = void 0;
 
-        if (object.data) {
-          var _map3 = object.data.get('raycasterMap');
-
-          if (_map3) _map3.active = false;
+        if (object.type === 'body' || object.type === 'composite') {
+          map = object.raycasterMap;
+        } else if (object.data) {
+          map = object.data.get('raycasterMap');
         }
+
+        if (map) map.active = false;
       }
     } catch (err) {
       _iterator4.e(err);
@@ -3440,8 +3974,15 @@ Raycaster.prototype = {
       try {
         for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
           var mapppedObject = _step5.value;
-          if (mapppedObject.data === undefined) continue;
-          var map = mapppedObject.data.get('raycasterMap');
+          var map = void 0;
+
+          if (mapppedObject.type === 'body' || mapppedObject.type === 'composite') {
+            map = mapppedObject.raycasterMap;
+          } else if (mapppedObject.data) {
+            map = mapppedObject.data.get('raycasterMap');
+          }
+
+          if (!map) continue;
           if (map.dynamic) map.updateMap();
         }
       } catch (err) {

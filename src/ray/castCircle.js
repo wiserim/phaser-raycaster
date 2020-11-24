@@ -43,7 +43,12 @@ export function castCircle(options = {}) {
             
             testedObjects.push(object);
 
-            let map = object.data.get('raycasterMap');
+            let map;
+            if(object.type === 'body' || object.type === 'composite')
+                map = object.raycasterMap;
+            else
+                map = object.data.get('raycasterMap');
+
             maps.push(map);
             //get points and angles
             for(let point of map.getPoints(this)) {
@@ -56,9 +61,14 @@ export function castCircle(options = {}) {
             //get objects intersections
             for(let j = i+1, jLength = options.objects.length; j < jLength; j++){
                 let objectB = options.objects[j];
-                let mapB = objectB.data.get('raycasterMap');
+                let mapB;
+                if(objectB.type === 'body' || objectB.type === 'composite')
+                    mapB = objectB.raycasterMap;
+                else {
+                    mapB = objectB.data.get('raycasterMap');
+                }
                 //check if bounding boxes overlap
-                if(!Phaser.Geom.Intersects.RectangleToRectangle(object.getBounds(), objectB.getBounds()))
+                if(!Phaser.Geom.Intersects.RectangleToRectangle(map.getBoundingBox(), mapB.getBoundingBox()))
                     continue;
                 
                 //find objects intersections
@@ -150,6 +160,7 @@ export function castCircle(options = {}) {
 
     this.setAngle(originalAngle);
     this.intersections = intersections;
+
     if(this.autoSlice)
         this.slicedIntersections = this.slice();
 
