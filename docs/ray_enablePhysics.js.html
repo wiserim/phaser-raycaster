@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Phaser-raycaster Source: ray/config.js</title>
+	<title>Phaser-raycaster Source: ray/enablePhysics.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -65,87 +65,55 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: ray/config.js</h1>
+		<h1 class="page-title">Source: ray/enablePhysics.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">/**
- * Configure ray.
+ * Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. Physics body can be added only once.
  *
- * @method Raycaster.Ray#config
+ * @method Raycaster.Ray#enablePhysics
  * @memberof Raycaster.Ray
  * @instance
- * @since 0.6.0
+ * @since 0.8.0
  *
- * @param {object} [options] - Ray's congfiguration options. May include:
- * @param {Phaser.Geom.Point} [options.origin = {x:0, y:0}] - Ray's position.
- * @param {float} [options.angle = 0] - Ray's angle in radians.
- * @param {float} [options.angleDeg = 0] - Ray's angle in degrees.
- * @param {float} [options.cone = 0] - Ray's cone angle in radians.
- * @param {float} [options.coneDeg = 0] - Ray's cone angle in degrees.
- * @param {integer} [options.range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
- * @param {integer} [options.collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's maximum collision range of ray's field of view.
- * @param {integer} [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
- * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
- * @param {boolean} [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
- * @param {boolean} [options.round = false] - If set true, point where ray hit will be rounded.
- * @param {(boolean|'arcade'|'matter')} [options.enablePhysics = false] - Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. If set true, arcade physics body will be added.
- *
+ * @param {'arcade'|'matter'} [type = 'arcade'] - Physics type
+ * 
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
-export function config(options) {
-    this.object = options.object;
-    //origin
-    if(options.origin !== undefined)
-        this.origin.setTo(options.origin.x, options.origin.y);
-
-    //angle
-    if(options.angle !== undefined)
-        this.angle = Phaser.Math.Angle.Normalize(options.angle);
-
-    //angle deg
-    if(options.angleDeg !== undefined)
-        this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(options.angleDeg));
-
-    //cone angle
-    if(options.cone !== undefined)
-        this.cone = options.cone;
-
-    //cone angle deg
-    if(options.coneDeg !== undefined)
-        this.cone = Phaser.Math.DegToRad(options.coneDeg);
-
-    //ray range (0 = max)
-    if(options.rayRange !== undefined)
-        this.rayRange = options.rayRange;
-
-    //collision range (0 = max)
-    if(options.collisionRange !== undefined)
-        this.collisionRange = options.collisionRange;
-
-    //detection range (0 = max)
-    if(options.detectionRange !== undefined)
-        this.detectionRange = options.detectionRange;
-
-    //ignore not intersected rays
-    if(options.ignoreNotIntersectedRays !== undefined)
-        this.ignoreNotIntersectedRays = (options.ignoreNotIntersectedRays == true)
+export function enablePhysics(type = 'arcade') {
     
-    //round
-    if(options.round !== undefined)
-        this.round = (options.round == true)
+    if(this.body !== undefined)
+        return this;
 
-    //auto slice
-    if(options.autoSlice !== undefined)
-        this.autoSlice = (options.autoSlice == true)
+    if(type === 'matter') {
+        this.bodyType = 'matter';
+        this.collisionCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y, this.collisionRange);
+        this.collisionCircle._ray = this;
 
-    //enable physics
-    if(options.enablePhysics !== undefined &amp;&amp; options.enablePhysics)
-        this.enablePhysics(options.enablePhysics);
-    
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
-    this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
+        if(this.collisionRange == Phaser.Math.MAX_SAFE_INTEGER) {
+            let bounds = this._raycaster.boundingBox;
+            this._raycaster.scene.matter.add.gameObject(this.collisionCircle, { shape: { type: 'rectangle', x:bounds.rectangle.centerX, y:bounds.rectangle.centerY, width:bounds.rectangle.width, height:bounds.rectangle.height }, label: 'phaser-raycaster-ray-body', isSensor: true, ignoreGravity:true });
+        }
+        else {
+            this._raycaster.scene.matter.add.gameObject(this.collisionCircle, { shape: { type: 'circle' }, label: 'phaser-raycaster-ray-body', isSensor: true, ignoreGravity:true });
+        }
+
+        this.body = this.collisionCircle.body;
+        this.body._ray = this;
+    }
+    else {
+        this.bodyType = 'arcade';
+        this._raycaster.scene.physics.add.existing(this.collisionCircle);
+
+        this.body = this.collisionCircle.body;
+        this.body
+            .setCircle(collisionRange)
+            .setAllowGravity(false)
+            .setImmovable(true);
+        this.body._ray = this;
+    }
 
     return this;
 }

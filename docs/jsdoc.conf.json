@@ -17,17 +17,19 @@
             "../src/ray/range.js",
             "../src/ray/cone.js",
             "../src/ray/overlap.js",
-            "../src/ray/enableArcadePhysics.js",
+            "../src/ray/enablePhysics.js",
             //map
             "../src/map/map-core.js",
             "../src/map/config.js",
             "../src/map/segmentsCount.js",
+            "../src/map/boundingBox.js",
             "../src/map/map-rectangle-methods.js",
             "../src/map/map-line-methods.js",
             "../src/map/map-circle-methods.js",
             "../src/map/map-polygon-methods.js",
             "../src/map/map-container-methods.js",
-            "../src/map/map-tilemap-methods.js"
+            "../src/map/map-tilemap-methods.js",
+            "../src/map/map-matterBody-methods.js"
         ],
         "includePattern": ".+\\.js(doc|x)?$",
         "excludePattern": "(^|\\/|\\\\)_"

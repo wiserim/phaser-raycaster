@@ -669,7 +669,8 @@
 <dd>
     
     <div class="description">
-        Ray's maximum detection range. Objects outside detection range won't be tested.Ray tests all objects when set to 0.
+        Ray's maximum detection range. Objects outside detection range won't be tested.
+Ray tests all objects when set to 0.
     </div>
     
 
@@ -1320,7 +1321,7 @@
             
 <hr>
 <dt class="name" id="body">
-    <h4 id="body"><span class="type-signature"></span>body<span class="type-signature"> :object|bolean</span></h4>
+    <h4 id="body"><span class="type-signature"></span>body<span class="type-signature"> :object</span></h4>
 
     
 </dt>
@@ -1337,9 +1338,6 @@
             <li>
                 
 <span class="param-type">object</span>
-|
-
-<span class="param-type">bolean</span>
 
 
 
@@ -1398,6 +1396,107 @@
 			<li>
 				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
 				 <a href="ray_ray-core.js.html#sunlight-1-line-142">line 142</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="bodyType">
+    <h4 id="bodyType"><span class="type-signature"></span>bodyType<span class="type-signature"> :bolean|'arcade'|'matter'</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Physics body type.
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">bolean</span>
+|
+
+<span class="param-type">'arcade'</span>
+|
+
+<span class="param-type">'matter'</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
+	<dd class="tag-since">
+		<ul class="dummy">
+			<li>0.9.0</li>
+		</ul>
+	</dd>
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default method-doc-label method-doc-details-label">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>false</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="ray_ray-core.js.html">ray/ray-core.js</a>,
+				 <a href="ray_ray-core.js.html#sunlight-1-line-151">line 151</a>
 			</li>
 		</ul>
 	</dd>
@@ -1960,6 +2059,52 @@
             
 
             <td class="description last">If set true, point where ray hit will be rounded.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>enablePhysics</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+|
+
+<span class="param-type">'arcade'</span>
+|
+
+<span class="param-type">'matter'</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Add to ray physics body. Body will be a circle with radius equal to <a href="Raycaster.Ray.html#collisionRange">Ray.collisionRange</a>. If set true, arcade physics body will be added.</td>
         </tr>
 
     
@@ -3936,7 +4081,8 @@
 
     
     <div class="description">
-        Set ray's maximum detection range. Objects outside detection range won't be tested.Ray tests all objects when set to 0.
+        Set ray's maximum detection range. Objects outside detection range won't be tested.
+Ray tests all objects when set to 0.
     </div>
     
 
@@ -4125,7 +4271,8 @@
 
     
     <div class="description">
-        Set ray's field of view maximum collision range. Objects outside collision range won't be tested by <a href="Raycaster.Ray.html#overlap">Raycaster.Ray.overlap</a> method.Determines ray's physics body radius.
+        Set ray's field of view maximum collision range. Objects outside collision range won't be tested by <a href="Raycaster.Ray.html#overlap">Raycaster.Ray.overlap</a> method.
+Determines ray's physics body radius.
     </div>
     
 
@@ -4249,7 +4396,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="ray_range.js.html">ray/range.js</a>,
-				 <a href="ray_range.js.html#sunlight-1-line-38">line 38</a>
+				 <a href="ray_range.js.html#sunlight-1-line-39">line 39</a>
 			</li>
 		</ul>
 	</dd>
@@ -4477,7 +4624,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="ray_range.js.html">ray/range.js</a>,
-				 <a href="ray_range.js.html#sunlight-1-line-60">line 60</a>
+				 <a href="ray_range.js.html#sunlight-1-line-95">line 95</a>
 			</li>
 		</ul>
 	</dd>
@@ -5104,7 +5251,7 @@
 
     
     <div class="description">
-        Process callback for arcade physics collider / overlap.
+        Process callback for physics collider / overlap.
     </div>
     
 
@@ -5156,7 +5303,7 @@
 
             
 
-            <td class="description last">Game object passed by collider / overlap.</td>
+            <td class="description last">Game object or matter body passed by collider / overlap or matter CollisionInfo object.</td>
         </tr>
 
     
@@ -5180,7 +5327,7 @@
 
             
 
-            <td class="description last">Game object passed by collider / overlap.</td>
+            <td class="description last">Game object or matter body passed by collider / overlap. Ignored if matter CollisionInfo object was passed as first argument.</td>
         </tr>
 
     
@@ -5232,7 +5379,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="ray_overlap.js.html">ray/overlap.js</a>,
-				 <a href="ray_overlap.js.html#sunlight-1-line-73">line 73</a>
+				 <a href="ray_overlap.js.html#sunlight-1-line-102">line 102</a>
 			</li>
 		</ul>
 	</dd>
@@ -5289,7 +5436,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="enableArcadePhysics"><span class="type-signature"></span>enableArcadePhysics()</h4>
+    <h4 class="name" id="enablePhysics"><span class="type-signature"></span>enablePhysics( [type])</h4>
     
     
 </dt>
@@ -5297,7 +5444,7 @@
 
     
     <div class="description">
-        Add to ray arcade physics body. Body will be a circle with radius equal to <a href="Raycaster.Ray.html#collisionRange">Ray.collisionRange</a>.
+        Add to ray physics body. Body will be a circle with radius equal to <a href="Raycaster.Ray.html#collisionRange">Ray.collisionRange</a>. Physics body can be added only once.
     </div>
     
 
@@ -5306,6 +5453,79 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">'arcade'</span>
+|
+
+<span class="param-type">'matter'</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    'arcade'
+                
+                </td>
+            
+
+            <td class="description last">Physics type</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -5350,8 +5570,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="ray_enableArcadePhysics.js.html">ray/enableArcadePhysics.js</a>,
-				 <a href="ray_enableArcadePhysics.js.html#sunlight-1-line-1">line 1</a>
+				<a href="ray_enablePhysics.js.html">ray/enablePhysics.js</a>,
+				 <a href="ray_enablePhysics.js.html#sunlight-1-line-1">line 1</a>
 			</li>
 		</ul>
 	</dd>
@@ -5458,9 +5678,9 @@
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on 2020-09-08T23:13:35+02:00
+		on 2020-11-25T10:02:25+01:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

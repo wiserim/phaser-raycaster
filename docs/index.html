@@ -88,22 +88,21 @@
     <section class="readme-section">
         <article><h1>Phaser Raycaster</h1>
 <p>Raycasting plugin for Phaser 3.</p>
-<p><a href="https://github.com/wiserim/phaser-raycaster/releases"><img src="https://img.shields.io/github/release/wiserim/phaser-raycaster.svg" alt="GitHub release"></a> <a href="https://www.npmjs.com/package/phaser-raycaster"><img src="https://img.shields.io/npm/v/phaser-raycaster.svg" alt="npm"></a> <a href="https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE"><img src="https://img.shields.io/github/license/wiserim/phaser-raycaster.svg" alt="GitHub"></a> <a href="https://github.com/wiserim/phaser-raycaster"><img src="https://img.shields.io/github/size/wiserim/phaser-raycaster/dist/phaser-raycaster.min.js.svg" alt="Github file size"></a></p>
-<p>Phaser Raycaster is a <a href="https://github.com/photonstorm/phaser">Phaser 3</a> plugin which provide raycasting for geometric game objects and sprites.
-It doesn't require Matter.js and can be used with arcade physics.</p>
+<p><a href="https://github.com/wiserim/phaser-raycaster/releases"><img src="https://img.shields.io/github/release/wiserim/phaser-raycaster.svg" alt="GitHub release"></a> <a href="https://www.npmjs.com/package/phaser-raycaster"><img src="https://img.shields.io/npm/v/phaser-raycaster.svg" alt="npm"></a> <a href="https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE"><img src="https://img.shields.io/github/license/wiserim/phaser-raycaster.svg" alt="GitHub"></a> <a href="https://github.com/wiserim/phaser-raycaster"><img src="https://img.shields.io/github/size/wiserim/phaser-raycaster/dist/phaser-raycaster.min.js.svg" alt="Github file size"></a> <a href="https://www.jsdelivr.com/package/npm/phaser-raycaster"><img src="https://data.jsdelivr.com/v1/package/npm/phaser-raycaster/badge?style=rounded" alt=""></a></p>
+<p>Phaser Raycaster is a <a href="https://github.com/photonstorm/phaser">Phaser 3</a> plugin which provide raycasting for geometric game objects, sprites and Matter.js bodies.
+It can be used with arcade physics Matter.js.</p>
 <p>Documentation: <a href="https://wiserim.github.io/phaser-raycaster/">https://wiserim.github.io/phaser-raycaster/</a></p>
 <p>Code examples are available on CodePen: <a href="https://codepen.io/collection/AOOQWr">LINK</a></p>
 <p><strong>Features:</strong></p>
 <ul>
-<li>works with arcade physics,</li>
+<li>works with arcade and matter physics,</li>
 <li>raycasting in a single direction, 360 degrees circle or in a cone,</li>
 <li>visibility detection (collision detection with game objects),</li>
-<li>test rays on mapped game objects (containers, lines, rectangles, polygons, circles, sprites and tilemaps),</li>
+<li>test rays on mapped game objects (containers, lines, rectangles, polygons, circles, sprites, tilemaps and matter bodies),</li>
 <li>provides closest intersection points between rays and tested objects,</li>
-<li>tests can be made on all mapped objects or only selected ones,</li>
+<li>tests can be made on all mapped objects, selected ones or only ones within detection range,</li>
 <li>static and dynamic mapping for individual objects,</li>
-<li>mapped objects intersections detection,</li>
-<li>rays can limit tests to objects below defined range.</li>
+<li>mapped objects intersections detection.</li>
 </ul>
 <p><em><strong>NPM</strong></em></p>
 <pre class="prettyprint source"><code>npm install phaser-raycaster
@@ -113,7 +112,7 @@ It doesn't require Matter.js and can be used with arcade physics.</p>
 <h2>Getting started</h2>
 <h3>1. Include plugin in your project:</h3>
 <pre class="prettyprint source lang-html"><code>&lt;!--CDN-->
-&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.jsdelivr.net/npm/phaser-raycaster@0.8.1/dist/phaser-raycaster.min.js&quot;>&lt;/script>
+&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdn.jsdelivr.net/npm/phaser-raycaster@0.9.0/dist/phaser-raycaster.min.js&quot;>&lt;/script>
 </code></pre>
 <pre class="prettyprint source"><code># NPM
 npm install phaser-raycaster
@@ -200,11 +199,11 @@ this.ray.setCone(90);
 //cast rays in a cone
 let intersections = this.ray.castCone();
 </code></pre>
-<h3>7. Collisions (arcade physics only)</h3>
+<h3>7. Collisions (arcade physics)</h3>
 <pre class="prettyprint source lang-javascript"><code>//enable auto slicing filed of view
 this.ray.autoSlice = true;
 //enable arcade physics body
-this.ray.enablePhysicsBody();
+this.ray.enablePhysics();
 //set collision (field of view) range
 this.ray.setCollisionRange(200);
 //cast ray
@@ -225,6 +224,34 @@ this.physics.add.overlap(this.ray, targets, function(rayFoVCircle, target){
     * what to do in game objects in line of sight
     */
 }, this.ray.processOverlap.bind(this.ray));
+</code></pre>
+<h3>8. Collisions (matter physics)</h3>
+<pre class="prettyprint source lang-javascript"><code>//enable auto slicing filed of view
+this.ray.autoSlice = true;
+//enable matter physics body
+this.ray.enablePhysics('matter');
+//cast ray
+this.ray.castCircle();
+
+//get all game objects and bodies in field of view (which bodies overlap ray's field of view)
+let visibleObjects = this.ray.overlap();
+
+//get objects and bodies in field of view
+visibleObjects = this.ray.overlap([gameObject1, gameObject2, body1, body2]);
+
+//check if object is in field of view
+visibleObjects = this.ray.overlap(gameObject);
+
+//add collider (require passing ray.overlap in callback to check if body's in field of view)
+this.ray.body.setOnCollideWith(body, function(body){
+    let overlap = this.ray.overlap(body);
+
+    if(overlap) {
+      /*
+      * what to do in game objects in line of sight
+      */
+    }
+});
 </code></pre></article>
     </section>
 
@@ -275,9 +302,9 @@ this.physics.add.overlap(this.ray, targets, function(rayFoVCircle, target){
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on 2020-09-08T23:13:35+02:00
+		on 2020-11-25T10:02:25+01:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

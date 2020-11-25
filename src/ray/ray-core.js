@@ -151,10 +151,10 @@ export function Ray(options, raycaster) {
     /**
     * Physics body type.
     *
-    * @name Raycaster.Ray#body
+    * @name Raycaster.Ray#bodyType
     * @type {(bolean|'arcade'|'matter')}
     * @default false
-    * @since 0.8.0
+    * @since 0.9.0
     */
     this.bodyType = false;
 
