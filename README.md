@@ -11,7 +11,7 @@ Documentation: [https://wiserim.github.io/phaser-raycaster/](https://wiserim.git
 Code examples are available on CodePen: [LINK](https://codepen.io/collection/AOOQWr)
 
 **Features:**
-* works with arcade and matter physics,
+* compatible with arcade and matter physics,
 * raycasting in a single direction, 360 degrees circle or in a cone,
 * visibility detection (collision detection with game objects),
 * test rays on mapped game objects (containers, lines, rectangles, polygons, circles, sprites, tilemaps and matter bodies),
