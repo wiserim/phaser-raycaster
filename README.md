@@ -1,7 +1,7 @@
 # Phaser Raycaster
 Raycasting plugin for Phaser 3.
 
-[![GitHub release](https://img.shields.io/github/release/wiserim/phaser-raycaster.svg)](https://github.com/wiserim/phaser-raycaster/releases) [![npm](https://img.shields.io/npm/v/phaser-raycaster.svg)](https://www.npmjs.com/package/phaser-raycaster) [![GitHub](https://img.shields.io/github/license/wiserim/phaser-raycaster.svg)](https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE) [![Github file size](https://img.shields.io/github/size/wiserim/phaser-raycaster/dist/phaser-raycaster.min.js.svg)](https://github.com/wiserim/phaser-raycaster)
+[![GitHub release](https://img.shields.io/github/release/wiserim/phaser-raycaster.svg)](https://github.com/wiserim/phaser-raycaster/releases) [![npm](https://img.shields.io/npm/v/phaser-raycaster.svg)](https://www.npmjs.com/package/phaser-raycaster) [![GitHub](https://img.shields.io/github/license/wiserim/phaser-raycaster.svg)](https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE) [![Github file size](https://img.shields.io/github/size/wiserim/phaser-raycaster/dist/phaser-raycaster.min.js.svg)](https://github.com/wiserim/phaser-raycaster) [![](https://data.jsdelivr.com/v1/package/npm/phaser-raycaster/badge?style=rounded)](https://www.jsdelivr.com/package/npm/phaser-raycaster)
 
 Phaser Raycaster is a [Phaser 3](https://github.com/photonstorm/phaser) plugin which provide raycasting for geometric game objects, sprites and Matter.js bodies.
 It can be used with arcade physics Matter.js.
@@ -14,12 +14,11 @@ Code examples are available on CodePen: [LINK](https://codepen.io/collection/AOO
 * works with arcade and matter physics,
 * raycasting in a single direction, 360 degrees circle or in a cone,
 * visibility detection (collision detection with game objects),
-* test rays on mapped game objects (containers, lines, rectangles, polygons, circles, sprites and tilemaps),
+* test rays on mapped game objects (containers, lines, rectangles, polygons, circles, sprites, tilemaps and matter bodies),
 * provides closest intersection points between rays and tested objects,
-* tests can be made on all mapped objects or only selected ones,
+* tests can be made on all mapped objects, selected ones or only ones within detection range,
 * static and dynamic mapping for individual objects,
-* mapped objects intersections detection,
-* rays can limit tests mapped objects below defined range.
+* mapped objects intersections detection.
 
 ***NPM***
 ```
