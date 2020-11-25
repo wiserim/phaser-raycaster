@@ -92,9 +92,9 @@ export function Map(options, raycaster) {
     * @instance
     * @since 0.6.0
     *
-    * @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+    * @param {Raycatser.Ray} [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
     *
-    * @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+    * @return {Phaser.Geom.Point[]} Array of mapped object's vertices.
     */
     this.getPoints;
     /**
@@ -105,9 +105,9 @@ export function Map(options, raycaster) {
     * @instance
     * @since 0.6.0
     *
-    * @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+    * @param {Raycatser.Ray} [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
     *
-    * @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+    * @return {Phaser.Geom.Line[]} Array of mapped object's segments.
     */
     this.getSegments;
     /**
@@ -118,7 +118,7 @@ export function Map(options, raycaster) {
     * @instance
     * @since 0.9.0
     *
-    * @return {Phaser.Geom.Rectangle} - Mapped object's bounding box.
+    * @return {Phaser.Geom.Rectangle} Mapped object's bounding box.
     */
     this.getBoundingBox;
     /**
