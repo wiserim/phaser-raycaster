@@ -15,10 +15,11 @@ export function enablePhysics(type = 'arcade') {
     if(this.body !== undefined)
         return this;
 
+    this.collisionCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y, this.collisionRange);
+    this.collisionCircle._ray = this;
+
     if(type === 'matter') {
         this.bodyType = 'matter';
-        this.collisionCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y, this.collisionRange);
-        this.collisionCircle._ray = this;
 
         if(this.collisionRange == Phaser.Math.MAX_SAFE_INTEGER) {
             let bounds = this._raycaster.boundingBox;
@@ -37,7 +38,7 @@ export function enablePhysics(type = 'arcade') {
 
         this.body = this.collisionCircle.body;
         this.body
-            .setCircle(collisionRange)
+            .setCircle(this.collisionRange)
             .setAllowGravity(false)
             .setImmovable(true);
         this.body._ray = this;
