@@ -43,6 +43,7 @@ export function overlap(objects) {
     }
     //arcade physics
     else {
+        let bodies = false;
         //get bodies in range
         if(objects === undefined) {
             objects = this._raycaster.scene.physics.overlapCirc(this.origin.x, this.origin.y, this.collisionRange, true, true);
@@ -123,7 +124,7 @@ export function processOverlap(object1, object2) {
     if(object1._ray !== undefined && object1._ray === this)
         target = object2;
     else if(object2._ray !== undefined && object2._ray === this)
-        target = obj1;
+        target = object1;
     else
         return false;
 
