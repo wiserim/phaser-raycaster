@@ -2787,6 +2787,7 @@ __webpack_require__.r(__webpack_exports__);
 function enablePhysics() {
   var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'arcade';
   if (this.body !== undefined) return this;
+  
   this.collisionCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y, this.collisionRange);
   this.collisionCircle._ray = this;
 
@@ -3043,6 +3044,7 @@ function processOverlap(object1, object2) {
   }
 
   if (object1._ray !== undefined && object1._ray === this) target = object2;else if (object2._ray !== undefined && object2._ray === this) target = object1;else return false;
+
   return this.overlap(target).length > 0;
 }
 /**
