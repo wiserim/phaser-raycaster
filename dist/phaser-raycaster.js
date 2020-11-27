@@ -911,9 +911,9 @@ function Map(options, raycaster) {
   * @instance
   * @since 0.6.0
   *
-  * @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+  * @param {Raycatser.Ray} [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
   *
-  * @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+  * @return {Phaser.Geom.Point[]} Array of mapped object's vertices.
   */
 
   this.getPoints;
@@ -925,9 +925,9 @@ function Map(options, raycaster) {
   * @instance
   * @since 0.6.0
   *
-  * @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+  * @param {Raycatser.Ray} [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
   *
-  * @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
+  * @return {Phaser.Geom.Line[]} Array of mapped object's segments.
   */
 
   this.getSegments;
@@ -939,7 +939,7 @@ function Map(options, raycaster) {
   * @instance
   * @since 0.9.0
   *
-  * @return {Phaser.Geom.Rectangle} - Mapped object's bounding box.
+  * @return {Phaser.Geom.Rectangle} Mapped object's bounding box.
   */
 
   this.getBoundingBox;
@@ -2726,7 +2726,6 @@ __webpack_require__.r(__webpack_exports__);
  * @param {boolean} [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
  * @param {boolean} [options.round = false] - If set true, point where ray hit will be rounded.
  * @param {(boolean|'arcade'|'matter')} [options.enablePhysics = false] - Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. If set true, arcade physics body will be added.
- * @param {boolean} [options. = false] - If set true, point where ray hit will be rounded.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
@@ -2788,11 +2787,11 @@ __webpack_require__.r(__webpack_exports__);
 function enablePhysics() {
   var type = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'arcade';
   if (this.body !== undefined) return this;
+  this.collisionCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y, this.collisionRange);
+  this.collisionCircle._ray = this;
 
   if (type === 'matter') {
     this.bodyType = 'matter';
-    this.collisionCircle = this._raycaster.scene.add.circle(this.origin.x, this.origin.y, this.collisionRange);
-    this.collisionCircle._ray = this;
 
     if (this.collisionRange == Phaser.Math.MAX_SAFE_INTEGER) {
       var bounds = this._raycaster.boundingBox;
@@ -2822,13 +2821,17 @@ function enablePhysics() {
 
     this.body = this.collisionCircle.body;
     this.body._ray = this;
+    this.setOnCollide = this.collisionCircle.setOnCollide;
+    this.setOnCollideStop = this.collisionCircle.setOnCollideStop;
+    this.setOnCollideActive = this.collisionCircle.setOnCollideActive;
+    this.setOnCollideWith = this.collisionCircle.setOnCollideWith;
   } else {
     this.bodyType = 'arcade';
 
     this._raycaster.scene.physics.add.existing(this.collisionCircle);
 
     this.body = this.collisionCircle.body;
-    this.body.setCircle(collisionRange).setAllowGravity(false).setImmovable(true);
+    this.body.setCircle(this.collisionRange).setAllowGravity(false).setImmovable(true);
     this.body._ray = this;
   }
 
@@ -2954,7 +2957,8 @@ function overlap(objects) {
       }
   } //arcade physics
   else {
-      //get bodies in range
+      var bodies = false; //get bodies in range
+
       if (objects === undefined) {
         objects = this._raycaster.scene.physics.overlapCirc(this.origin.x, this.origin.y, this.collisionRange, true, true);
         bodies = true;
@@ -3042,7 +3046,7 @@ function processOverlap(object1, object2) {
     object1 = object1.bodyA;
   }
 
-  if (object1._ray !== undefined && object1._ray === this) target = object2;else if (object2._ray !== undefined && object2._ray === this) target = obj1;else return false;
+  if (object1._ray !== undefined && object1._ray === this) target = object2;else if (object2._ray !== undefined && object2._ray === this) target = object1;else return false;
   return this.overlap(target).length > 0;
 }
 /**
@@ -3492,10 +3496,10 @@ function Ray(options, raycaster) {
   /**
   * Physics body type.
   *
-  * @name Raycaster.Ray#body
+  * @name Raycaster.Ray#bodyType
   * @type {(bolean|'arcade'|'matter')}
   * @default false
-  * @since 0.8.0
+  * @since 0.9.0
   */
 
   this.bodyType = false; //this.collisionCircle;
