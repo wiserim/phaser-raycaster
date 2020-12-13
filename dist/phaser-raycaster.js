@@ -2821,10 +2821,7 @@ function enablePhysics() {
 
     this.body = this.collisionCircle.body;
     this.body._ray = this;
-    this.setOnCollide = this.collisionCircle.setOnCollide;
-    this.setOnCollideStop = this.collisionCircle.setOnCollideStop;
-    this.setOnCollideActive = this.collisionCircle.setOnCollideActive;
-    this.setOnCollideWith = this.collisionCircle.setOnCollideWith;
+    this.setOnCollideActive();
   } else {
     this.bodyType = 'arcade';
 
@@ -2837,6 +2834,242 @@ function enablePhysics() {
 
   return this;
 }
+
+/***/ }),
+
+/***/ "./src/ray/matter-physics-methods.js":
+/*!*******************************************!*\
+  !*** ./src/ray/matter-physics-methods.js ***!
+  \*******************************************/
+/*! exports provided: setCollisionCategory, setCollisionGroup, setCollidesWith, setOnCollide, setOnCollideEnd, setOnCollideActive, setOnCollideWith */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCollisionCategory", function() { return setCollisionCategory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCollisionGroup", function() { return setCollisionGroup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCollidesWith", function() { return setCollidesWith; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setOnCollide", function() { return setOnCollide; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setOnCollideEnd", function() { return setOnCollideEnd; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setOnCollideActive", function() { return setOnCollideActive; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setOnCollideWith", function() { return setOnCollideWith; });
+/*Matter physics methods for ray body*/
+
+/**
+ * Sets the collision category of this ray's Matter Body. This number must be a power of two between 2^0 (= 1) and 2^31.
+ * Two bodies with different collision groups (see {@link #setCollisionGroup}) will only collide if their collision
+ * categories are included in their collision masks (see {@link #setCollidesWith}).
+ *
+ * @method Raycaster.Ray#setCollisionCategory
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.9.1
+ *
+ * @param {number} value - Unique category bitfield.
+ * 
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+function setCollisionCategory(value) {
+  this.body.collisionFilter.category = value;
+  return this;
+}
+;
+/**
+ * Sets the collision group of this ray's Matter Body. If this is zero or two Matter Bodies have different values,
+ * they will collide according to the usual rules (see {@link #setCollisionCategory} and {@link #setCollisionGroup}).
+ * If two Matter Bodies have the same positive value, they will always collide; if they have the same negative value,
+ * they will never collide.
+ *
+ * @method Raycaster.Ray#setCollisionCategory
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.9.1
+ *
+ * @param {number} value - Unique group index.
+ * 
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+
+function setCollisionGroup(value) {
+  this.body.collisionFilter.group = value;
+  return this;
+}
+;
+/**
+ * Sets the collision mask for this ray's Matter Body. Two Matter Bodies with different collision groups will only
+ * collide if each one includes the other's category in its mask based on a bitwise AND, i.e. `(categoryA & maskB) !== 0`
+ * and `(categoryB & maskA) !== 0` are both true.*
+ *
+ * @method Raycaster.Ray#setCollidesWith
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.9.1
+ *
+ * @param {(number|number[])} categories - A unique category bitfield, or an array of them.
+ * 
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+
+function setCollidesWith(categories) {
+  var flags = 0;
+
+  if (!Array.isArray(categories)) {
+    flags = categories;
+  } else {
+    for (var i = 0; i < categories.length; i++) {
+      flags |= categories[i];
+    }
+  }
+
+  this.body.collisionFilter.mask = flags;
+  return this;
+}
+;
+/**
+ * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
+ * 
+ * This does not change the bodies collision category, group or filter. Those must be set in addition
+ * to the callback.
+ *
+ * @method Raycaster.Ray#setOnCollide
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.9.1
+ *
+ * @param {function} callback - The callback to invoke when this body starts colliding with another.
+ * 
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+
+function setOnCollide(callback) {
+  var self = this;
+
+  this.body.onCollideCallback = function (collisionInfo) {
+    if (collisionInfo.rayCollided) {
+      callback(collisionInfo);
+    } else if (self.processOverlap(collisionInfo)) {
+      collisionInfo.rayCollided = true;
+      callback(collisionInfo);
+    }
+  };
+
+  return this;
+}
+;
+/**
+ * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
+ * 
+ * This does not change the bodies collision category, group or filter. Those must be set in addition
+ * to the callback.
+ *
+ * @method Raycaster.Ray#setOnCollideEnd
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.9.1
+ *
+ * @param {function} callback - The callback to invoke when this body stops colliding with another.
+ * 
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+
+function setOnCollideEnd(callback) {
+  this.body.onCollideEndCallback = function (collisionInfo) {
+    if (collisionInfo.rayCollided) {
+      collisionInfo.rayCollided = false;
+      callback(collisionInfo);
+    }
+  };
+
+  return this;
+}
+;
+/**
+ * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
+ * 
+ * This does not change the bodies collision category, group or filter. Those must be set in addition
+ * to the callback.
+ *
+ * @method Raycaster.Ray#setOnCollideActive
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.9.1
+ *
+ * @param {function} callback - The callback to invoke for the duration of this body colliding with another.
+ * 
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+
+function setOnCollideActive(callback) {
+  var self = this;
+
+  var func = function func(collisionInfo) {
+    if (self.processOverlap(collisionInfo)) {
+      var body = collisionInfo.bodyA.label === 'phaser-raycaster-ray-body' ? collisionInfo.bodyB : collisionInfo.bodyA;
+
+      if (collisionInfo.rayCollided !== true) {
+        collisionInfo.rayCollided = true;
+
+        if (self.body.onCollideCallback) {
+          self.body.onCollideCallback(collisionInfo);
+        }
+
+        if (self.body.onCollideWith !== undefined && self.body.onCollideWith[body.id]) {
+          self.body.onCollideWith[body.id](body, collisionInfo);
+        }
+      }
+
+      if (callback) callback(collisionInfo);
+    } else {
+      if (self.body.onCollideEndCallback && collisionInfo.rayCollided === true) {
+        self.body.onCollideEndCallback(collisionInfo);
+      }
+    }
+  };
+
+  this.body.onCollideActiveCallback = func;
+  return this;
+}
+/**
+ * The callback is sent a reference to the other body, along with a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
+ * 
+ * This does not change the bodies collision category, group or filter. Those must be set in addition
+ * to the callback.
+ *
+ * @method Raycaster.Ray#setOnCollideWith
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.9.1
+ *
+ * @param {(MatterJS.Body|MatterJS.Body[])} body - The body, or an array of bodies, to test for collisions with.
+ * @param {function} callback - The callback to invoke when this body collides with the given body or bodies.
+ * 
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+
+function setOnCollideWith(body, callback) {
+  var self = this;
+
+  var func = function func(body, collisionInfo) {
+    if (collisionInfo.rayCollided) {
+      callback(body, collisionInfo);
+    } else if (self.processOverlap(collisionInfo)) {
+      collisionInfo.rayCollided = true;
+      callback(body, collisionInfo);
+    }
+  };
+
+  if (!Array.isArray(body)) {
+    body = [body];
+  }
+
+  for (var i = 0; i < body.length; i++) {
+    var src = body[i].hasOwnProperty('body') ? body[i].body : body[i];
+    this.body.setOnCollideWith(src, func);
+  }
+
+  return this;
+}
+;
 
 /***/ }),
 
@@ -3039,14 +3272,17 @@ function overlap(objects) {
  */
 
 function processOverlap(object1, object2) {
-  var target; //check if it's matter collisionInfo object
+  var obj1, obj2, target; //check if it's matter collisionInfo object
 
   if (object1.bodyA !== undefined && object1.bodyB !== undefined) {
-    object2 = object1.bodyB;
-    object1 = object1.bodyA;
+    obj1 = object1.bodyA;
+    obj2 = object1.bodyB;
+  } else {
+    obj1 = object1;
+    obj2 = object2;
   }
 
-  if (object1._ray !== undefined && object1._ray === this) target = object2;else if (object2._ray !== undefined && object2._ray === this) target = object1;else return false;
+  if (obj1._ray !== undefined && obj1._ray === this) target = obj2;else if (obj2._ray !== undefined && obj2._ray === this) target = obj1;else return false;
   return this.overlap(target).length > 0;
 }
 /**
@@ -3108,7 +3344,6 @@ function testArcadeOverlap(hitbox) {
  */
 
 function testMatterOverlap(object) {
-  var overlap = false;
   var body;
   if (object.type === 'body') body = object;else if (object.body !== undefined) body = object.body;else return false; //if body is concave, ignore convex body
 
@@ -3527,7 +3762,14 @@ Ray.prototype = {
   overlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").overlap,
   processOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").processOverlap,
   testArcadeOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").testArcadeOverlap,
-  testMatterOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").testMatterOverlap
+  testMatterOverlap: __webpack_require__(/*! ./overlap.js */ "./src/ray/overlap.js").testMatterOverlap,
+  setCollisionCategory: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setCollisionCategory,
+  setCollisionGroup: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setCollisionGroup,
+  setCollidesWith: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setCollidesWith,
+  setOnCollide: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setOnCollide,
+  setOnCollideEnd: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setOnCollideEnd,
+  setOnCollideActive: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setOnCollideActive,
+  setOnCollideWith: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setOnCollideWith
 };
 
 /***/ }),
@@ -3662,7 +3904,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.9.0';
+  this.version = '0.9.1';
   /**
   * Raycaster's scene
   *

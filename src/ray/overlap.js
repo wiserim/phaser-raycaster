@@ -114,17 +114,21 @@ export function overlap(objects) {
  * @return {boolean} Return true if game object is overlapping ray's field of view.
  */
 export function processOverlap(object1, object2) {
-    let target;
+    let obj1, obj2, target;
     //check if it's matter collisionInfo object
     if(object1.bodyA !== undefined && object1.bodyB !== undefined) {
-        object2 = object1.bodyB;
-        object1 = object1.bodyA;
+        obj1 = object1.bodyA;
+        obj2 = object1.bodyB;
+    }
+    else {
+        obj1 = object1;
+        obj2 = object2;
     }
 
-    if(object1._ray !== undefined && object1._ray === this)
-        target = object2;
-    else if(object2._ray !== undefined && object2._ray === this)
-        target = object1;
+    if(obj1._ray !== undefined && obj1._ray === this)
+        target = obj2;
+    else if(obj2._ray !== undefined && obj2._ray === this)
+        target = obj1;
     else
         return false;
 
@@ -180,7 +184,6 @@ export function testArcadeOverlap(hitbox) {
  * @return {boolean} True if body overlaps with {@link Raycaster.Ray Raycaster.Ray} field of view.
  */
 export function testMatterOverlap(object) {
-    let overlap = false;
     let body;
 
     if(object.type === 'body')

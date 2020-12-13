@@ -33,7 +33,7 @@ npm install phaser-raycaster
 ### 1. Include plugin in your project:
 ```html
 <!--CDN-->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.9.0/dist/phaser-raycaster.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.9.1/dist/phaser-raycaster.min.js"></script>
 ```
 ```
 # NPM
@@ -149,9 +149,9 @@ visibleObjects = this.ray.overlap(gameObject);
 
 //add overlap collider (require passing ray.processOverlap as process callback)
 this.physics.add.overlap(this.ray, targets, function(rayFoVCircle, target){
-    /*
-    * what to do in game objects in line of sight
-    */
+  /*
+  * What to do with game objects in line of sight.
+  */
 }, this.ray.processOverlap.bind(this.ray));
 ```
 
@@ -170,17 +170,44 @@ let visibleObjects = this.ray.overlap();
 //get objects and bodies in field of view
 visibleObjects = this.ray.overlap([gameObject1, gameObject2, body1, body2]);
 
-//check if object is in field of view
+//check if object or body is in field of view
 visibleObjects = this.ray.overlap(gameObject);
 
-//add collider (require passing ray.overlap in callback to check if body's in field of view)
-this.ray.body.setOnCollideWith(body, function(body){
-    let overlap = this.ray.overlap(body);
+//add onCollide event
+this.ray.setOnCollide(function(collisionInfo){
+  //get body
+  let body = collisionInfo.bodyA.label === 'phaser-raycaster-ray-body' ? collisionInfo.bodyB : collisionInfo.bodyA;
+    /*
+    * What to do with game object which enters line of sight .
+    */
+  }
+});
 
-    if(overlap) {
-      /*
-      * what to do in game objects in line of sight
-      */
-    }
+//add onCollideWith event
+this.ray.setOnCollideWith(body, function(body, collisionInfo){
+    /*
+    * What to do with game object which enters line of sight.
+    */
+  }
+});
+
+//add onCollideEnd event
+this.ray.setOnCollideEnd(function(collisionInfo){
+  //get body
+  let body = collisionInfo.bodyA.label === 'phaser-raycaster-ray-body' ? collisionInfo.bodyB : collisionInfo.bodyA;
+    /*
+    * What to do with game object which leaves line of sight.
+    */
+  }
+});
+
+//add onCollideActive event
+this.ray.setOnCollide(function(collisionInfo){
+  //get body
+  let body = collisionInfo.bodyA.label === 'phaser-raycaster-ray-body' ? collisionInfo.bodyB : collisionInfo.bodyA;
+    /*
+    * What to do with game object while it's in line of sight.
+    */
+  }
 });
 ```

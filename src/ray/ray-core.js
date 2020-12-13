@@ -183,5 +183,12 @@ Ray.prototype = {
     overlap: require('./overlap.js').overlap,
     processOverlap: require('./overlap.js').processOverlap,
     testArcadeOverlap: require('./overlap.js').testArcadeOverlap,
-    testMatterOverlap: require('./overlap.js').testMatterOverlap
+    testMatterOverlap: require('./overlap.js').testMatterOverlap,
+    setCollisionCategory: require('./matter-physics-methods.js').setCollisionCategory,
+    setCollisionGroup: require('./matter-physics-methods.js').setCollisionGroup,
+    setCollidesWith: require('./matter-physics-methods.js').setCollidesWith,
+    setOnCollide: require('./matter-physics-methods.js').setOnCollide,
+    setOnCollideEnd: require('./matter-physics-methods.js').setOnCollideEnd,
+    setOnCollideActive: require('./matter-physics-methods.js').setOnCollideActive,
+    setOnCollideWith: require('./matter-physics-methods.js').setOnCollideWith
 };
