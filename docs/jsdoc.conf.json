@@ -18,6 +18,7 @@
             "../src/ray/cone.js",
             "../src/ray/overlap.js",
             "../src/ray/enablePhysics.js",
+            "../src/ray/matter-physics-methods.js",
             //map
             "../src/map/map-core.js",
             "../src/map/config.js",
