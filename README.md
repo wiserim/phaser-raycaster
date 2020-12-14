@@ -129,7 +129,7 @@ let intersections = this.ray.castCone();
 
 ### 7. Collisions (arcade physics)
 ```javascript
-//enable auto slicing filed of view
+//enable auto slicing field of view
 this.ray.autoSlice = true;
 //enable arcade physics body
 this.ray.enablePhysics();
@@ -157,7 +157,7 @@ this.physics.add.overlap(this.ray, targets, function(rayFoVCircle, target){
 
 ### 8. Collisions (matter physics)
 ```javascript
-//enable auto slicing filed of view
+//enable auto slicing field of view
 this.ray.autoSlice = true;
 //enable matter physics body
 this.ray.enablePhysics('matter');
