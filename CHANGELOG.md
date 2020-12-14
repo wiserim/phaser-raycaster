@@ -1,5 +1,24 @@
 # Change Log
 
+## Version 0.9.1 - 2020.12.13
+
+### New features
+
+* Added matter physics game objects collision methods to `Ray`.
+* `Ray.setCollisionCategory` is new method that sets the collision category of `Ray` matter body.
+* `Ray.setCollisionGroup` is new method that sets the collision category of `Ray` matter body.
+* `Ray.setCollidesWith` is new method that sets the collision mask for `Ray` matter body.
+* `Ray.setOnCollide` is new method that sets `onCollide` event's calback for `Ray` matter body.
+* `Ray.setOnCollideEnd` is new method that sets `onCollideEnd` event's calback for `Ray` matter body.
+* `Ray.setOnCollideActive` is new method that sets `onCollideActive` event's calback for `Ray` matter body.
+* `Ray.setOnCollideWith` is new method that sets `onCollide` event's calback for `Ray` matter body when it collides with the given body or bodies.
+
+### Bug fixes
+
+* `Ray.processOverlap` method return false for all arcade bodies.
+
+---
+
 ## Version 0.9.0 - 2020.11.26
 
 ### New features
@@ -7,7 +26,7 @@
 * Added matter physics support.
 * `Raycaster.mapGameObjects` now accepts matter bodies.
 * `Map` can now map matter bodies.
-* `Map.getBoundingBox` is new methods that allows to get map bounding box.
+* `Map.getBoundingBox` is new method that allows to get map bounding box.
 * `Map.forceConvex` is new property that force using matter body's convex body (hull) for mapping.
 * `Map.forceVerticesMapping` is new property that force using circle matter body's vertices for mapping.
 * `Ray.enablePhysics` is new method that creates arcade / matter physics body for ray.

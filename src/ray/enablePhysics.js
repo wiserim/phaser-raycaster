@@ -31,11 +31,7 @@ export function enablePhysics(type = 'arcade') {
 
         this.body = this.collisionCircle.body;
         this.body._ray = this;
-
-        this.setOnCollide = this.collisionCircle.setOnCollide;
-        this.setOnCollideStop = this.collisionCircle.setOnCollideStop;
-        this.setOnCollideActive = this.collisionCircle.setOnCollideActive;
-        this.setOnCollideWith = this.collisionCircle.setOnCollideWith;
+        this.setOnCollideActive();
     }
     else {
         this.bodyType = 'arcade';
