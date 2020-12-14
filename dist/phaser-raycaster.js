@@ -3283,6 +3283,7 @@ function processOverlap(object1, object2) {
   }
 
   if (obj1._ray !== undefined && obj1._ray === this) target = obj2;else if (obj2._ray !== undefined && obj2._ray === this) target = obj1;else return false;
+
   return this.overlap(target).length > 0;
 }
 /**

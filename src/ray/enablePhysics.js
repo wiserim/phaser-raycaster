@@ -31,7 +31,6 @@ export function enablePhysics(type = 'arcade') {
 
         this.body = this.collisionCircle.body;
         this.body._ray = this;
-        
         this.setOnCollideActive();
     }
     else {
