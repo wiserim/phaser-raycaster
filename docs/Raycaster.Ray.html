@@ -669,8 +669,7 @@
 <dd>
     
     <div class="description">
-        Ray's maximum detection range. Objects outside detection range won't be tested.
-Ray tests all objects when set to 0.
+        Ray's maximum detection range. Objects outside detection range won't be tested.Ray tests all objects when set to 0.
     </div>
     
 
@@ -5636,9 +5635,7 @@ Determines ray's physics body radius.
 
     
     <div class="description">
-        Sets the collision category of this ray's Matter Body. This number must be a power of two between 2^0 (= 1) and 2^31.
-Two bodies with different collision groups (see #setCollisionGroup) will only collide if their collision
-categories are included in their collision masks (see #setCollidesWith).
+        Sets the collision category of this ray's Matter Body. This number must be a power of two between 2^0 (= 1) and 2^31.Two bodies with different collision groups (see #setCollisionGroup) will only collide if their collisioncategories are included in their collision masks (see #setCollidesWith).
     </div>
     
 
@@ -5807,10 +5804,7 @@ categories are included in their collision masks (see #setCollidesWith).
 
     
     <div class="description">
-        Sets the collision group of this ray's Matter Body. If this is zero or two Matter Bodies have different values,
-they will collide according to the usual rules (see #setCollisionCategory and #setCollisionGroup).
-If two Matter Bodies have the same positive value, they will always collide; if they have the same negative value,
-they will never collide.
+        Sets the collision group of this ray's Matter Body. If this is zero or two Matter Bodies have different values,they will collide according to the usual rules (see #setCollisionCategory and #setCollisionGroup).If two Matter Bodies have the same positive value, they will always collide; if they have the same negative value,they will never collide.
     </div>
     
 
@@ -5979,9 +5973,7 @@ they will never collide.
 
     
     <div class="description">
-        Sets the collision mask for this ray's Matter Body. Two Matter Bodies with different collision groups will only
-collide if each one includes the other's category in its mask based on a bitwise AND, i.e. `(categoryA & maskB) !== 0`
-and `(categoryB & maskA) !== 0` are both true.*
+        Sets the collision mask for this ray's Matter Body. Two Matter Bodies with different collision groups will onlycollide if each one includes the other's category in its mask based on a bitwise AND, i.e. `(categoryA & maskB) !== 0`and `(categoryB & maskA) !== 0` are both true.*
     </div>
     
 
@@ -6153,10 +6145,7 @@ and `(categoryB & maskA) !== 0` are both true.*
 
     
     <div class="description">
-        The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-
-This does not change the bodies collision category, group or filter. Those must be set in addition
-to the callback.
+        The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.This does not change the bodies collision category, group or filter. Those must be set in additionto the callback.
     </div>
     
 
@@ -6325,10 +6314,7 @@ to the callback.
 
     
     <div class="description">
-        The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-
-This does not change the bodies collision category, group or filter. Those must be set in addition
-to the callback.
+        The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.This does not change the bodies collision category, group or filter. Those must be set in additionto the callback.
     </div>
     
 
@@ -6497,10 +6483,7 @@ to the callback.
 
     
     <div class="description">
-        The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-
-This does not change the bodies collision category, group or filter. Those must be set in addition
-to the callback.
+        The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.This does not change the bodies collision category, group or filter. Those must be set in additionto the callback.
     </div>
     
 
@@ -6669,10 +6652,7 @@ to the callback.
 
     
     <div class="description">
-        The callback is sent a reference to the other body, along with a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-
-This does not change the bodies collision category, group or filter. Those must be set in addition
-to the callback.
+        The callback is sent a reference to the other body, along with a `Phaser.Types.Physics.Matter.MatterCollisionData` object.This does not change the bodies collision category, group or filter. Those must be set in additionto the callback.
     </div>
     
 
@@ -6906,13 +6886,13 @@ to the callback.
 
 
 	<span class="copyright">
-	&copy; Marcin Walczak 2020
+	&copy; Marcin Walczak 2021
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on 2020-12-13T23:59:03+01:00
+		on 2021-02-13T21:04:14+01:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

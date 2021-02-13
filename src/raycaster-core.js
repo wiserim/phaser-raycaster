@@ -1,6 +1,6 @@
 /**
 * @author       Marcin Walczak <contact@marcin-walczak.pl>
-* @copyright    2020 Marcin Walczak
+* @copyright    2021 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 
@@ -30,7 +30,7 @@ export function Raycaster(options) {
     * @readonly
     * @since 0.6.0
     */
-    this.version = '0.9.1';
+    this.version = '0.9.2';
     /**
     * Raycaster's scene
     *

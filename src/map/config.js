@@ -86,6 +86,17 @@ export function config(options) {
             //reset tilemap origin
             this.object.setOrigin(0,0);
             break;
+        case 'TilemapLayer':
+            //ray colliding tiles
+            this.collisionTiles = (options.collisionTiles) ? options.collisionTiles : [];
+            this.getPoints = tilemap.getPoints;
+            this.getSegments = tilemap.getSegments;
+            this.getBoundingBox = boundingBox.getBoundingBox;
+            this.updateMap = tilemap.updateMap;
+            this.setCollisionTiles = tilemap.setCollisionTiles;
+            //reset tilemap origin
+            this.object.setOrigin(0,0);
+            break;
         case 'MatterBody':
             //force convex body (hull) mapping
             this.forceConvex = (options.forceConvex) ? true : false;

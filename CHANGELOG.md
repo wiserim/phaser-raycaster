@@ -1,5 +1,13 @@
 # Change Log
 
+## Version 0.9.2 - 2020.02.13
+
+### Bug fixes
+
+* `Raycaster.mapGameObjects` doesn't map `Phaser.Tilemaps.TilemapLayer` which replaced `Phaser.Tilemaps.StaticTilemapLayer` and `Phaser.Tilemaps.DynamicTilemapLayer` in Phaser 3.50.0.
+
+---
+
 ## Version 0.9.1 - 2020.12.13
 
 ### New features

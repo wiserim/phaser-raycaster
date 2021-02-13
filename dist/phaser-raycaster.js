@@ -320,6 +320,18 @@ function config(options) {
       this.object.setOrigin(0, 0);
       break;
 
+    case 'TilemapLayer':
+      //ray colliding tiles
+      this.collisionTiles = options.collisionTiles ? options.collisionTiles : [];
+      this.getPoints = tilemap.getPoints;
+      this.getSegments = tilemap.getSegments;
+      this.getBoundingBox = boundingBox.getBoundingBox;
+      this.updateMap = tilemap.updateMap;
+      this.setCollisionTiles = tilemap.setCollisionTiles; //reset tilemap origin
+
+      this.object.setOrigin(0, 0);
+      break;
+
     case 'MatterBody':
       //force convex body (hull) mapping
       this.forceConvex = options.forceConvex ? true : false; //force mapping by vertices
@@ -3283,7 +3295,6 @@ function processOverlap(object1, object2) {
   }
 
   if (obj1._ray !== undefined && obj1._ray === this) target = obj2;else if (obj2._ray !== undefined && obj2._ray === this) target = obj1;else return false;
-
   return this.overlap(target).length > 0;
 }
 /**
@@ -3875,7 +3886,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 /**
 * @author       Marcin Walczak <contact@marcin-walczak.pl>
-* @copyright    2020 Marcin Walczak
+* @copyright    2021 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 
@@ -3905,7 +3916,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.9.1';
+  this.version = '0.9.2';
   /**
   * Raycaster's scene
   *
