@@ -123,7 +123,7 @@ let intersections = this.ray.castCircle();
 //set ray's cone angle (in radians)
 this.ray.setCone(1);
 //set ray's cone angle (in degrees)
-this.ray.setCone(90);
+this.ray.setConeDeg(90);
 
 //cast rays in a cone
 let intersections = this.ray.castCone();
