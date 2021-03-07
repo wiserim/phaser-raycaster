@@ -9,7 +9,7 @@
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
+ * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and hit segment if available.
  */
 export function castCircle(options = {}) {
     let originalAngle = this.angle;

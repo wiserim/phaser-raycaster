@@ -10,10 +10,12 @@
  * @param {object[]} [options.objects = {Raycaster#mappedObjects}] - Array of game objects to test. If not provided test all mapped game objects.
  * @param {Phaser.Geom.Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
  *
- * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found.
+ * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found. Additionally contains reference to hit mapped object and hit segment if available.
  */
 export function cast(options = {}) {
     let closestIntersection;
+    let closestSegment;
+    let closestObject;
     let closestDistance = this.rayRange;
     //if bounding box is defined check bounding box intersection
     if(this._raycaster && this._raycaster.boundingBox) {
@@ -85,6 +87,8 @@ export function cast(options = {}) {
             if(distance < closestDistance) {
                 closestDistance = distance;
                 closestIntersection = intersection;
+                closestObject = map.object;
+                closestSegment = segment;
             }
         }
 
@@ -108,6 +112,7 @@ export function cast(options = {}) {
                         if(distance < closestDistance) {
                             closestDistance = distance;
                             closestIntersection = point;
+                            closestObject = map.object;
                             isTangent = true;
                             break;
                         }
@@ -145,6 +150,7 @@ export function cast(options = {}) {
 
                         closestDistance = distance;
                         closestIntersection = intersection;
+                        closestObject = map.object;
                     }
                 }
             }
@@ -160,6 +166,8 @@ export function cast(options = {}) {
     }
     else {
         result = new Phaser.Geom.Point(closestIntersection.x, closestIntersection.y);
+        result.segment = closestSegment;
+        result.object = closestObject;
     }
 
     if(this.round) {

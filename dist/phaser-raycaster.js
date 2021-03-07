@@ -2003,11 +2003,13 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @param {object[]} [options.objects = {Raycaster#mappedObjects}] - Array of game objects to test. If not provided test all mapped game objects.
  * @param {Phaser.Geom.Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
  *
- * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found.
+ * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found. Additionally contains reference to hit mapped object and hit segment if available.
  */
 function cast() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var closestIntersection;
+  var closestSegment;
+  var closestObject;
   var closestDistance = this.rayRange; //if bounding box is defined check bounding box intersection
 
   if (this._raycaster && this._raycaster.boundingBox) {
@@ -2081,6 +2083,8 @@ function cast() {
           if (_distance4 < closestDistance) {
             closestDistance = _distance4;
             closestIntersection = _intersection2;
+            closestObject = map.object;
+            closestSegment = segment;
           }
         } //check if map is circular
 
@@ -2115,6 +2119,7 @@ function cast() {
                 if (_distance2 < closestDistance) {
                   closestDistance = _distance2;
                   closestIntersection = point;
+                  closestObject = map.object;
                   isTangent = true;
                   break;
                 }
@@ -2161,6 +2166,7 @@ function cast() {
               if (_distance3 < closestDistance) {
                 closestDistance = _distance3;
                 closestIntersection = _intersection;
+                closestObject = map.object;
               }
             }
           } catch (err) {
@@ -2184,6 +2190,8 @@ function cast() {
     result = this._ray.getPointB();
   } else {
     result = new Phaser.Geom.Point(closestIntersection.x, closestIntersection.y);
+    result.segment = closestSegment;
+    result.object = closestObject;
   }
 
   if (this.round) {
@@ -2223,7 +2231,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
+ * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and hit segment if available.
  */
 function castCircle() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -2437,7 +2445,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
+ * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and hit segment if available.
  */
 function castCone() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -3916,7 +3924,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.9.2';
+  this.version = '0.9.3';
   /**
   * Raycaster's scene
   *
