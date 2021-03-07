@@ -33,7 +33,7 @@ npm install phaser-raycaster
 ### 1. Include plugin in your project:
 ```html
 <!--CDN-->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.9.2/dist/phaser-raycaster.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.9.3/dist/phaser-raycaster.min.js"></script>
 ```
 ```
 # NPM
@@ -112,8 +112,10 @@ this.ray.setOrigin(400, 300);
 this.ray.setAngle(2);
 //set ray direction (in degrees)
 this.ray.setAngleDeg(90);
-//cast single ray and get closets intersection with mapped objects
+//cast single ray and get closets intersection, hit mapped object and hit segment
 let intersection = this.ray.cast();
+let hitObject = intersection.object;
+let hitSegment = intersection.segment;
 
 //cast rays in all directions (toward all mapped objects vertices / points)
 let intersections = this.ray.castCircle();
