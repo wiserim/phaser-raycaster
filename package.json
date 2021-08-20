@@ -1,6 +1,6 @@
 {
   "name": "phaser-raycaster",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Raycasting plugin for Phaser 3.",
   "main": "dist/phaser-raycaster.min.js",
   "scripts": {
@@ -25,9 +25,9 @@
     "url": "https://github.com/wiserim/phaser-raycaster.git"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/preset-env": "^7.12.16",
-    "@babel/register": "^7.12.13",
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/register": "^7.15.3",
     "babel-loader": "^8.2.2",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.10"

@@ -30,7 +30,7 @@ export function Raycaster(options) {
     * @readonly
     * @since 0.6.0
     */
-    this.version = '0.9.3';
+    this.version = '0.9.4';
     /**
     * Raycaster's scene
     *
@@ -215,6 +215,9 @@ Raycaster.prototype = {
             }
             else if(!object.data) {
                 object.setDataEnabled();
+                object.data.set('raycasterMap', map);
+            }
+            else {
                 object.data.set('raycasterMap', map);
             }
 

@@ -293,6 +293,7 @@ function config(options) {
     case 'Container':
       this.getPoints = container.getPoints;
       this.getSegments = container.getSegments;
+      this.getBoundingBox = boundingBox.getBoundingBox;
       this.updateMap = container.updateMap;
       break;
 
@@ -3924,7 +3925,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.9.3';
+  this.version = '0.9.4';
   /**
   * Raycaster's scene
   *
@@ -4095,6 +4096,8 @@ Raycaster.prototype = {
           object.raycasterMap = map;
         } else if (!object.data) {
           object.setDataEnabled();
+          object.data.set('raycasterMap', map);
+        } else {
           object.data.set('raycasterMap', map);
         }
 
