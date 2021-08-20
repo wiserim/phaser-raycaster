@@ -1,5 +1,26 @@
 # Change Log
 
+## Version 0.9.4 - 2021.08.20
+
+### Bug fixes
+
+* `Map.config` doesn't add `Map.getBoundingBox` method to containers map.
+* `Raycaster.mapGameObjects` doesn't add map to data attribute if it's already enabled.
+
+### Updates
+
+* `Ray.cast`, `Ray.castCircle` and `Ray.castCone` methods return additionally hit mapped objects and segments.
+
+---
+
+## Version 0.9.3 - 2021.03.07
+
+### Updates
+
+* `Ray.cast`, `Ray.castCircle` and `Ray.castCone` methods return additionally hit mapped objects and segments.
+
+---
+
 ## Version 0.9.2 - 2020.02.13
 
 ### Bug fixes

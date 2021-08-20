@@ -62,6 +62,7 @@ export function config(options) {
         case 'Container':
             this.getPoints = container.getPoints;
             this.getSegments = container.getSegments;
+            this.getBoundingBox = boundingBox.getBoundingBox;
             this.updateMap = container.updateMap;
             break;
         case 'StaticTilemapLayer':
