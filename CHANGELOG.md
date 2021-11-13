@@ -1,5 +1,15 @@
 # Change Log
 
+## Version 0.10 - 2021.11.13
+
+### New features
+
+* Added debug mode.
+* Added statistics.
+* Added additional intersection data. Each point contains reference to hit mapped object and it's segment if available.
+
+---
+
 ## Version 0.9.4 - 2021.08.20
 
 ### Bug fixes

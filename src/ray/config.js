@@ -75,5 +75,10 @@ export function config(options) {
     Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
 
+    if(this._raycaster.debugOptions.enabled && this._raycaster.scene !== undefined) {
+        this.graphics =  this._raycaster.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00}, fillStyle: { color: 0xff00ff } });
+        this.graphics.setDepth(1000);
+    }
+
     return this;
 }

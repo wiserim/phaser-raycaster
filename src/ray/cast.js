@@ -9,14 +9,26 @@
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = {Raycaster#mappedObjects}] - Array of game objects to test. If not provided test all mapped game objects.
  * @param {Phaser.Geom.Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
+ * @param {boolean} [options.internal = false] - Flag determining if method is used by other casting method.
  *
- * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found. Additionally contains reference to hit mapped object and hit segment if available.
+ * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found. Additionally contains reference to hit mapped object and segment if available.
  */
 export function cast(options = {}) {
     let closestIntersection;
     let closestSegment;
     let closestObject;
     let closestDistance = this.rayRange;
+    let internal = options.internal ? options.internal : false;
+    let startTime = performance.now();
+    let stats = {
+        method: 'cast',
+        rays: 1,
+        testedMappedObjects: 0,
+        hitMappedObjects: 0,
+        segments: 0,
+        time: 0
+    };
+
     //if bounding box is defined check bounding box intersection
     if(this._raycaster && this._raycaster.boundingBox) {
         let intersections = [];
@@ -59,10 +71,15 @@ export function cast(options = {}) {
         else
             map = object.data.get('raycasterMap');
 
+        stats.testedMappedObjects++;
+
         //check if object is intersected by ray
-        if(!Phaser.Geom.Intersects.GetLineToRectangle(this._ray, map.getBoundingBox()))
+        if(Phaser.Geom.Intersects.GetLineToRectangle(this._ray, map.getBoundingBox()).length === 0)
             continue;
 
+        stats.hitMappedObjects++;
+        stats.segments += map.getSegments(this).length;
+        
         //check intersections
         for(let segment of map.getSegments(this)) {
             let intersection = [];
@@ -157,6 +174,18 @@ export function cast(options = {}) {
         }
     }
 
+    //update stats
+    if(internal) {
+        this._stats.rays++;
+        this._stats.testedMappedObjects += stats.testedMappedObjects;
+        this._stats.hitMappedObjects += stats.hitMappedObjects;
+        this._stats.segments += stats.segments;
+    }
+    else {
+        stats.time = performance.now() - startTime;
+        this._stats = stats;
+    }
+
     let result;
     if(!closestIntersection) {
         if(this.ignoreNotIntersectedRays)
@@ -174,6 +203,9 @@ export function cast(options = {}) {
         result.x = Math.round(result.x);
         result.y = Math.round(result.y);
     }
+
+    if(!internal)
+        this.drawDebug([result]);
     
     return result;
 }

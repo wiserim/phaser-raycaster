@@ -20,6 +20,7 @@
  * @param {(object|object[])} [options.objects] - Game object or array of game objects to map.
  * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box.
  * @param {boolean} [options.autoUpdate = true] - If set true, automatically update dynamic maps on scene update event.
+ * @param {bool|object} [options.debug] - Enable debug mode or configure it {@link Raycaster#debugOptions debugOptions}.
  */
 export function Raycaster(options) {
     /**
@@ -30,17 +31,89 @@ export function Raycaster(options) {
     * @readonly
     * @since 0.6.0
     */
-    this.version = '0.9.4';
+    this.version = '0.10';
     /**
     * Raycaster's scene
     *
-    * @name Raycaster#version
-    * @type {string}
+    * @name Raycaster#scene
+    * @type {Phaser.Scene}
     * @private
     * @since 0.6.0
     */
     this.scene;
+    /**
+    * Raycaster's graphics object used for debug
+    *
+    * @name Raycaster#graphics
+    * @type {Phaser.GameObjects.Graphics}
+    * @private
+    * @since 0.10
+    */
     this.graphics;
+    /**
+    * Raycaster's debug config
+    *
+    * @name Raycaster#debugOptions
+    * @type {Object}
+    * @since 0.10
+    * 
+    * @property {bool} [enable = false] Enable debug mode
+    * @property {bool} [maps = true] - Enable maps debug
+    * @param {bool} [rays = true] - Enable rays debug
+    * @property {bool} graphics - Debug graphics options
+    * @property {bool|number} [graphics.ray = 0x00ff00] - Debug ray color. Set false to disable.
+    * @property {bool|number} [graphics.rayPoint = 0xff00ff] - Debug ray point color. Set false to disable.
+    * @property {bool|number} [graphics.mapPoint = 0x00ffff] - debug map point color. Set false to disable.
+    * @property {bool|number} [graphics.mapSegment = 0x0000ff] - Debug map segment color. Set false to disable.
+    * @property {bool|number} [graphics.mapBoundingBox = 0xff0000] - Debug map bounding box color. Set false to disable.
+    */
+    this.debugOptions = {
+        enabled: false,
+        maps: true,
+        rays: true,
+        graphics: {
+            ray: 0x00ff00,
+            rayPoint: 0xff00ff,
+            mapPoint: 0x00ffff,
+            mapSegment: 0x0000ff,
+            mapBoundingBox: 0xff0000
+        }
+    };
+
+    /**
+    * Raycaster statistics.
+    *
+    * @name Raycaster.Raycaster#_stats
+    * @type {object}
+    * @private
+    * @since 0.10
+    * 
+    * @property {object} mappedObjects Mapped objects statistics.
+    * @property {number} mappedObjects.total Mapped objects total.
+    * @property {number} mappedObjects.static Static maps.
+    * @property {number} mappedObjects.dynamic Dynamic maps.
+    * @property {number} mappedObjects.rectangleMaps Rectangle maps.
+    * @property {number} mappedObjects.polygonMaps Polygon maps.
+    * @property {number} mappedObjects.circleMaps Circle maps.
+    * @property {number} mappedObjects.lineMaps Line maps.
+    * @property {number} mappedObjects.containerMaps Container maps.
+    * @property {number} mappedObjects.tilemapMaps Tilemap maps.
+    * @property {number} mappedObjects.matterMaps Matter body maps.
+    */
+     this._stats = {
+        mappedObjects: {
+            total: 0,
+            static: 0,
+            dynamic: 0,
+            rectangleMaps: 0,
+            polygonMaps: 0,
+            circleMaps: 0,
+            lineMaps: 0,
+            containerMaps: 0,
+            tilemapMaps: 0,
+            matterMaps: 0
+        }
+     };
 
     /**
     * Raycaster's bounding box.
@@ -116,6 +189,7 @@ Raycaster.prototype = {
     * @param {integer} [options.mapSegmentCount = 0] - Number of segments of circle maps.
     * @param {(object|object[])} [options.objects] - Game object or array of game objects to map.
     * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box.
+    * @param {bool|object} [options.debug] - Enable debug mode or cofigure {@link Raycaster#debugOptions debugOptions}.
     *
     * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
@@ -123,7 +197,16 @@ Raycaster.prototype = {
         if(options.scene !== undefined) {
             this.scene = options.scene;
             this.graphics =  this.scene.add.graphics({ lineStyle: { width: 1, color: 0x00ff00}, fillStyle: { color: 0xff00ff } });
+            this.graphics.setDepth(999);
         }
+
+        if(options.debug !== undefined && options.debug !== false) {
+            this.debugOptions.enabled = true;
+
+            if(typeof options.debug === 'object')
+                Object.assign(this.debugOptions, options.debug);
+        }
+            
 
         if(options.mapSegmentCount !== undefined)
             this.mapSegmentCount = options.mapSegmentCount;
@@ -222,7 +305,45 @@ Raycaster.prototype = {
             }
 
             this.mappedObjects.push(object);
+
+            //update stats
+            if(object.dynamic)
+                this._stats.mappedObjects.dynamic++;
+            else
+                this._stats.mappedObjects.static++;
+            
+            switch(object.type) {
+                case 'Polygon':
+                    this._stats.mappedObjects.polygonMaps++;
+                    break;
+                case 'Arc':
+                    this._stats.mappedObjects.circleMaps++;
+                    break;
+                case 'Line':
+                    this._stats.mappedObjects.lineMaps++;
+                    break;
+                case 'Container':
+                    this._stats.mappedObjects.containerMaps++;
+                    break;
+                case 'StaticTilemapLayer':
+                    this._stats.mappedObjects.tilemapMaps++;
+                    break;
+                case 'DynamicTilemapLayer':
+                    this._stats.mappedObjects.tilemapMaps++;
+                    break;
+                case 'TilemapLayer':
+                    this._stats.mappedObjects.tilemapMaps++;
+                    break;
+                case 'MatterBody':
+                    this._stats.mappedObjects.matterMaps++;
+                    break;
+                default:
+                    this._stats.mappedObjects.rectangleMaps++;
+            }
         }
+
+        this._stats.mappedObjects.total = this.mappedObjects.length;
+
         return this;
     },
 
@@ -245,8 +366,45 @@ Raycaster.prototype = {
         for(let object of objects) {
             let index = this.mappedObjects.indexOf(object);
             if(index >= 0)
-                this.mappedObjects.splice(index, 1)
+                this.mappedObjects.splice(index, 1);
+            
+            //update stats
+            if(object.dynamic)
+                this._stats.mappedObjects.dynamic--;
+            else
+                this._stats.mappedObjects.static--;
+            
+            switch(object.type) {
+                case 'Polygon':
+                    this._stats.mappedObjects.polygonMaps--;
+                    break;
+                case 'Arc':
+                    this._stats.mappedObjects.circleMaps--;
+                    break;
+                case 'Line':
+                    this._stats.mappedObjects.lineMaps--;
+                    break;
+                case 'Container':
+                    this._stats.mappedObjects.containerMaps--;
+                    break;
+                case 'StaticTilemapLayer':
+                    this._stats.mappedObjects.tilemapMaps--;
+                    break;
+                case 'DynamicTilemapLayer':
+                    this._stats.mappedObjects.tilemapMaps--;
+                    break;
+                case 'TilemapLayer':
+                    this._stats.mappedObjects.tilemapMaps--;
+                    break;
+                case 'MatterBody':
+                    this._stats.mappedObjects.matterMaps--;
+                    break;
+                default:
+                    this._stats.mappedObjects.rectangleMaps--;
+            }
         }
+
+        this._stats.mappedObjects.total = this.mappedObjects.length;
 
         return this;
     },
@@ -324,11 +482,13 @@ Raycaster.prototype = {
     * @memberof Raycaster
     * @instance
     * @since 0.6.0
-    *
+    * 
+    * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
     update: function() {
         //update dynamic maps
-        if(this.mappedObjects.length > 0)
+        let dynamicMaps = 0;
+        if(this.mappedObjects.length > 0) {
             for(let mapppedObject of this.mappedObjects) {
                 let map;
 
@@ -342,9 +502,22 @@ Raycaster.prototype = {
                 if(!map)
                     continue;
 
-                if(map.dynamic)
+                if(map.dynamic) {
                     map.updateMap();
+                    dynamicMap++;
+                }
             }
+
+            //update stats
+            this._stats.mappedObjects.static = this.mappedObjects.length - dynamicMaps;
+            this._stats.mappedObjects.dynamic = dynamicMaps;
+
+            //debug
+            if(this.debugOptions.enabled)
+                this.drawDebug();
+        }
+
+        return this;
     },
 
     /**
@@ -361,6 +534,78 @@ Raycaster.prototype = {
     */
     createRay: function(options = {}) {
         return new this.Ray(options, this);
+    },
+
+    /**
+    * Get raycaster statistics.
+    *
+    * @method Raycaster#getStats
+    * @memberof Raycaster
+    * @instance
+    * @since 0.10
+    *
+    * @return {object} Raycaster statistics.
+    */
+    getStats: function() {
+        return this._stats;
+    },
+
+    /**
+    * Draw maps in debug mode
+    *
+    * @method Raycaster#drawDebug
+    * @memberof Raycaster
+    * @private
+    * @since 0.10
+    * 
+    * @return {Raycaster} {@link Raycaster Raycaster} instance
+    */
+     drawDebug: function() {
+        if(this.graphics === undefined || !this.debugOptions.enabled)
+            return this;
+
+        //clear
+        this.graphics.clear();
+
+        if(!this.debugOptions.maps)
+            return this;
+
+        for(let object of this.mappedObjects)
+        {
+            let map;
+        
+            if(object.type === 'body' || object.type === 'composite')
+                map = object.raycasterMap;
+            else
+                map = object.data.get('raycasterMap');
+            
+            if(!map)
+                continue;
+
+            //draw bounding box
+            if(this.debugOptions.graphics.mapBoundingBox) {
+                this.graphics.lineStyle(1, this.debugOptions.graphics.mapBoundingBox);
+                this.graphics.strokeRectShape(map.getBoundingBox());
+            }
+
+            //draw segments
+            if(this.debugOptions.graphics.mapSegment) {
+                this.graphics.lineStyle(1, this.debugOptions.graphics.mapSegment);
+                for(let segment of map.getSegments()) {
+                    this.graphics.strokeLineShape(segment);
+                }
+            }
+
+            //draw points
+            if(this.debugOptions.graphics.mapPoint) {
+                this.graphics.fillStyle(this.debugOptions.graphics.mapPoint);
+                for(let point of map.getPoints()) {
+                    this.graphics.fillPoint(point.x, point.y, 3)
+                }
+            }
+        }
+
+        return this;
     }
 }
 

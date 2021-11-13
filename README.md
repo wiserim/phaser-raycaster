@@ -18,7 +18,8 @@ Code examples are available on CodePen: [LINK](https://codepen.io/collection/AOO
 * provides closest intersection points between rays and tested objects,
 * tests can be made on all mapped objects, selected ones or only ones within detection range,
 * static and dynamic mapping for individual objects,
-* mapped objects intersections detection.
+* mapped objects intersections detection,
+* debug mode.
 
 ***NPM***
 ```
@@ -33,7 +34,7 @@ npm install phaser-raycaster
 ### 1. Include plugin in your project:
 ```html
 <!--CDN-->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.9.4/dist/phaser-raycaster.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.10.0/dist/phaser-raycaster.min.js"></script>
 ```
 ```
 # NPM
@@ -212,4 +213,70 @@ this.ray.setOnCollide(function(collisionInfo){
     */
   }
 });
+```
+### 9. Statistics
+```javascript
+//get raycaster statistics
+let statistics = this.raycaster.getStats();
+/*
+  statistics = {
+    mappedObjects: {
+      total - mapped objects total
+      static - static maps
+      dynamic - dynamic maps
+      rectangleMaps - rectangle maps
+      polygonMaps - polygon maps
+      circleMaps - circle maps
+      lineMaps - line maps
+      containerMaps - container maps
+      tilemapMaps - tilemap maps
+      matterMaps - matter body maps
+    }
+  }
+*/
+
+//get ray statistics
+let rayStatistics = this.ray.getStats();
+/*
+  rayStatistics = {
+    method - used casting method (cast, castCircle, castCone)
+    rays - casted rays
+    testedMappedObjects - tested mapped objects
+    hitMappedObjects - hit mapped objects
+    segments - tested segments
+    time - casting time
+  }
+*/
+```
+
+### 10. Debug mode
+```javascript
+  //enable debug mode
+  this.raycaster = this.raycasterPlugin.createRaycaster({
+    debug: true
+  });
+
+  //advanced debug mode options
+  this.raycaster = this.raycasterPlugin.createRaycaster({
+    debug: {
+      enabled: false, //enable debug mode
+      maps: true, //enable maps debug
+      rays: true, //enable rays debug
+      graphics: {
+          ray: 0x00ff00, //debug ray color; set false to disable
+          rayPoint: 0xff00ff, //debug ray point color; set false to disable
+          mapPoint: 0x00ffff, //debug map point color; set false to disable
+          mapSegment: 0x0000ff, //debug map segment color; set false to disable
+          mapBoundingBox: 0xff0000 //debug map bounding box color; set false to disable
+      }
+    }
+  });
+
+  //change debug options after initialization
+  this.raycaster.debugOptions.enabled = true;
+
+  this.raycaster.setOptions({
+    debug: true
+  });
+
 ```
