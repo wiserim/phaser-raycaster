@@ -158,13 +158,46 @@ export function Ray(options, raycaster) {
     */
     this.bodyType = false;
 
-    //this.collisionCircle;
+    /**
+    * Ray casting stats.
+    *
+    * @name Raycaster.Ray#_stats
+    * @type {object}
+    * @private
+    * @since 0.10
+    * 
+    * @property {string} method Used casting method (cast, castCircle, castCone).
+    * @property {number} rays Casted rays.
+    * @property {number} testedMappedObjects Tested mapped objects.
+    * @property {number} hitMappedObjects Hit mapped objects.
+    * @property {number} segments Tested segments.
+    * @property {number} time Casting time.
+    */
+    this._stats = {
+        method: 'cast',
+        rays: 0,
+        testedMappedObjects: 0,
+        hitMappedObjects: 0,
+        segments: 0,
+        time: 0
+    };
+
+    /**
+    * Ray's graphics object used for debug
+    *
+    * @name Raycaster.Ray#graphics
+    * @type {Phaser.GameObjects.Graphics}
+    * @private
+    * @since 0.10
+    */
+     this.graphics;
 
     this.config(options);
 };
 
 Ray.prototype = {
     config: require('./config.js').config,
+    getStats: require('./stats.js').getStats,
     setRay: require('./ray.js').setRay,    
     setOrigin: require('./origin.js').setOrigin,
     setRayRange: require('./range.js').setRayRange,
@@ -190,5 +223,6 @@ Ray.prototype = {
     setOnCollide: require('./matter-physics-methods.js').setOnCollide,
     setOnCollideEnd: require('./matter-physics-methods.js').setOnCollideEnd,
     setOnCollideActive: require('./matter-physics-methods.js').setOnCollideActive,
-    setOnCollideWith: require('./matter-physics-methods.js').setOnCollideWith
+    setOnCollideWith: require('./matter-physics-methods.js').setOnCollideWith,
+    drawDebug: require('./debug.js').drawDebug
 };

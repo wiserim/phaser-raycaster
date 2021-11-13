@@ -378,6 +378,47 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>debug</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+|
+
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Enable debug mode or configure it <a href="Raycaster.html#debugOptions">debugOptions</a>.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -559,7 +600,472 @@
 		<ul class="dummy">
 			<li>
 				<a href="raycaster-core.js.html">raycaster-core.js</a>,
-				 <a href="raycaster-core.js.html#sunlight-1-line-25">line 25</a>
+				 <a href="raycaster-core.js.html#sunlight-1-line-26">line 26</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="debugOptions">
+    <h4 id="debugOptions"><span class="type-signature"></span>debugOptions<span class="type-signature"> :Object</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Raycaster's debug config
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Object</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>enable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Enable debug mode</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>maps</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last">Enable maps debug</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>graphics</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Debug graphics options
+                <h6>Properties</h6>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>ray</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+|
+
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0x00ff00
+                
+                </td>
+            
+
+            <td class="description last">Debug ray color. Set false to disable.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>rayPoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+|
+
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0xff00ff
+                
+                </td>
+            
+
+            <td class="description last">Debug ray point color. Set false to disable.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mapPoint</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+|
+
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0x00ffff
+                
+                </td>
+            
+
+            <td class="description last">debug map point color. Set false to disable.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mapSegment</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+|
+
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0x0000ff
+                
+                </td>
+            
+
+            <td class="description last">Debug map segment color. Set false to disable.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mapBoundingBox</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+|
+
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    0xff0000
+                
+                </td>
+            
+
+            <td class="description last">Debug map bounding box color. Set false to disable.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
+	<dd class="tag-since">
+		<ul class="dummy">
+			<li>0.10</li>
+		</ul>
+	</dd>
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="raycaster-core.js.html">raycaster-core.js</a>,
+				 <a href="raycaster-core.js.html#sunlight-1-line-53">line 53</a>
 			</li>
 		</ul>
 	</dd>
@@ -647,7 +1153,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="raycaster-core.js.html">raycaster-core.js</a>,
-				 <a href="raycaster-core.js.html#sunlight-1-line-55">line 55</a>
+				 <a href="raycaster-core.js.html#sunlight-1-line-128">line 128</a>
 			</li>
 		</ul>
 	</dd>
@@ -742,7 +1248,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="raycaster-core.js.html">raycaster-core.js</a>,
-				 <a href="raycaster-core.js.html#sunlight-1-line-64">line 64</a>
+				 <a href="raycaster-core.js.html#sunlight-1-line-137">line 137</a>
 			</li>
 		</ul>
 	</dd>
@@ -1025,6 +1531,47 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>debug</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bool</span>
+|
+
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Enable debug mode or cofigure <a href="Raycaster.html#debugOptions">debugOptions</a>.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -1080,7 +1627,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="raycaster-core.js.html">raycaster-core.js</a>,
-				 <a href="raycaster-core.js.html#sunlight-1-line-106">line 106</a>
+				 <a href="raycaster-core.js.html#sunlight-1-line-179">line 179</a>
 			</li>
 		</ul>
 	</dd>
@@ -1321,7 +1868,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="raycaster-core.js.html">raycaster-core.js</a>,
-				 <a href="raycaster-core.js.html#sunlight-1-line-140">line 140</a>
+				 <a href="raycaster-core.js.html#sunlight-1-line-223">line 223</a>
 			</li>
 		</ul>
 	</dd>
@@ -1587,7 +2134,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="raycaster-core.js.html">raycaster-core.js</a>,
-				 <a href="raycaster-core.js.html#sunlight-1-line-180">line 180</a>
+				 <a href="raycaster-core.js.html#sunlight-1-line-263">line 263</a>
 			</li>
 		</ul>
 	</dd>
@@ -1759,7 +2306,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="raycaster-core.js.html">raycaster-core.js</a>,
-				 <a href="raycaster-core.js.html#sunlight-1-line-229">line 229</a>
+				 <a href="raycaster-core.js.html#sunlight-1-line-350">line 350</a>
 			</li>
 		</ul>
 	</dd>
@@ -1931,7 +2478,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="raycaster-core.js.html">raycaster-core.js</a>,
-				 <a href="raycaster-core.js.html#sunlight-1-line-254">line 254</a>
+				 <a href="raycaster-core.js.html#sunlight-1-line-412">line 412</a>
 			</li>
 		</ul>
 	</dd>
@@ -2103,7 +2650,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="raycaster-core.js.html">raycaster-core.js</a>,
-				 <a href="raycaster-core.js.html#sunlight-1-line-287">line 287</a>
+				 <a href="raycaster-core.js.html#sunlight-1-line-445">line 445</a>
 			</li>
 		</ul>
 	</dd>
@@ -2222,7 +2769,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="raycaster-core.js.html">raycaster-core.js</a>,
-				 <a href="raycaster-core.js.html#sunlight-1-line-320">line 320</a>
+				 <a href="raycaster-core.js.html#sunlight-1-line-478">line 478</a>
 			</li>
 		</ul>
 	</dd>
@@ -2247,6 +2794,30 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <a href="Raycaster.html">Raycaster</a> instance
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Raycaster.html">Raycaster</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
@@ -2379,7 +2950,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="raycaster-core.js.html">raycaster-core.js</a>,
-				 <a href="raycaster-core.js.html#sunlight-1-line-350">line 350</a>
+				 <a href="raycaster-core.js.html#sunlight-1-line-523">line 523</a>
 			</li>
 		</ul>
 	</dd>
@@ -2420,6 +2991,125 @@
     <dd>
         
 <span class="param-type"><a href="Raycaster.Ray.html">Raycaster.Ray</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getStats"><span class="type-signature"></span>getStats()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get raycaster statistics.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+	<dt class="tag-since method-doc-label method-doc-details-label">Since:</dt>
+	<dd class="tag-since">
+		<ul class="dummy">
+			<li>0.10</li>
+		</ul>
+	</dd>
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="raycaster-core.js.html">raycaster-core.js</a>,
+				 <a href="raycaster-core.js.html#sunlight-1-line-539">line 539</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Raycaster statistics.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
 
 
 
@@ -2488,7 +3178,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a>
 	
-		on 2021-08-20T21:23:39+02:00
+		on 2021-11-13T22:03:49+01:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

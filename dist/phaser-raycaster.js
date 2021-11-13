@@ -373,7 +373,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -505,21 +505,21 @@ function updateMap() {
     points = newPoints;
   } //if rotation === 0
   else {
-      var _iterator2 = _createForOfIteratorHelper(points),
-          _step2;
+    var _iterator2 = _createForOfIteratorHelper(points),
+        _step2;
 
-      try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var _point = _step2.value;
-          _point.x = _point.x * this.object.scaleX + offset.x;
-          _point.y = _point.y * this.object.scaleY + offset.y;
-        }
-      } catch (err) {
-        _iterator2.e(err);
-      } finally {
-        _iterator2.f();
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var _point = _step2.value;
+        _point.x = _point.x * this.object.scaleX + offset.x;
+        _point.y = _point.y * this.object.scaleY + offset.y;
       }
-    } //set segments
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+  } //set segments
 
 
   for (var i = 0, length = points.length; i < length; i++) {
@@ -546,7 +546,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -1069,12 +1069,12 @@ function updateMap() {
     segments.push(new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y));
   } //if rotation === 0
   else {
-      //set points
-      points.push(new Phaser.Geom.Point(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y));
-      points.push(new Phaser.Geom.Point(pointB.x * this.object.scaleX + offset.x, pointB.y * this.object.scaleY + offset.y)); //set segment
+    //set points
+    points.push(new Phaser.Geom.Point(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y));
+    points.push(new Phaser.Geom.Point(pointB.x * this.object.scaleX + offset.x, pointB.y * this.object.scaleY + offset.y)); //set segment
 
-      segments.push(new Phaser.Geom.Line(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y, pointB.x + offset.x * this.object.scaleX, pointB.y * this.object.scaleY + offset.y));
-    }
+    segments.push(new Phaser.Geom.Line(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y, pointB.x + offset.x * this.object.scaleX, pointB.y * this.object.scaleY + offset.y));
+  }
 
   this._points = points;
   this._segments = segments;
@@ -1097,7 +1097,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBoundingBox", function() { return getBoundingBox; });
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -1221,53 +1221,53 @@ function updateMap() {
         segments.push(segment);
       } //if concave body
       else if (bodyItem.parts.length > 1) {
-          var _loop = function _loop(_i, _length) {
-            var vertices = bodyItem.parts[_i].vertices;
-            var pointA = new Phaser.Geom.Point(vertices[0].x, vertices[0].y);
-            if (points.find(function (point) {
-              return point.x == pointA.x && point.y == pointA.y;
-            }) === undefined) points.push(pointA);
+        var _loop = function _loop(_i, _length) {
+          var vertices = bodyItem.parts[_i].vertices;
+          var pointA = new Phaser.Geom.Point(vertices[0].x, vertices[0].y);
+          if (points.find(function (point) {
+            return point.x == pointA.x && point.y == pointA.y;
+          }) === undefined) points.push(pointA);
 
-            var _loop2 = function _loop2(j, _length2) {
-              var pointB = new Phaser.Geom.Point(vertices[j].x, vertices[j].y); //check if segment was already added
+          var _loop2 = function _loop2(j, _length2) {
+            var pointB = new Phaser.Geom.Point(vertices[j].x, vertices[j].y); //check if segment was already added
 
-              var segmentIndex = segments.findIndex(function (segment) {
-                return segment.x1 == pointA.x && segment.y1 == pointA.y && segment.x2 == pointB.x && segment.y2 == pointB.y || segment.x1 == pointB.x && segment.y1 == pointB.y && segment.x2 == pointA.x && segment.y2 == pointA.y;
-              });
-
-              if (segmentIndex !== -1) {
-                segments.splice(segmentIndex, 1);
-                pointA = pointB;
-                return "continue";
-              }
-
-              if (points.find(function (point) {
-                return point.x == pointB.x && point.y == pointB.y;
-              }) === undefined) points.push(pointB); //add segment
-
-              var segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
-              segments.push(segment);
-              pointA = pointB;
-            };
-
-            for (var j = 1, _length2 = vertices.length; j < _length2; j++) {
-              var _ret = _loop2(j, _length2);
-
-              if (_ret === "continue") continue;
-            } //closing segment
-
-
-            var closingSegment = new Phaser.Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
             var segmentIndex = segments.findIndex(function (segment) {
-              return segment.x1 == closingSegment.x1 && segment.y1 == closingSegment.y1 && segment.x2 == closingSegment.x2 && segment.y2 == closingSegment.y2 || segment.x1 == closingSegment.x2 && segment.y1 == closingSegment.y2 && segment.x2 == closingSegment.x1 && segment.y2 == closingSegment.y1;
+              return segment.x1 == pointA.x && segment.y1 == pointA.y && segment.x2 == pointB.x && segment.y2 == pointB.y || segment.x1 == pointB.x && segment.y1 == pointB.y && segment.x2 == pointA.x && segment.y2 == pointA.y;
             });
-            if (segmentIndex === undefined) segments.push(closingSegment);
+
+            if (segmentIndex !== -1) {
+              segments.splice(segmentIndex, 1);
+              pointA = pointB;
+              return "continue";
+            }
+
+            if (points.find(function (point) {
+              return point.x == pointB.x && point.y == pointB.y;
+            }) === undefined) points.push(pointB); //add segment
+
+            var segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
+            segments.push(segment);
+            pointA = pointB;
           };
 
-          for (var _i = 1, _length = bodyItem.parts.length; _i < _length; _i++) {
-            _loop(_i, _length);
-          }
+          for (var j = 1, _length2 = vertices.length; j < _length2; j++) {
+            var _ret = _loop2(j, _length2);
+
+            if (_ret === "continue") continue;
+          } //closing segment
+
+
+          var closingSegment = new Phaser.Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
+          var segmentIndex = segments.findIndex(function (segment) {
+            return segment.x1 == closingSegment.x1 && segment.y1 == closingSegment.y1 && segment.x2 == closingSegment.x2 && segment.y2 == closingSegment.y2 || segment.x1 == closingSegment.x2 && segment.y1 == closingSegment.y2 && segment.x2 == closingSegment.x1 && segment.y2 == closingSegment.y1;
+          });
+          if (segmentIndex === undefined) segments.push(closingSegment);
+        };
+
+        for (var _i = 1, _length = bodyItem.parts.length; _i < _length; _i++) {
+          _loop(_i, _length);
         }
+      }
     }
   } catch (err) {
     _iterator.e(err);
@@ -1318,7 +1318,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPoints", function() { return getPoints; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -1404,20 +1404,20 @@ function updateMap() {
     }
   } //if rotation === 0
   else {
-      var _iterator2 = _createForOfIteratorHelper(this.object.geom.points),
-          _step2;
+    var _iterator2 = _createForOfIteratorHelper(this.object.geom.points),
+        _step2;
 
-      try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var _point = _step2.value;
-          points.push(new Phaser.Geom.Point(_point.x * this.object.scaleX + offset.x, _point.y * this.object.scaleY + offset.y));
-        }
-      } catch (err) {
-        _iterator2.e(err);
-      } finally {
-        _iterator2.f();
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var _point = _step2.value;
+        points.push(new Phaser.Geom.Point(_point.x * this.object.scaleX + offset.x, _point.y * this.object.scaleY + offset.y));
       }
-    } //set segments
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+  } //set segments
 
 
   for (var i = 0, length = points.length; i < length; i++) {
@@ -1532,7 +1532,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSegments", function() { return getSegments; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMap", function() { return updateMap; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setCollisionTiles", function() { return setCollisionTiles; });
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -1986,7 +1986,7 @@ function setAngleDeg() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "cast", function() { return cast; });
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -2003,15 +2003,26 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = {Raycaster#mappedObjects}] - Array of game objects to test. If not provided test all mapped game objects.
  * @param {Phaser.Geom.Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
+ * @param {boolean} [options.internal = false] - Flag determining if method is used by other casting method.
  *
- * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found. Additionally contains reference to hit mapped object and hit segment if available.
+ * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found. Additionally contains reference to hit mapped object and segment if available.
  */
 function cast() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   var closestIntersection;
   var closestSegment;
   var closestObject;
-  var closestDistance = this.rayRange; //if bounding box is defined check bounding box intersection
+  var closestDistance = this.rayRange;
+  var internal = options.internal ? options.internal : false;
+  var startTime = performance.now();
+  var stats = {
+    method: 'cast',
+    rays: 1,
+    testedMappedObjects: 0,
+    hitMappedObjects: 0,
+    segments: 0,
+    time: 0
+  }; //if bounding box is defined check bounding box intersection
 
   if (this._raycaster && this._raycaster.boundingBox) {
     var _intersections = [];
@@ -2037,14 +2048,14 @@ function cast() {
       }
     } //if ray target is declared
     else if (options.target) {
-        var _distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, options.target.x, options.target.y); //if target is within ray range
+      var _distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, options.target.x, options.target.y); //if target is within ray range
 
 
-        if (this.rayRange > _distance) {
-          closestDistance = _distance;
-          closestIntersection = options.target;
-        }
+      if (this.rayRange > _distance) {
+        closestDistance = _distance;
+        closestIntersection = options.target;
       }
+    }
   } //if no objects to cast ray were passed, use raycasters mapped objects
 
 
@@ -2059,9 +2070,12 @@ function cast() {
     for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var object = _step2.value;
       var map = void 0;
-      if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap'); //check if object is intersected by ray
+      if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap');
+      stats.testedMappedObjects++; //check if object is intersected by ray
 
-      if (!Phaser.Geom.Intersects.GetLineToRectangle(this._ray, map.getBoundingBox())) continue; //check intersections
+      if (Phaser.Geom.Intersects.GetLineToRectangle(this._ray, map.getBoundingBox()).length === 0) continue;
+      stats.hitMappedObjects++;
+      stats.segments += map.getSegments(this).length; //check intersections
 
       var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
           _step3;
@@ -2177,11 +2191,22 @@ function cast() {
           }
         }
       }
-    }
+    } //update stats
+
   } catch (err) {
     _iterator2.e(err);
   } finally {
     _iterator2.f();
+  }
+
+  if (internal) {
+    this._stats.rays++;
+    this._stats.testedMappedObjects += stats.testedMappedObjects;
+    this._stats.hitMappedObjects += stats.hitMappedObjects;
+    this._stats.segments += stats.segments;
+  } else {
+    stats.time = performance.now() - startTime;
+    this._stats = stats;
   }
 
   var result;
@@ -2200,6 +2225,7 @@ function cast() {
     result.y = Math.round(result.y);
   }
 
+  if (!internal) this.drawDebug([result]);
   return result;
 }
 
@@ -2215,7 +2241,7 @@ function cast() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "castCircle", function() { return castCircle; });
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -2232,7 +2258,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and hit segment if available.
+ * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and it's segment if available.
  */
 function castCircle() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -2240,7 +2266,17 @@ function castCircle() {
   var intersections = [];
   var maps = [];
   var rayTargets = [];
-  var testedObjects = []; //if no objects to cast ray were passed, use raycasters mapped objects
+  var testedObjects = [];
+  var startTime = performance.now(); //reset stats
+
+  this._stats = {
+    method: 'castCircle',
+    rays: 0,
+    testedMappedObjects: 0,
+    hitMappedObjects: 0,
+    segments: 0,
+    time: 0
+  }; //if no objects to cast ray were passed, use raycasters mapped objects
 
   if (!options.objects) {
     if (this._raycaster) options.objects = this._raycaster.mappedObjects;else return intersections; //if bounding box is defined add bounding box points to 
@@ -2364,7 +2400,8 @@ function castCircle() {
 
         var _intersection = this.cast({
           objects: testedObjects,
-          target: target.point
+          target: target.point,
+          internal: true
         });
 
         if (_intersection) {
@@ -2381,7 +2418,8 @@ function castCircle() {
           if (castSides) {
             this.setAngle(target.angle - 0.0001);
             var intersectionA = this.cast({
-              objects: testedObjects
+              objects: testedObjects,
+              internal: true
             });
 
             if (intersectionA) {
@@ -2391,7 +2429,8 @@ function castCircle() {
             intersections.push(_intersection);
             this.setAngle(target.angle + 0.0001);
             var intersectionB = this.cast({
-              objects: testedObjects
+              objects: testedObjects,
+              internal: true
             });
 
             if (intersectionB) {
@@ -2414,6 +2453,8 @@ function castCircle() {
   this.setAngle(originalAngle);
   this.intersections = intersections;
   if (this.autoSlice) this.slicedIntersections = this.slice();
+  this._stats.time = performance.now() - startTime;
+  this.drawDebug(intersections);
   return intersections;
 }
 
@@ -2429,7 +2470,7 @@ function castCircle() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "castCone", function() { return castCone; });
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -2446,7 +2487,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and hit segment if available.
+ * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and it's segment if available.
  */
 function castCone() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -2458,7 +2499,17 @@ function castCone() {
   var cone = this.cone;
   var minAngle = 0;
   var maxAngle = 0;
-  var angleOffset = 0; //set cone
+  var angleOffset = 0;
+  var startTime = performance.now(); //reset stats
+
+  this._stats = {
+    method: 'castCircle',
+    rays: 0,
+    testedMappedObjects: 0,
+    hitMappedObjects: 0,
+    segments: 0,
+    time: 0
+  }; //set cone
 
   if (options.cone !== undefined) cone = options.cone;
   if (options.coneDeg !== undefined) cone = Phaser.Math.DegToRad(options.coneDeg); //set cone min and max angle
@@ -2618,7 +2669,8 @@ function castCone() {
 
     var _intersection = this.cast({
       objects: testedObjects,
-      target: target.point
+      target: target.point,
+      internal: true
     });
 
     if (_intersection) {
@@ -2635,7 +2687,8 @@ function castCone() {
       if (castSides) {
         this.setAngle(target.angle - 0.0001);
         var intersectionA = this.cast({
-          objects: testedObjects
+          objects: testedObjects,
+          internal: true
         });
 
         if (intersectionA) {
@@ -2645,7 +2698,8 @@ function castCone() {
         intersections.push(_intersection);
         this.setAngle(target.angle + 0.0001);
         var intersectionB = this.cast({
-          objects: testedObjects
+          objects: testedObjects,
+          internal: true
         });
 
         if (intersectionB) {
@@ -2662,6 +2716,8 @@ function castCone() {
   this.setAngle(originalAngle);
   this.intersections = intersections;
   if (this.autoSlice) this.slicedIntersections = this.slice(intersections, false);
+  this._stats.time = performance.now() - startTime;
+  this.drawDebug(intersections);
   return intersections;
 }
 
@@ -2778,6 +2834,101 @@ function config(options) {
   if (options.enablePhysics !== undefined && options.enablePhysics) this.enablePhysics(options.enablePhysics);
   Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
   this.detectionRangeCircle.setTo(this.origin.x, this.origin.y, this.detectionRange);
+
+  if (this._raycaster.debugOptions.enabled && this._raycaster.scene !== undefined) {
+    this.graphics = this._raycaster.scene.add.graphics({
+      lineStyle: {
+        width: 1,
+        color: 0x00ff00
+      },
+      fillStyle: {
+        color: 0xff00ff
+      }
+    });
+    this.graphics.setDepth(1000);
+  }
+
+  return this;
+}
+
+/***/ }),
+
+/***/ "./src/ray/debug.js":
+/*!**************************!*\
+  !*** ./src/ray/debug.js ***!
+  \**************************/
+/*! exports provided: drawDebug */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "drawDebug", function() { return drawDebug; });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+/**
+ * Draw rays in debug mode
+ *
+ * @method Raycaster.Ray#drawDebug
+ * @memberof Raycaster
+ * @private
+ * @since 0.10
+ * 
+ * @param {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
+ * 
+ * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
+ */
+function drawDebug(intersections) {
+  if (this.graphics === undefined || !this._raycaster.debugOptions.enabled) return this; //clear
+
+  this.graphics.clear();
+  if (!this._raycaster.debugOptions.rays) return this;
+
+  if (this._raycaster.debugOptions.graphics.ray) {
+    this.graphics.lineStyle(1, this._raycaster.debugOptions.graphics.ray);
+
+    var _iterator = _createForOfIteratorHelper(intersections),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var intersection = _step.value;
+        this.graphics.strokeLineShape({
+          x1: this.origin.x,
+          y1: this.origin.y,
+          x2: intersection.x,
+          y2: intersection.y
+        });
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+  }
+
+  if (this._raycaster.debugOptions.graphics.rayPoint) {
+    this.graphics.fillStyle(this._raycaster.debugOptions.graphics.rayPoint);
+    this.graphics.fillPoint(this.origin.x, this.origin.y, 3);
+
+    var _iterator2 = _createForOfIteratorHelper(intersections),
+        _step2;
+
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var _intersection = _step2.value;
+        this.graphics.fillPoint(_intersection.x, _intersection.y, 3);
+      }
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+  }
+
   return this;
 }
 
@@ -3148,7 +3299,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "processOverlap", function() { return processOverlap; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testArcadeOverlap", function() { return testArcadeOverlap; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "testMatterOverlap", function() { return testMatterOverlap; });
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
@@ -3192,89 +3343,89 @@ function overlap(objects) {
       }
     } //get object's body
     else {
-        if (!Array.isArray(objects)) objects = [objects];
+      if (!Array.isArray(objects)) objects = [objects];
 
-        var _iterator2 = _createForOfIteratorHelper(objects),
-            _step2;
+      var _iterator2 = _createForOfIteratorHelper(objects),
+          _step2;
 
-        try {
-          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-            var _object = _step2.value;
-            if (_object === this.body) continue;
-            if (this.testMatterOverlap(_object)) targets.push(_object);
-          }
-        } catch (err) {
-          _iterator2.e(err);
-        } finally {
-          _iterator2.f();
+      try {
+        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+          var _object = _step2.value;
+          if (_object === this.body) continue;
+          if (this.testMatterOverlap(_object)) targets.push(_object);
         }
+      } catch (err) {
+        _iterator2.e(err);
+      } finally {
+        _iterator2.f();
       }
+    }
   } //arcade physics
   else {
-      var bodies = false; //get bodies in range
+    var bodies = false; //get bodies in range
 
-      if (objects === undefined) {
-        objects = this._raycaster.scene.physics.overlapCirc(this.origin.x, this.origin.y, this.collisionRange, true, true);
-        bodies = true;
-      } //get object's body
-      else if (!Array.isArray(objects)) {
-          objects = [objects];
-        } //if objects are bodies
+    if (objects === undefined) {
+      objects = this._raycaster.scene.physics.overlapCirc(this.origin.x, this.origin.y, this.collisionRange, true, true);
+      bodies = true;
+    } //get object's body
+    else if (!Array.isArray(objects)) {
+      objects = [objects];
+    } //if objects are bodies
 
 
-      if (bodies) {
-        var _iterator3 = _createForOfIteratorHelper(objects),
-            _step3;
+    if (bodies) {
+      var _iterator3 = _createForOfIteratorHelper(objects),
+          _step3;
 
-        try {
-          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-            var _body = _step3.value;
-            if (_body === this.body) continue;
-            var hitbox = void 0; //get physics body hitbox
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var _body = _step3.value;
+          if (_body === this.body) continue;
+          var hitbox = void 0; //get physics body hitbox
 
-            if (_body.isCircle) {
-              hitbox = new Phaser.Geom.Circle(_body.position.x + _body.halfWidth, _body.position.y + _body.halfWidth, _body.halfWidth);
-            } else {
-              hitbox = new Phaser.Geom.Rectangle(_body.x, _body.y, _body.width, _body.height);
-            }
-
-            if (this.testOverlap(hitbox)) targets.push(_body.gameObject);
+          if (_body.isCircle) {
+            hitbox = new Phaser.Geom.Circle(_body.position.x + _body.halfWidth, _body.position.y + _body.halfWidth, _body.halfWidth);
+          } else {
+            hitbox = new Phaser.Geom.Rectangle(_body.x, _body.y, _body.width, _body.height);
           }
-        } catch (err) {
-          _iterator3.e(err);
-        } finally {
-          _iterator3.f();
+
+          if (this.testOverlap(hitbox)) targets.push(_body.gameObject);
         }
-      } //if objects are game objects
-      else {
-          var _iterator4 = _createForOfIteratorHelper(objects),
-              _step4;
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
+      }
+    } //if objects are game objects
+    else {
+      var _iterator4 = _createForOfIteratorHelper(objects),
+          _step4;
 
-          try {
-            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-              var _object2 = _step4.value;
-              if (_object2.body === undefined) continue;
+      try {
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var _object2 = _step4.value;
+          if (_object2.body === undefined) continue;
 
-              var _hitbox = void 0; //get physics body hitbox
+          var _hitbox = void 0; //get physics body hitbox
 
 
-              if (_object2.body.isCircle) {
-                _hitbox = new Phaser.Geom.Circle(_object2.body.position.x + _object2.body.halfWidth, _object2.body.position.y + _object2.body.halfWidth, _object2.body.halfWidth);
-                if (!Phaser.Geom.Intersects.CircleToCircle(overlapCircle, _hitbox)) continue;
-              } else {
-                _hitbox = new Phaser.Geom.Rectangle(_object2.body.x, _object2.body.y, _object2.body.width, _object2.body.height);
-                if (!Phaser.Geom.Intersects.CircleToRectangle(overlapCircle, _hitbox)) continue;
-              }
-
-              if (this.testArcadeOverlap(_hitbox)) targets.push(_object2);
-            }
-          } catch (err) {
-            _iterator4.e(err);
-          } finally {
-            _iterator4.f();
+          if (_object2.body.isCircle) {
+            _hitbox = new Phaser.Geom.Circle(_object2.body.position.x + _object2.body.halfWidth, _object2.body.position.y + _object2.body.halfWidth, _object2.body.halfWidth);
+            if (!Phaser.Geom.Intersects.CircleToCircle(overlapCircle, _hitbox)) continue;
+          } else {
+            _hitbox = new Phaser.Geom.Rectangle(_object2.body.x, _object2.body.y, _object2.body.width, _object2.body.height);
+            if (!Phaser.Geom.Intersects.CircleToRectangle(overlapCircle, _hitbox)) continue;
           }
+
+          if (this.testArcadeOverlap(_hitbox)) targets.push(_object2);
         }
+      } catch (err) {
+        _iterator4.e(err);
+      } finally {
+        _iterator4.f();
+      }
     }
+  }
 
   return targets;
 }
@@ -3335,8 +3486,8 @@ function testArcadeOverlap(hitbox) {
         overlap = Phaser.Geom.Intersects.TriangleToCircle(slice, hitbox);
       } //if hitbox is a rectangle
       else {
-          overlap = Phaser.Geom.Intersects.RectangleToTriangle(hitbox, slice);
-        }
+        overlap = Phaser.Geom.Intersects.RectangleToTriangle(hitbox, slice);
+      }
 
       if (overlap) {
         return true;
@@ -3758,13 +3909,47 @@ function Ray(options, raycaster) {
   * @since 0.9.0
   */
 
-  this.bodyType = false; //this.collisionCircle;
+  this.bodyType = false;
+  /**
+  * Ray casting stats.
+  *
+  * @name Raycaster.Ray#_stats
+  * @type {object}
+  * @private
+  * @since 0.10
+  * 
+  * @property {string} method Used casting method (cast, castCircle, castCone).
+  * @property {number} rays Casted rays.
+  * @property {number} testedMappedObjects Tested mapped objects.
+  * @property {number} hitMappedObjects Hit mapped objects.
+  * @property {number} segments Tested segments.
+  * @property {number} time Casting time.
+  */
 
+  this._stats = {
+    method: 'cast',
+    rays: 0,
+    testedMappedObjects: 0,
+    hitMappedObjects: 0,
+    segments: 0,
+    time: 0
+  };
+  /**
+  * Ray's graphics object used for debug
+  *
+  * @name Raycaster.Ray#graphics
+  * @type {Phaser.GameObjects.Graphics}
+  * @private
+  * @since 0.10
+  */
+
+  this.graphics;
   this.config(options);
 }
 ;
 Ray.prototype = {
   config: __webpack_require__(/*! ./config.js */ "./src/ray/config.js").config,
+  getStats: __webpack_require__(/*! ./stats.js */ "./src/ray/stats.js").getStats,
   setRay: __webpack_require__(/*! ./ray.js */ "./src/ray/ray.js").setRay,
   setOrigin: __webpack_require__(/*! ./origin.js */ "./src/ray/origin.js").setOrigin,
   setRayRange: __webpack_require__(/*! ./range.js */ "./src/ray/range.js").setRayRange,
@@ -3790,7 +3975,8 @@ Ray.prototype = {
   setOnCollide: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setOnCollide,
   setOnCollideEnd: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setOnCollideEnd,
   setOnCollideActive: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setOnCollideActive,
-  setOnCollideWith: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setOnCollideWith
+  setOnCollideWith: __webpack_require__(/*! ./matter-physics-methods.js */ "./src/ray/matter-physics-methods.js").setOnCollideWith,
+  drawDebug: __webpack_require__(/*! ./debug.js */ "./src/ray/debug.js").drawDebug
 };
 
 /***/ }),
@@ -3877,6 +4063,36 @@ function slice() {
 
 /***/ }),
 
+/***/ "./src/ray/stats.js":
+/*!**************************!*\
+  !*** ./src/ray/stats.js ***!
+  \**************************/
+/*! exports provided: getStats */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getStats", function() { return getStats; });
+/**
+ * Get ray statistics for last casting. Stats include
+ * * number of casted rays,
+ * * number of tested mapped objects,
+ * * number of tested map segments.
+ * * casting time
+ *
+ * @method Raycaster.Ray#getStats
+ * @memberof Raycaster.Ray
+ * @instance
+ * @since 0.10
+ *
+ * @return {object} Statisticss from last casting.
+ */
+function getStats() {
+  return this._stats;
+}
+
+/***/ }),
+
 /***/ "./src/raycaster-core.js":
 /*!*******************************!*\
   !*** ./src/raycaster-core.js ***!
@@ -3887,11 +4103,13 @@ function slice() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Raycaster", function() { return Raycaster; });
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 /**
 * @author       Marcin Walczak <contact@marcin-walczak.pl>
@@ -3915,6 +4133,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @param {(object|object[])} [options.objects] - Game object or array of game objects to map.
  * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box.
  * @param {boolean} [options.autoUpdate = true] - If set true, automatically update dynamic maps on scene update event.
+ * @param {bool|object} [options.debug] - Enable debug mode or configure it {@link Raycaster#debugOptions debugOptions}.
  */
 function Raycaster(options) {
   /**
@@ -3925,18 +4144,92 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.9.4';
+  this.version = '0.10';
   /**
   * Raycaster's scene
   *
-  * @name Raycaster#version
-  * @type {string}
+  * @name Raycaster#scene
+  * @type {Phaser.Scene}
   * @private
   * @since 0.6.0
   */
 
   this.scene;
+  /**
+  * Raycaster's graphics object used for debug
+  *
+  * @name Raycaster#graphics
+  * @type {Phaser.GameObjects.Graphics}
+  * @private
+  * @since 0.10
+  */
+
   this.graphics;
+  /**
+  * Raycaster's debug config
+  *
+  * @name Raycaster#debugOptions
+  * @type {Object}
+  * @since 0.10
+  * 
+  * @property {bool} [enable = false] Enable debug mode
+  * @property {bool} [maps = true] - Enable maps debug
+  * @param {bool} [rays = true] - Enable rays debug
+  * @property {bool} graphics - Debug graphics options
+  * @property {bool|number} [graphics.ray = 0x00ff00] - Debug ray color. Set false to disable.
+  * @property {bool|number} [graphics.rayPoint = 0xff00ff] - Debug ray point color. Set false to disable.
+  * @property {bool|number} [graphics.mapPoint = 0x00ffff] - debug map point color. Set false to disable.
+  * @property {bool|number} [graphics.mapSegment = 0x0000ff] - Debug map segment color. Set false to disable.
+  * @property {bool|number} [graphics.mapBoundingBox = 0xff0000] - Debug map bounding box color. Set false to disable.
+  */
+
+  this.debugOptions = {
+    enabled: false,
+    maps: true,
+    rays: true,
+    graphics: {
+      ray: 0x00ff00,
+      rayPoint: 0xff00ff,
+      mapPoint: 0x00ffff,
+      mapSegment: 0x0000ff,
+      mapBoundingBox: 0xff0000
+    }
+  };
+  /**
+  * Raycaster statistics.
+  *
+  * @name Raycaster.Raycaster#_stats
+  * @type {object}
+  * @private
+  * @since 0.10
+  * 
+  * @property {object} mappedObjects Mapped objects statistics.
+  * @property {number} mappedObjects.total Mapped objects total.
+  * @property {number} mappedObjects.static Static maps.
+  * @property {number} mappedObjects.dynamic Dynamic maps.
+  * @property {number} mappedObjects.rectangleMaps Rectangle maps.
+  * @property {number} mappedObjects.polygonMaps Polygon maps.
+  * @property {number} mappedObjects.circleMaps Circle maps.
+  * @property {number} mappedObjects.lineMaps Line maps.
+  * @property {number} mappedObjects.containerMaps Container maps.
+  * @property {number} mappedObjects.tilemapMaps Tilemap maps.
+  * @property {number} mappedObjects.matterMaps Matter body maps.
+  */
+
+  this._stats = {
+    mappedObjects: {
+      total: 0,
+      static: 0,
+      dynamic: 0,
+      rectangleMaps: 0,
+      polygonMaps: 0,
+      circleMaps: 0,
+      lineMaps: 0,
+      containerMaps: 0,
+      tilemapMaps: 0,
+      matterMaps: 0
+    }
+  };
   /**
   * Raycaster's bounding box.
   *
@@ -4002,6 +4295,7 @@ Raycaster.prototype = {
   * @param {integer} [options.mapSegmentCount = 0] - Number of segments of circle maps.
   * @param {(object|object[])} [options.objects] - Game object or array of game objects to map.
   * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box.
+  * @param {bool|object} [options.debug] - Enable debug mode or cofigure {@link Raycaster#debugOptions debugOptions}.
   *
   * @return {Raycaster} {@link Raycaster Raycaster} instance
   */
@@ -4017,6 +4311,12 @@ Raycaster.prototype = {
           color: 0xff00ff
         }
       });
+      this.graphics.setDepth(999);
+    }
+
+    if (options.debug !== undefined && options.debug !== false) {
+      this.debugOptions.enabled = true;
+      if (_typeof(options.debug) === 'object') Object.assign(this.debugOptions, options.debug);
     }
 
     if (options.mapSegmentCount !== undefined) this.mapSegmentCount = options.mapSegmentCount;
@@ -4101,7 +4401,46 @@ Raycaster.prototype = {
           object.data.set('raycasterMap', map);
         }
 
-        this.mappedObjects.push(object);
+        this.mappedObjects.push(object); //update stats
+
+        if (object.dynamic) this._stats.mappedObjects.dynamic++;else this._stats.mappedObjects.static++;
+
+        switch (object.type) {
+          case 'Polygon':
+            this._stats.mappedObjects.polygonMaps++;
+            break;
+
+          case 'Arc':
+            this._stats.mappedObjects.circleMaps++;
+            break;
+
+          case 'Line':
+            this._stats.mappedObjects.lineMaps++;
+            break;
+
+          case 'Container':
+            this._stats.mappedObjects.containerMaps++;
+            break;
+
+          case 'StaticTilemapLayer':
+            this._stats.mappedObjects.tilemapMaps++;
+            break;
+
+          case 'DynamicTilemapLayer':
+            this._stats.mappedObjects.tilemapMaps++;
+            break;
+
+          case 'TilemapLayer':
+            this._stats.mappedObjects.tilemapMaps++;
+            break;
+
+          case 'MatterBody':
+            this._stats.mappedObjects.matterMaps++;
+            break;
+
+          default:
+            this._stats.mappedObjects.rectangleMaps++;
+        }
       }
     } catch (err) {
       _iterator.e(err);
@@ -4109,6 +4448,7 @@ Raycaster.prototype = {
       _iterator.f();
     }
 
+    this._stats.mappedObjects.total = this.mappedObjects.length;
     return this;
   },
 
@@ -4134,7 +4474,46 @@ Raycaster.prototype = {
       for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
         var object = _step2.value;
         var index = this.mappedObjects.indexOf(object);
-        if (index >= 0) this.mappedObjects.splice(index, 1);
+        if (index >= 0) this.mappedObjects.splice(index, 1); //update stats
+
+        if (object.dynamic) this._stats.mappedObjects.dynamic--;else this._stats.mappedObjects.static--;
+
+        switch (object.type) {
+          case 'Polygon':
+            this._stats.mappedObjects.polygonMaps--;
+            break;
+
+          case 'Arc':
+            this._stats.mappedObjects.circleMaps--;
+            break;
+
+          case 'Line':
+            this._stats.mappedObjects.lineMaps--;
+            break;
+
+          case 'Container':
+            this._stats.mappedObjects.containerMaps--;
+            break;
+
+          case 'StaticTilemapLayer':
+            this._stats.mappedObjects.tilemapMaps--;
+            break;
+
+          case 'DynamicTilemapLayer':
+            this._stats.mappedObjects.tilemapMaps--;
+            break;
+
+          case 'TilemapLayer':
+            this._stats.mappedObjects.tilemapMaps--;
+            break;
+
+          case 'MatterBody':
+            this._stats.mappedObjects.matterMaps--;
+            break;
+
+          default:
+            this._stats.mappedObjects.rectangleMaps--;
+        }
       }
     } catch (err) {
       _iterator2.e(err);
@@ -4142,6 +4521,7 @@ Raycaster.prototype = {
       _iterator2.f();
     }
 
+    this._stats.mappedObjects.total = this.mappedObjects.length;
     return this;
   },
 
@@ -4232,10 +4612,13 @@ Raycaster.prototype = {
   * @memberof Raycaster
   * @instance
   * @since 0.6.0
-  *
+  * 
+  * @return {Raycaster} {@link Raycaster Raycaster} instance
   */
   update: function update() {
     //update dynamic maps
+    var dynamicMaps = 0;
+
     if (this.mappedObjects.length > 0) {
       var _iterator5 = _createForOfIteratorHelper(this.mappedObjects),
           _step5;
@@ -4252,14 +4635,26 @@ Raycaster.prototype = {
           }
 
           if (!map) continue;
-          if (map.dynamic) map.updateMap();
-        }
+
+          if (map.dynamic) {
+            map.updateMap();
+            dynamicMap++;
+          }
+        } //update stats
+
       } catch (err) {
         _iterator5.e(err);
       } finally {
         _iterator5.f();
       }
+
+      this._stats.mappedObjects.static = this.mappedObjects.length - dynamicMaps;
+      this._stats.mappedObjects.dynamic = dynamicMaps; //debug
+
+      if (this.debugOptions.enabled) this.drawDebug();
     }
+
+    return this;
   },
 
   /**
@@ -4277,6 +4672,98 @@ Raycaster.prototype = {
   createRay: function createRay() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     return new this.Ray(options, this);
+  },
+
+  /**
+  * Get raycaster statistics.
+  *
+  * @method Raycaster#getStats
+  * @memberof Raycaster
+  * @instance
+  * @since 0.10
+  *
+  * @return {object} Raycaster statistics.
+  */
+  getStats: function getStats() {
+    return this._stats;
+  },
+
+  /**
+  * Draw maps in debug mode
+  *
+  * @method Raycaster#drawDebug
+  * @memberof Raycaster
+  * @private
+  * @since 0.10
+  * 
+  * @return {Raycaster} {@link Raycaster Raycaster} instance
+  */
+  drawDebug: function drawDebug() {
+    if (this.graphics === undefined || !this.debugOptions.enabled) return this; //clear
+
+    this.graphics.clear();
+    if (!this.debugOptions.maps) return this;
+
+    var _iterator6 = _createForOfIteratorHelper(this.mappedObjects),
+        _step6;
+
+    try {
+      for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+        var object = _step6.value;
+        var map = void 0;
+        if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap');
+        if (!map) continue; //draw bounding box
+
+        if (this.debugOptions.graphics.mapBoundingBox) {
+          this.graphics.lineStyle(1, this.debugOptions.graphics.mapBoundingBox);
+          this.graphics.strokeRectShape(map.getBoundingBox());
+        } //draw segments
+
+
+        if (this.debugOptions.graphics.mapSegment) {
+          this.graphics.lineStyle(1, this.debugOptions.graphics.mapSegment);
+
+          var _iterator7 = _createForOfIteratorHelper(map.getSegments()),
+              _step7;
+
+          try {
+            for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+              var segment = _step7.value;
+              this.graphics.strokeLineShape(segment);
+            }
+          } catch (err) {
+            _iterator7.e(err);
+          } finally {
+            _iterator7.f();
+          }
+        } //draw points
+
+
+        if (this.debugOptions.graphics.mapPoint) {
+          this.graphics.fillStyle(this.debugOptions.graphics.mapPoint);
+
+          var _iterator8 = _createForOfIteratorHelper(map.getPoints()),
+              _step8;
+
+          try {
+            for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
+              var point = _step8.value;
+              this.graphics.fillPoint(point.x, point.y, 3);
+            }
+          } catch (err) {
+            _iterator8.e(err);
+          } finally {
+            _iterator8.f();
+          }
+        }
+      }
+    } catch (err) {
+      _iterator6.e(err);
+    } finally {
+      _iterator6.f();
+    }
+
+    return this;
   }
 };
 Raycaster.prototype.Map = __webpack_require__(/*! ./map/map-core.js */ "./src/map/map-core.js").Map;

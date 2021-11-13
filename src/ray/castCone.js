@@ -9,7 +9,7 @@
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and hit segment if available.
+ * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and it's segment if available.
  */
 export function castCone(options = {}) {
     let originalAngle = this.angle;
@@ -21,6 +21,16 @@ export function castCone(options = {}) {
     let minAngle = 0;
     let maxAngle = 0;
     let angleOffset = 0;
+    let startTime = performance.now();
+    //reset stats
+    this._stats = {
+        method: 'castCircle',
+        rays: 0,
+        testedMappedObjects: 0,
+        hitMappedObjects: 0,
+        segments: 0,
+        time: 0
+    };
 
     //set cone
     if(options.cone !== undefined)
@@ -164,7 +174,8 @@ export function castCone(options = {}) {
         this.setAngle(target.angle);
         let intersection = this.cast({
             objects: testedObjects,
-            target: target.point
+            target: target.point,
+            internal: true
         });
         if(intersection){
             //if intersection hits target point cast two additional rays
@@ -179,7 +190,8 @@ export function castCone(options = {}) {
             if(castSides) {
                 this.setAngle(target.angle - 0.0001);
                 let intersectionA = this.cast({
-                    objects: testedObjects
+                    objects: testedObjects,
+                    internal: true
                 });
 
                 if(intersectionA) {
@@ -190,7 +202,8 @@ export function castCone(options = {}) {
 
                 this.setAngle(target.angle + 0.0001);
                 let intersectionB = this.cast({
-                    objects: testedObjects
+                    objects: testedObjects,
+                    internal: true
                 });
 
                 if(intersectionB) {
@@ -208,6 +221,10 @@ export function castCone(options = {}) {
     this.intersections = intersections;
     if(this.autoSlice)
         this.slicedIntersections = this.slice(intersections, false);
+    
+    this._stats.time = performance.now() - startTime;
+
+    this.drawDebug(intersections);
 
     return intersections;
 }
