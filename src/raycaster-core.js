@@ -31,7 +31,7 @@ export function Raycaster(options) {
     * @readonly
     * @since 0.6.0
     */
-    this.version = '0.10';
+    this.version = '0.10.1';
     /**
     * Raycaster's scene
     *
@@ -504,7 +504,7 @@ Raycaster.prototype = {
 
                 if(map.dynamic) {
                     map.updateMap();
-                    dynamicMap++;
+                    dynamicMaps++;
                 }
             }
 

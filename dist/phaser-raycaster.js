@@ -2069,11 +2069,20 @@ function cast() {
   try {
     for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var object = _step2.value;
-      var map = void 0;
+      var map = void 0,
+          boundingBox = void 0;
       if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap');
-      stats.testedMappedObjects++; //check if object is intersected by ray
+      stats.testedMappedObjects++; //get slightly enlarged bounding box due to fridge cases, when ray "glanced" border box's corner (v0.10.1)
 
-      if (Phaser.Geom.Intersects.GetLineToRectangle(this._ray, map.getBoundingBox()).length === 0) continue;
+      if (internal) {
+        boundingBox = map._boundingBox;
+      } else {
+        boundingBox = map.getBoundingBox();
+        boundingBox.setTo(boundingBox.x - 0.1, boundingBox.y - 0.1, boundingBox.width + 0.2, boundingBox.height + 0.2);
+      } //check if object is intersected by ray
+
+
+      if (Phaser.Geom.Intersects.GetLineToRectangle(this._ray, boundingBox).length === 0) continue;
       stats.hitMappedObjects++;
       stats.segments += map.getSegments(this).length; //check intersections
 
@@ -2279,174 +2288,171 @@ function castCircle() {
   }; //if no objects to cast ray were passed, use raycasters mapped objects
 
   if (!options.objects) {
-    if (this._raycaster) options.objects = this._raycaster.mappedObjects;else return intersections; //if bounding box is defined add bounding box points to 
-
-    if (this._raycaster && this._raycaster.boundingBox) {
-      var _iterator = _createForOfIteratorHelper(this._raycaster.boundingBox.points),
-          _step;
-
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var point = _step.value;
-          rayTargets.push({
-            point: point,
-            angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, point.x, point.y)
-          });
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-    }
-
-    for (var i = 0, iLength = options.objects.length; i < iLength; i++) {
-      var object = options.objects[i]; //if bound in range
-
-      if (!this.boundsInRange(object)) continue;
-      testedObjects.push(object);
-      var map = void 0;
-      if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap');
-      maps.push(map); //get points and angles
-
-      var _iterator2 = _createForOfIteratorHelper(map.getPoints(this)),
-          _step2;
-
-      try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var _point = _step2.value;
-          rayTargets.push({
-            point: _point,
-            angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, _point.x, _point.y)
-          });
-        } //get objects intersections
-
-      } catch (err) {
-        _iterator2.e(err);
-      } finally {
-        _iterator2.f();
-      }
-
-      for (var j = i + 1, jLength = options.objects.length; j < jLength; j++) {
-        var objectB = options.objects[j];
-        var mapB = void 0;
-        if (objectB.type === 'body' || objectB.type === 'composite') mapB = objectB.raycasterMap;else {
-          mapB = objectB.data.get('raycasterMap');
-        } //check if bounding boxes overlap
-
-        if (!Phaser.Geom.Intersects.RectangleToRectangle(map.getBoundingBox(), mapB.getBoundingBox())) continue; //find objects intersections
-
-        var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
-            _step3;
-
-        try {
-          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-            var segmentA = _step3.value;
-
-            var _iterator4 = _createForOfIteratorHelper(mapB.getSegments(this)),
-                _step4;
-
-            try {
-              for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-                var segmentB = _step4.value;
-                var intersection = [];
-                if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
-                rayTargets.push({
-                  point: new Phaser.Geom.Point(intersection.x, intersection.y),
-                  angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y)
-                });
-              }
-            } catch (err) {
-              _iterator4.e(err);
-            } finally {
-              _iterator4.f();
-            }
-          }
-        } catch (err) {
-          _iterator3.e(err);
-        } finally {
-          _iterator3.f();
-        }
-      }
-    } //sort target points by angle
+    if (this._raycaster) options.objects = this._raycaster.mappedObjects;else return intersections;
+  } //if bounding box is defined add bounding box points to 
 
 
-    rayTargets.sort(function (a, b) {
-      //if rays towards points have the same angles promote closer one
-      if (a.angle == b.angle) {
-        if (Phaser.Math.Distance.Between(this.origin.x, this.origin.y, a.point.x, a.point.y) > Phaser.Math.Distance.Between(this.origin.x, this.origin.y, b.point.x, b.point.y)) return 1;else return -1;
-      }
-
-      return a.angle - b.angle;
-    }.bind(this));
-    var previousTarget = {
-      angle: false
-    }; //cast rays
-
-    var _iterator5 = _createForOfIteratorHelper(rayTargets),
-        _step5;
+  if (this._raycaster && this._raycaster.boundingBox) {
+    var _iterator = _createForOfIteratorHelper(this._raycaster.boundingBox.points),
+        _step;
 
     try {
-      for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-        var target = _step5.value;
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var point = _step.value;
+        rayTargets.push({
+          point: point,
+          angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, point.x, point.y)
+        });
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+  }
 
-        //if current target is the same as previous one skip loop
-        if (target.angle === previousTarget.angle) {
-          continue;
+  for (var i = 0, iLength = options.objects.length; i < iLength; i++) {
+    var object = options.objects[i]; //if bound in range
+
+    if (!this.boundsInRange(object)) continue;
+    testedObjects.push(object);
+    var map = void 0,
+        boundingBox = void 0;
+    if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap'); //get slightly enlarged bounding box due to fridge cases, when ray "glanced" border box's corner (v0.10.1)
+
+    boundingBox = map.getBoundingBox();
+    boundingBox.setTo(boundingBox.x - 0.1, boundingBox.y - 0.1, boundingBox.width + 0.2, boundingBox.height + 0.2);
+    map._boundingBox = boundingBox;
+    maps.push(map); //get points and angles
+
+    var _iterator2 = _createForOfIteratorHelper(map.getPoints(this)),
+        _step2;
+
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var _point = _step2.value;
+        rayTargets.push({
+          point: _point,
+          angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, _point.x, _point.y)
+        });
+      } //get objects intersections
+
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+
+    for (var j = i + 1, jLength = options.objects.length; j < jLength; j++) {
+      var objectB = options.objects[j];
+      var mapB = void 0;
+      if (objectB.type === 'body' || objectB.type === 'composite') mapB = objectB.raycasterMap;else {
+        mapB = objectB.data.get('raycasterMap');
+      } //check if bounding boxes overlap
+
+      if (!Phaser.Geom.Intersects.RectangleToRectangle(map.getBoundingBox(), mapB.getBoundingBox())) continue; //find objects intersections
+
+      var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
+          _step3;
+
+      try {
+        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+          var segmentA = _step3.value;
+
+          var _iterator4 = _createForOfIteratorHelper(mapB.getSegments(this)),
+              _step4;
+
+          try {
+            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+              var segmentB = _step4.value;
+              var intersection = [];
+              if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
+              rayTargets.push({
+                point: new Phaser.Geom.Point(intersection.x, intersection.y),
+                angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y)
+              });
+            }
+          } catch (err) {
+            _iterator4.e(err);
+          } finally {
+            _iterator4.f();
+          }
         }
+      } catch (err) {
+        _iterator3.e(err);
+      } finally {
+        _iterator3.f();
+      }
+    }
+  } //sort target points by angle
 
-        previousTarget = target;
-        this.setAngle(target.angle);
 
-        var _intersection = this.cast({
+  rayTargets.sort(function (a, b) {
+    //if rays towards points have the same angles promote closer one
+    if (a.angle == b.angle) {
+      if (Phaser.Math.Distance.Between(this.origin.x, this.origin.y, a.point.x, a.point.y) > Phaser.Math.Distance.Between(this.origin.x, this.origin.y, b.point.x, b.point.y)) return 1;else return -1;
+    }
+
+    return a.angle - b.angle;
+  }.bind(this));
+  var previousTarget = {
+    angle: false
+  }; //cast rays
+
+  for (var _i = 0, _rayTargets = rayTargets; _i < _rayTargets.length; _i++) {
+    var target = _rayTargets[_i];
+
+    //if current target is the same as previous one skip loop
+    if (target.angle === previousTarget.angle) {
+      continue;
+    }
+
+    previousTarget = target;
+    this.setAngle(target.angle);
+
+    var _intersection = this.cast({
+      objects: testedObjects,
+      target: target.point,
+      internal: true
+    });
+
+    if (_intersection) {
+      //if intersection hits target point cast two additional rays
+      var castSides = false;
+
+      if (this.round) {
+        var roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
+        castSides = Phaser.Geom.Point.Equals(roundedTarget, _intersection);
+      } else {
+        castSides = Phaser.Geom.Point.Equals(target.point, _intersection);
+      }
+
+      if (castSides) {
+        this.setAngle(target.angle - 0.0001);
+        var intersectionA = this.cast({
           objects: testedObjects,
-          target: target.point,
           internal: true
         });
 
-        if (_intersection) {
-          //if intersection hits target point cast two additional rays
-          var castSides = false;
-
-          if (this.round) {
-            var roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
-            castSides = Phaser.Geom.Point.Equals(roundedTarget, _intersection);
-          } else {
-            castSides = Phaser.Geom.Point.Equals(target.point, _intersection);
-          }
-
-          if (castSides) {
-            this.setAngle(target.angle - 0.0001);
-            var intersectionA = this.cast({
-              objects: testedObjects,
-              internal: true
-            });
-
-            if (intersectionA) {
-              intersections.push(intersectionA);
-            }
-
-            intersections.push(_intersection);
-            this.setAngle(target.angle + 0.0001);
-            var intersectionB = this.cast({
-              objects: testedObjects,
-              internal: true
-            });
-
-            if (intersectionB) {
-              intersections.push(intersectionB);
-            }
-
-            continue;
-          }
-
-          intersections.push(_intersection);
+        if (intersectionA) {
+          intersections.push(intersectionA);
         }
+
+        intersections.push(_intersection);
+        this.setAngle(target.angle + 0.0001);
+        var intersectionB = this.cast({
+          objects: testedObjects,
+          internal: true
+        });
+
+        if (intersectionB) {
+          intersections.push(intersectionB);
+        }
+
+        continue;
       }
-    } catch (err) {
-      _iterator5.e(err);
-    } finally {
-      _iterator5.f();
+
+      intersections.push(_intersection);
     }
   }
 
@@ -2531,31 +2537,32 @@ function castCone() {
   }); //if no objects to cast ray were passed, use raycasters mapped objects
 
   if (!options.objects) {
-    if (this._raycaster) options.objects = this._raycaster.mappedObjects;else return intersections; //if bounding box is defined add bounding box points to 
+    if (this._raycaster) options.objects = this._raycaster.mappedObjects;else return intersections;
+  } //if bounding box is defined add bounding box points to 
 
-    if (this._raycaster && this._raycaster.boundingBox) {
-      var _iterator = _createForOfIteratorHelper(this._raycaster.boundingBox.points),
-          _step;
 
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var point = _step.value;
-          var angle = Phaser.Math.Angle.Between(this.origin.x, this.origin.y, point.x, point.y);
-          var angleOffsetDeg = Phaser.Math.Angle.ShortestBetween(Phaser.Math.RadToDeg(angle), Phaser.Math.RadToDeg(originalAngle));
+  if (this._raycaster && this._raycaster.boundingBox) {
+    var _iterator = _createForOfIteratorHelper(this._raycaster.boundingBox.points),
+        _step;
 
-          if (Math.abs(angleOffsetDeg) < Phaser.Math.RadToDeg(cone / 2)) {
-            rayTargets.push({
-              point: point,
-              angle: angle,
-              angleOffsetDeg: -angleOffsetDeg
-            });
-          }
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var point = _step.value;
+        var angle = Phaser.Math.Angle.Between(this.origin.x, this.origin.y, point.x, point.y);
+        var angleOffsetDeg = Phaser.Math.Angle.ShortestBetween(Phaser.Math.RadToDeg(angle), Phaser.Math.RadToDeg(originalAngle));
+
+        if (Math.abs(angleOffsetDeg) < Phaser.Math.RadToDeg(cone / 2)) {
+          rayTargets.push({
+            point: point,
+            angle: angle,
+            angleOffsetDeg: -angleOffsetDeg
+          });
         }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
       }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
     }
   }
 
@@ -2564,8 +2571,13 @@ function castCone() {
 
     if (!this.boundsInRange(object)) continue;
     testedObjects.push(object);
-    var map = void 0;
-    if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap');
+    var map = void 0,
+        boundingBox = void 0;
+    if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap'); //get slightly enlarged bounding box due to fridge cases, when ray "glanced" border box's corner (v0.10.1)
+
+    boundingBox = map.getBoundingBox();
+    boundingBox.setTo(boundingBox.x - 0.1, boundingBox.y - 0.1, boundingBox.width + 0.2, boundingBox.height + 0.2);
+    map._boundingBox = boundingBox;
     maps.push(map); //get points and angles
 
     var _iterator2 = _createForOfIteratorHelper(map.getPoints(this)),
@@ -4144,7 +4156,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.10';
+  this.version = '0.10.1';
   /**
   * Raycaster's scene
   *
@@ -4638,7 +4650,7 @@ Raycaster.prototype = {
 
           if (map.dynamic) {
             map.updateMap();
-            dynamicMap++;
+            dynamicMaps++;
           }
         } //update stats
 
