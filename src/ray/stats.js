@@ -8,7 +8,7 @@
  * @method Raycaster.Ray#getStats
  * @memberof Raycaster.Ray
  * @instance
- * @since 0.10
+ * @since 0.10.0
  *
  * @return {object} Statisticss from last casting.
  */

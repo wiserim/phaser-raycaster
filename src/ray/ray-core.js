@@ -164,7 +164,7 @@ export function Ray(options, raycaster) {
     * @name Raycaster.Ray#_stats
     * @type {object}
     * @private
-    * @since 0.10
+    * @since 0.10.0
     * 
     * @property {string} method Used casting method (cast, castCircle, castCone).
     * @property {number} rays Casted rays.
@@ -188,7 +188,7 @@ export function Ray(options, raycaster) {
     * @name Raycaster.Ray#graphics
     * @type {Phaser.GameObjects.Graphics}
     * @private
-    * @since 0.10
+    * @since 0.10.0
     */
      this.graphics;
 
