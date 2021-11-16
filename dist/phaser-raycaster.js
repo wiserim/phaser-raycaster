@@ -3928,7 +3928,7 @@ function Ray(options, raycaster) {
   * @name Raycaster.Ray#_stats
   * @type {object}
   * @private
-  * @since 0.10
+  * @since 0.10.0
   * 
   * @property {string} method Used casting method (cast, castCircle, castCone).
   * @property {number} rays Casted rays.
@@ -3952,7 +3952,7 @@ function Ray(options, raycaster) {
   * @name Raycaster.Ray#graphics
   * @type {Phaser.GameObjects.Graphics}
   * @private
-  * @since 0.10
+  * @since 0.10.0
   */
 
   this.graphics;
@@ -4095,7 +4095,7 @@ __webpack_require__.r(__webpack_exports__);
  * @method Raycaster.Ray#getStats
  * @memberof Raycaster.Ray
  * @instance
- * @since 0.10
+ * @since 0.10.0
  *
  * @return {object} Statisticss from last casting.
  */
@@ -4173,7 +4173,7 @@ function Raycaster(options) {
   * @name Raycaster#graphics
   * @type {Phaser.GameObjects.Graphics}
   * @private
-  * @since 0.10
+  * @since 0.10.0
   */
 
   this.graphics;
@@ -4182,7 +4182,7 @@ function Raycaster(options) {
   *
   * @name Raycaster#debugOptions
   * @type {Object}
-  * @since 0.10
+  * @since 0.10.0
   * 
   * @property {bool} [enable = false] Enable debug mode
   * @property {bool} [maps = true] - Enable maps debug
@@ -4213,7 +4213,7 @@ function Raycaster(options) {
   * @name Raycaster.Raycaster#_stats
   * @type {object}
   * @private
-  * @since 0.10
+  * @since 0.10.0
   * 
   * @property {object} mappedObjects Mapped objects statistics.
   * @property {number} mappedObjects.total Mapped objects total.
@@ -4692,7 +4692,7 @@ Raycaster.prototype = {
   * @method Raycaster#getStats
   * @memberof Raycaster
   * @instance
-  * @since 0.10
+  * @since 0.10.0
   *
   * @return {object} Raycaster statistics.
   */
@@ -4706,7 +4706,7 @@ Raycaster.prototype = {
   * @method Raycaster#drawDebug
   * @memberof Raycaster
   * @private
-  * @since 0.10
+  * @since 0.10.0
   * 
   * @return {Raycaster} {@link Raycaster Raycaster} instance
   */
