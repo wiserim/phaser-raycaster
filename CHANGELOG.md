@@ -1,12 +1,25 @@
 # Change Log
 
-## Version 0.10 - 2021.11.13
+## Version 0.10.1 - 2021.11.16
+
+### Bug fixes
+
+* `Raycaster.update` - typo in code.
+* `Ray.cast`, `Ray.castCircle` and `Ray.castCone` methods after optimization in fringe cases when ray "glanced" object's border box corner didn't detect hit properly.
+
+---
+
+## Version 0.10.0 - 2021.11.13
 
 ### New features
 
 * Added debug mode.
 * Added statistics.
 * Added additional intersection data. Each point contains reference to hit mapped object and it's segment if available.
+
+### Updates
+
+* `Ray.cast`, `Ray.castCircle` and `Ray.castCone` methods optimization.
 
 ---
 

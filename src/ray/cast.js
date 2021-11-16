@@ -64,7 +64,7 @@ export function cast(options = {}) {
     }
     
     for(let object of options.objects) {
-        let map;
+        let map, boundingBox;
         
         if(object.type === 'body' || object.type === 'composite')
             map = object.raycasterMap;
@@ -73,8 +73,17 @@ export function cast(options = {}) {
 
         stats.testedMappedObjects++;
 
+        //get slightly enlarged bounding box due to fridge cases, when ray "glanced" border box's corner (v0.10.1)
+        if(internal) {
+            boundingBox = map._boundingBox;
+        }
+        else {
+            boundingBox = map.getBoundingBox();
+            boundingBox.setTo(boundingBox.x - 0.1, boundingBox.y - 0.1, boundingBox.width + 0.2, boundingBox.height + 0.2);
+        }
+
         //check if object is intersected by ray
-        if(Phaser.Geom.Intersects.GetLineToRectangle(this._ray, map.getBoundingBox()).length === 0)
+        if(Phaser.Geom.Intersects.GetLineToRectangle(this._ray, boundingBox).length === 0)
             continue;
 
         stats.hitMappedObjects++;
