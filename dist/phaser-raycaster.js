@@ -3401,7 +3401,7 @@ function overlap(objects) {
             hitbox = new Phaser.Geom.Rectangle(_body.x, _body.y, _body.width, _body.height);
           }
 
-          if (this.testOverlap(hitbox)) targets.push(_body.gameObject);
+          if (this.testArcadeOverlap(hitbox)) targets.push(_body.gameObject);
         }
       } catch (err) {
         _iterator3.e(err);
@@ -4121,7 +4121,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 /**
 * @author       Marcin Walczak <contact@marcin-walczak.pl>
@@ -4156,7 +4156,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.10.1';
+  this.version = '0.10.2';
   /**
   * Raycaster's scene
   *

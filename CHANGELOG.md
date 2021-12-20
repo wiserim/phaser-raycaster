@@ -1,5 +1,13 @@
 # Change Log
 
+## Version 0.10.2 - 2021.12.20
+
+### Bug fixes
+
+* `Ray.overlap` - method is using deprecated method `Ray.testOverlap` instead of `Ray.testArcadeOverlap` to test Arcade body.
+
+---
+
 ## Version 0.10.1 - 2021.11.16
 
 ### Bug fixes
