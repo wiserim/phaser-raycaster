@@ -68,7 +68,7 @@ export function overlap(objects) {
                     hitbox = new Phaser.Geom.Rectangle(body.x, body.y, body.width, body.height);
                 }
 
-                if(this.testOverlap(hitbox))
+                if(this.testArcadeOverlap(hitbox))
                     targets.push(body.gameObject);
             }
         }

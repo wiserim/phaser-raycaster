@@ -31,7 +31,7 @@ export function Raycaster(options) {
     * @readonly
     * @since 0.6.0
     */
-    this.version = '0.10.1';
+    this.version = '0.10.2';
     /**
     * Raycaster's scene
     *
