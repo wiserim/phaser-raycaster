@@ -1,6 +1,6 @@
 {
   "name": "phaser-raycaster",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "description": "Raycasting plugin for Phaser 3.",
   "main": "dist/phaser-raycaster.min.js",
   "scripts": {
