@@ -1,5 +1,23 @@
 # Change Log
 
+## Version 0.10.3 - 2022.06.27
+
+### New features
+
+* Added `Ray.destroy` method.
+* Added `Map.destroy` method.
+* Added `Raycaster.destroy` method.
+* Added `mapChild` option to `Map.config` parameters.
+
+### Updates
+
+* `Raycaster.removeMappedObjects` method now also destroys `Map` objects.
+* Container's `Map` now allows to choose single child element which will be mapped, by passing it as `mapChild` option to `Map.config` parameters.
+* Container's `Map` now allows to use circle map children with `Map.segmentCount` set to 0. Transformed children circles are stored in `Map._circles` property.
+* Updated NPM dev dependencies.
+
+---
+
 ## Version 0.10.2 - 2021.12.20
 
 ### Bug fixes

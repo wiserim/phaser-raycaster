@@ -24,7 +24,7 @@ export function castCone(options = {}) {
     let startTime = performance.now();
     //reset stats
     this._stats = {
-        method: 'castCircle',
+        method: 'castCone',
         rays: 0,
         testedMappedObjects: 0,
         hitMappedObjects: 0,

@@ -18,7 +18,7 @@
  * @param {Phaser.Scene} [options.scene] - Scene in which Raycaster will be used.
  * @param {integer} [options.mapSegmentCount = 0] - Number of segments of circle maps. If set to 0, map will be teste
  * @param {(object|object[])} [options.objects] - Game object or array of game objects to map.
- * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box.
+ * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box. If not passed, {@link Raycaster Raycaster} will set it's bounding box based on Arcade Physics / Matter physics world bounds.
  * @param {boolean} [options.autoUpdate = true] - If set true, automatically update dynamic maps on scene update event.
  * @param {bool|object} [options.debug] - Enable debug mode or configure it {@link Raycaster#debugOptions debugOptions}.
  */
@@ -31,7 +31,7 @@ export function Raycaster(options) {
     * @readonly
     * @since 0.6.0
     */
-    this.version = '0.10.2';
+    this.version = '0.10.3';
     /**
     * Raycaster's scene
     *
@@ -116,7 +116,8 @@ export function Raycaster(options) {
      };
 
     /**
-    * Raycaster's bounding box.
+    * Raycaster's bounding box. By default it's size is based on Arcade Physics / Matter physics world bounds.
+    * If world size will change after creation of Raycaster, bounding box needs to be updated.
     *
     * @name Raycaster#boundingBox
     * @type {Phaser.Geom.Rectangle}
@@ -368,6 +369,11 @@ Raycaster.prototype = {
             if(index >= 0)
                 this.mappedObjects.splice(index, 1);
             
+            if(object.type === 'body' || object.type === 'composite')
+                object.raycasterMap.destroy();
+            else
+                object.data.get('raycasterMap').destroy();
+            
             //update stats
             if(object.dynamic)
                 this._stats.mappedObjects.dynamic--;
@@ -606,6 +612,22 @@ Raycaster.prototype = {
         }
 
         return this;
+    },
+
+    /**
+     * Destroy object and all mapped objects.
+     *
+     * @method Raycaster#destroy
+     * @memberof Raycaster
+     * @instance
+     * @since 0.10.3
+     */
+    destroy: function() {
+        this.removeMappedObjects(this.mappedObjects);
+
+        for(let key in this) {
+            delete this[key];
+        }
     }
 }
 
