@@ -22,6 +22,7 @@ let boundingBox = require('./boundingBox.js');
  * @param {boolean} [options.dynamic = false] - If set true, map will be dynamic (updated on scene update event).
  * @param {boolean} [options.active = true] - If set true, map will be active (will provide points, segments and will be updated).
  * @param {integer} [options.segmentCount] - Circle map's segment count. If set to 0, map won't be generating segments and relay only on tangent points calculated for currently testing ray.
+ * @param {object} [options.mapChild] - Container's child. If set, only set child will be mapped.
  * @param {boolean} [options.forceConvex] - If set true, matter body map will use convex body (hull) for non-covex bodies.
  * @param {boolean} [options.forceVerticesMapping] - If set true, matter body map will use only vertices for mapping circle bodies.
  * 
@@ -60,10 +61,18 @@ export function config(options) {
             this.updateMap = line.updateMap;
             break;
         case 'Container':
+            //container's child
+            this.mapChild = (options.mapChild) ? options.mapChild : null;
+            //circle segments count
+            this.segmentCount = (options.segmentCount) ? options.segmentCount : 0;
+            //transformed container's circle children
+            this._circles = [];
             this.getPoints = container.getPoints;
             this.getSegments = container.getSegments;
             this.getBoundingBox = boundingBox.getBoundingBox;
             this.updateMap = container.updateMap;
+            this._updateChildMap = container._updateChildMap;
+            this.setSegmentCount = segmentCount.setSegmentCount;
             break;
         case 'StaticTilemapLayer':
             //ray colliding tiles

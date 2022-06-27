@@ -140,7 +140,8 @@ export function Map(options, raycaster) {
 };
 
 Map.prototype = {
-    config: require('./config.js').config
+    config: require('./config.js').config,
+    destroy: require('./destroy.js').destroy
 };
 
 Map.prototype.constructor = Map;

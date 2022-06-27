@@ -34,7 +34,7 @@ npm install phaser-raycaster
 ### 1. Include plugin in your project:
 ```html
 <!--CDN-->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.10.2/dist/phaser-raycaster.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.10.3/dist/phaser-raycaster.min.js"></script>
 ```
 ```
 # NPM
@@ -130,7 +130,35 @@ this.ray.setConeDeg(90);
 let intersections = this.ray.castCone();
 ```
 
-### 7. Collisions (arcade physics)
+### 7. Raycaster bounding box
+By default Raycaster is setting it's bounding box based on Arcade Physics / Matter physics world bounds.
+If world size will change after creation of Raycaster, bounding box needs to be updated.
+```javascript
+//define bounds
+var bounds = new Phaser.Geom.Rectangle(x, y, width, height);
+
+//get world bounds (arcade physics)
+bounds = this.worldLayer.getBounds();
+
+//get bounds (matter physics)
+let walls = this.matter.world;
+bounds = new Phaser.Geom.Rectangle(
+  walls.top.vertices[3].x, //x
+  walls.top.vertices[3].y, //y
+  walls.bottom.vertices[1].x - walls.top.vertices[3].x, //width
+  walls.bottom.vertices[1].y - walls.top.vertices[3].y //height
+)
+
+//set bounding box on raycaster creation
+var raycaster = this.raycasterPlugin.createRaycaster({
+  boundingBox: bounds
+});
+
+//set bounding box after creation
+raycaster.setBoundingBox(x, y, width, height);
+```
+
+### 8. Collisions (arcade physics)
 ```javascript
 //enable auto slicing field of view
 this.ray.autoSlice = true;
@@ -158,7 +186,7 @@ this.physics.add.overlap(this.ray, targets, function(rayFoVCircle, target){
 }, this.ray.processOverlap.bind(this.ray));
 ```
 
-### 8. Collisions (matter physics)
+### 9. Collisions (matter physics)
 ```javascript
 //enable auto slicing field of view
 this.ray.autoSlice = true;
@@ -214,7 +242,7 @@ this.ray.setOnCollide(function(collisionInfo){
   }
 });
 ```
-### 9. Statistics
+### 10. Statistics
 ```javascript
 //get raycaster statistics
 let statistics = this.raycaster.getStats();
@@ -249,7 +277,7 @@ let rayStatistics = this.ray.getStats();
 */
 ```
 
-### 10. Debug mode
+### 11. Debug mode
 ```javascript
   //enable debug mode
   this.raycaster = this.raycasterPlugin.createRaycaster({

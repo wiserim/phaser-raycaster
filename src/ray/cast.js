@@ -130,7 +130,6 @@ export function cast(options = {}) {
                 let points = map.getPoints(this);
                 let isTangent = false;
                 for(let point of points) {
-
                     if(Phaser.Geom.Point.Equals(options.target, point)) {
                         //get closest intersection
                         let distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
@@ -177,6 +176,49 @@ export function cast(options = {}) {
                         closestDistance = distance;
                         closestIntersection = intersection;
                         closestObject = map.object;
+                    }
+                }
+            }
+        }
+
+        //check container map's circles
+        if(map.type == 'Container' && map._circles.length > 0) {
+            for(let circle of map._circles) {
+                //check if target point is a circle tangent point to ray
+                if(options.target) {
+                    let isTangent = false;
+
+                    for(let point of circle.points) {
+                        if(Phaser.Geom.Point.Equals(options.target, point)) {
+                            //get closest intersection
+                            let distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
+
+                            if(distance < closestDistance) {
+                                closestDistance = distance;
+                                closestIntersection = point;
+                                closestObject = map.object;
+                                isTangent = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if(isTangent)
+                        continue;
+                }
+
+                let circleIntersections = [];
+
+                if(Phaser.Geom.Intersects.GetLineToCircle(this._ray, circle, circleIntersections)) {
+                    for(let intersection of circleIntersections) {
+                        //get closest intersection
+                        let distance = Phaser.Math.Distance.Between(this._ray.x1, this._ray.y1, intersection.x, intersection.y);
+
+                        if(distance < closestDistance) {
+                            closestDistance = distance;
+                            closestIntersection = intersection;
+                            closestObject = map.object;
+                        }
                     }
                 }
             }

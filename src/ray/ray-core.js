@@ -224,5 +224,6 @@ Ray.prototype = {
     setOnCollideEnd: require('./matter-physics-methods.js').setOnCollideEnd,
     setOnCollideActive: require('./matter-physics-methods.js').setOnCollideActive,
     setOnCollideWith: require('./matter-physics-methods.js').setOnCollideWith,
-    drawDebug: require('./debug.js').drawDebug
+    drawDebug: require('./debug.js').drawDebug,
+    destroy: require('./destroy.js').destroy,
 };
