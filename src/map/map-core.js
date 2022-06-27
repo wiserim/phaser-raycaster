@@ -134,7 +134,8 @@ export function Map(options, raycaster) {
     this.updateMap;
 
     this.config(options);
-    this.updateMap();
+    if(!this.notSupported)
+        this.updateMap();
 
     return this;
 };
