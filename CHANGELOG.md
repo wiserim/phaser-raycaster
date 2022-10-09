@@ -1,5 +1,14 @@
 # Change Log
 
+## Version 0.10.4 - 2022.06.28
+
+### Updates
+
+* `Raycaster.mapGameObjects` method now checks if mapped object is supported.
+* `Map.updateMap` method for container objects now checks if mapped children objects are supported.
+
+---
+
 ## Version 0.10.3 - 2022.06.27
 
 ### New features

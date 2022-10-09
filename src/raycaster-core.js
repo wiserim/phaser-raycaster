@@ -31,7 +31,7 @@ export function Raycaster(options) {
     * @readonly
     * @since 0.6.0
     */
-    this.version = '0.10.3';
+    this.version = '0.10.4';
     /**
     * Raycaster's scene
     *
@@ -286,6 +286,10 @@ Raycaster.prototype = {
             if(this.mappedObjects.includes(object))
                 continue;
 
+            //if object is not supported
+            if(object.data && object.data.get('raycasterMapNotSupported'))
+                continue;
+
             let config = {};
             for(let option in options) {
                 config[option] = options[option];
@@ -293,6 +297,11 @@ Raycaster.prototype = {
             config.object = object;
             
             let map = new this.Map(config, this);
+            
+            if(map.notSupported) {
+                map.destroy();
+                continue;
+            }
 
             if(object.type === 'body' || object.type === 'composite') {
                 object.raycasterMap = map;

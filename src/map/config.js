@@ -125,6 +125,11 @@ export function config(options) {
             this.updateMap = rectangle.updateMap;
     }
 
+    //if object is not supported
+    if(this.type != 'MatterBody' && typeof this.object.getBounds !== 'function') {
+        this.notSupported = true;
+    }
+
     //dynamic map
     this.dynamic = (options.dynamic == true) ? true : false;
 

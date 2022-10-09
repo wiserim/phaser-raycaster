@@ -124,12 +124,15 @@ export function updateMap() {
         for(let i = 0, iLength = container.list.length; i < iLength; i++){
             let childA = container.list[i];
             let mapA = childA.data.get('raycasterMap');
+            
+            if(!mapA)
+                continue;
 
             for(let j = i+1, jLength = container.list.length; j < jLength; j++){
                 let childB = container.list[j];
                 let mapB = childB.data.get('raycasterMap');
                 //check if bounding boxes overlap
-                if(!Phaser.Geom.Intersects.RectangleToRectangle(childA.getBounds(), childB.getBounds()))
+                if(!mapB || !Phaser.Geom.Intersects.RectangleToRectangle(childA.getBounds(), childB.getBounds()))
                     continue;
 
                 //find objects intersections
@@ -141,7 +144,7 @@ export function updateMap() {
                         
                         //calculate positions after container's rotation
                         if(rotation !== 0) {
-                            let vector = new Phaser.Geom.Line(this.object.x, this.object.y, intersection.x * this.object.scaleX + offset.x, intersection.y * this.object.scaleY + offset.y);
+                            let vector = new Phaser.Geom.Line(container.x, container.y, intersection.x * container.scaleX + offset.x, intersection.y * container.scaleY + offset.y);
                             Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
                             points.push(vector.getPointB());
                         }
@@ -179,6 +182,10 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
     if(!child.data)
         child.setDataEnabled();
 
+    //if object is not supported
+    if(child.data.get('raycasterMapNotSupported'))
+        return;
+
     //get child map
     let map = child.data.get('raycasterMap');
     if(!map) {
@@ -186,6 +193,13 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
             object: child,
             segmentCount: this.segmentCount
         });
+
+        if(map.notSupported) {
+            map.destroy();
+            child.data.set('raycasterMapNotSupported', true);
+            return;
+        }
+
         child.data.set('raycasterMap', map);
     }
     else
@@ -202,7 +216,7 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
         }
         //if rotation === 0
         else
-            points.push(new Phaser.Geom.Point(point.x * container.scaleX + offset.x, point.y * container.scaleX + offset.y));
+            points.push(new Phaser.Geom.Point(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y));
 
         childPoints.push(points[points.length - 1])
     }
@@ -222,7 +236,7 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
         }
         //if rotation === 0
         else
-            segments.push(new Phaser.Geom.Line(segment.getPointA().x * container.scaleX + offset.x, segment.getPointA().y * container.scaleY + offset.y, segment.getPointB().x * container.scaleX + offset.x, segment.getPointB().y * container.scaleY + offset.y));
+            segments.push(new Phaser.Geom.Line(segment.getPointA().x * this.object.scaleX + offset.x, segment.getPointA().y * this.object.scaleY + offset.y, segment.getPointB().x * this.object.scaleX + offset.x, segment.getPointB().y * this.object.scaleY + offset.y));
     }
 
     //if child's map is a circle and this.segmentsCount == 0, store transformed circles in this._circles array.
