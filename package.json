@@ -3,6 +3,7 @@
   "version": "0.10.4",
   "description": "Raycasting plugin for Phaser 3.",
   "main": "dist/phaser-raycaster.min.js",
+  "types": "types/types.d.ts",
   "scripts": {
     "dev": "webpack --mode development --config webpack/webpack.config.dev.js --watch",
     "build": "webpack --mode development --config webpack/webpack.config.dev.js && webpack --mode production --config webpack/webpack.config.js",

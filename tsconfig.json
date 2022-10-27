@@ -1,10 +1,10 @@
 {
-  "include": ["src/*"],
+  "include": ["src/raycaster-core.js"],
   "compilerOptions": {
     "allowJs": true,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "dist",
+    "outDir": "types",
     "declarationMap": true
   }
 }
