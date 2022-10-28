@@ -6,8 +6,8 @@
  * @instance
  * @since 0.6.0
  *
- * @param {integer} x - X coordinate.
- * @param {integer} y - Y coordinate.
+ * @param {number} x - X coordinate.
+ * @param {number} y - Y coordinate.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */

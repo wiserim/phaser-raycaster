@@ -8,13 +8,13 @@
  *
  * @param {object} [options] - Ray's congfiguration options. May include:
  * @param {Phaser.Geom.Point} [options.origin = {x:0, y:0}] - Ray's position.
- * @param {float} [options.angle = 0] - Ray's angle in radians.
- * @param {float} [options.angleDeg = 0] - Ray's angle in degrees.
- * @param {float} [options.cone = 0] - Ray's cone angle in radians.
- * @param {float} [options.coneDeg = 0] - Ray's cone angle in degrees.
- * @param {integer} [options.range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
- * @param {integer} [options.collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's maximum collision range of ray's field of view.
- * @param {integer} [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
+ * @param {number} [options.angle = 0] - Ray's angle in radians.
+ * @param {number} [options.angleDeg = 0] - Ray's angle in degrees.
+ * @param {number} [options.cone = 0] - Ray's cone angle in radians.
+ * @param {number} [options.coneDeg = 0] - Ray's cone angle in degrees.
+ * @param {number} [options.range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
+ * @param {number} [options.collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's maximum collision range of ray's field of view.
+ * @param {number} [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
  * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
  * @param {boolean} [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
  * @param {boolean} [options.round = false] - If set true, point where ray hit will be rounded.

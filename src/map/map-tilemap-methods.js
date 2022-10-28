@@ -8,7 +8,7 @@
 * @private
 * @since 0.7.3
 *
-* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+* @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
 * @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
 */
@@ -47,7 +47,7 @@ export function getPoints(ray = false) {
 * @private
 * @since 0.7.3
 *
-* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+* @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
 * @return {Phaser.Geom.Line[]} - Array of mapped object's segments.
 */

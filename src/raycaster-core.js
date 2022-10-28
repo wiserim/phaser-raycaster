@@ -16,11 +16,11 @@
  *
  * @param {object} [options] - Raycaster's configuration options. May include:
  * @param {Phaser.Scene} [options.scene] - Scene in which Raycaster will be used.
- * @param {integer} [options.mapSegmentCount = 0] - Number of segments of circle maps. If set to 0, map will be teste
+ * @param {number} [options.mapSegmentCount = 0] - Number of segments of circle maps. If set to 0, map will be teste
  * @param {(object|object[])} [options.objects] - Game object or array of game objects to map.
  * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box. If not passed, {@link Raycaster Raycaster} will set it's bounding box based on Arcade Physics / Matter physics world bounds.
  * @param {boolean} [options.autoUpdate = true] - If set true, automatically update dynamic maps on scene update event.
- * @param {bool|object} [options.debug] - Enable debug mode or configure it {@link Raycaster#debugOptions debugOptions}.
+ * @param {boolean|object} [options.debug] - Enable debug mode or configure it {@link Raycaster#debugOptions debugOptions}.
  */
 export function Raycaster(options) {
     /**
@@ -31,7 +31,7 @@ export function Raycaster(options) {
     * @readonly
     * @since 0.6.0
     */
-    this.version = '0.10.4';
+    this.version = '0.10.5';
     /**
     * Raycaster's scene
     *
@@ -57,15 +57,15 @@ export function Raycaster(options) {
     * @type {Object}
     * @since 0.10.0
     * 
-    * @property {bool} [enable = false] Enable debug mode
-    * @property {bool} [maps = true] - Enable maps debug
-    * @param {bool} [rays = true] - Enable rays debug
-    * @property {bool} graphics - Debug graphics options
-    * @property {bool|number} [graphics.ray = 0x00ff00] - Debug ray color. Set false to disable.
-    * @property {bool|number} [graphics.rayPoint = 0xff00ff] - Debug ray point color. Set false to disable.
-    * @property {bool|number} [graphics.mapPoint = 0x00ffff] - debug map point color. Set false to disable.
-    * @property {bool|number} [graphics.mapSegment = 0x0000ff] - Debug map segment color. Set false to disable.
-    * @property {bool|number} [graphics.mapBoundingBox = 0xff0000] - Debug map bounding box color. Set false to disable.
+    * @property {boolean} [enable = false] Enable debug mode
+    * @property {boolean} [maps = true] - Enable maps debug
+    * @param {boolean} [rays = true] - Enable rays debug
+    * @property {boolean} graphics - Debug graphics options
+    * @property {boolean|number} [graphics.ray = 0x00ff00] - Debug ray color. Set false to disable.
+    * @property {boolean|number} [graphics.rayPoint = 0xff00ff] - Debug ray point color. Set false to disable.
+    * @property {boolean|number} [graphics.mapPoint = 0x00ffff] - debug map point color. Set false to disable.
+    * @property {boolean|number} [graphics.mapSegment = 0x0000ff] - Debug map segment color. Set false to disable.
+    * @property {boolean|number} [graphics.mapBoundingBox = 0xff0000] - Debug map bounding box color. Set false to disable.
     */
     this.debugOptions = {
         enabled: false,
@@ -139,7 +139,7 @@ export function Raycaster(options) {
     * Number of segments of circle maps.
     *
     * @name Raycaster#mapSegmentCount
-    * @type {integer}
+    * @type {number}
     * @default 0
     * @since 0.6.0
     */
@@ -187,10 +187,10 @@ Raycaster.prototype = {
     *
     * @param {object} [options] - Raycaster's congfiguration options. May include:
     * @param {Phaser.Scene} [options.scene] - Scene in which Raycaster will be used.
-    * @param {integer} [options.mapSegmentCount = 0] - Number of segments of circle maps.
+    * @param {number} [options.mapSegmentCount = 0] - Number of segments of circle maps.
     * @param {(object|object[])} [options.objects] - Game object or array of game objects to map.
     * @param {Phaser.Geom.Rectangle} [options.boundingBox] - Raycaster's bounding box.
-    * @param {bool|object} [options.debug] - Enable debug mode or cofigure {@link Raycaster#debugOptions debugOptions}.
+    * @param {boolean|object} [options.debug] - Enable debug mode or cofigure {@link Raycaster#debugOptions debugOptions}.
     *
     * @return {Raycaster} {@link Raycaster Raycaster} instance
     */
@@ -207,7 +207,6 @@ Raycaster.prototype = {
             if(typeof options.debug === 'object')
                 Object.assign(this.debugOptions, options.debug);
         }
-            
 
         if(options.mapSegmentCount !== undefined)
             this.mapSegmentCount = options.mapSegmentCount;
@@ -222,17 +221,17 @@ Raycaster.prototype = {
     },
 
     /**
-    * Set Raycatser's bounding box.
+    * Set Raycaster's bounding box.
     *
     * @method Raycaster#setBoundingBox
     * @memberof Raycaster
     * @instance
     * @since 0.6.0
     *
-    * @param {integer} x - The X coordinate of the top left corner of bounding box.
-    * @param {integer} y - The Y coordinate of the top left corner of bounding box.
-    * @param {integer} width - The width of bounding box.
-    * @param {integer} height - The height of bounding box.
+    * @param {number} x - The X coordinate of the top left corner of bounding box.
+    * @param {number} y - The Y coordinate of the top left corner of bounding box.
+    * @param {number} width - The width of bounding box.
+    * @param {number} height - The height of bounding box.
     *
     * @return {Raycaster} {@link Raycaster Raycaster} instance
     */

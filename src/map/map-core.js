@@ -92,7 +92,7 @@ export function Map(options, raycaster) {
     * @instance
     * @since 0.6.0
     *
-    * @param {Raycatser.Ray} [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
+    * @param {Raycaster.Ray} [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
     *
     * @return {Phaser.Geom.Point[]} Array of mapped object's vertices.
     */
@@ -105,7 +105,7 @@ export function Map(options, raycaster) {
     * @instance
     * @since 0.6.0
     *
-    * @param {Raycatser.Ray} [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
+    * @param {Raycaster.Ray} [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
     *
     * @return {Phaser.Geom.Line[]} Array of mapped object's segments.
     */

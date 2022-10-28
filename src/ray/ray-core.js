@@ -42,7 +42,7 @@ export function Ray(options, raycaster) {
     * Ray's angle in radians.
     *
     * @name Raycaster.Ray#angle
-    * @type {float}
+    * @type {number}
     * @default 0
     * @since 0.6.0
     */
@@ -51,7 +51,7 @@ export function Ray(options, raycaster) {
     * Ray's cone width angle in radians.
     *
     * @name Raycaster.Ray#cone
-    * @type {float}
+    * @type {number}
     * @default 0
     * @since 0.7.0
     */
@@ -60,7 +60,7 @@ export function Ray(options, raycaster) {
     * Ray's maximum range
     *
     * @name Raycaster.Ray#rayRange
-    * @type {integer}
+    * @type {number}
     * @default Phaser.Math.MAX_SAFE_INTEGER
     * @since 0.6.0
     */
@@ -70,7 +70,7 @@ export function Ray(options, raycaster) {
     * Ray tests all objects when set to 0.
     *
     * @name Raycaster.Ray#detectionRange
-    * @type {integer}
+    * @type {number}
     * @default
     * @since 0.6.0
     */
@@ -88,7 +88,7 @@ export function Ray(options, raycaster) {
     * Ray's maximum collision range of ray's field of view. Radius of {@link Raycaster.Ray#collisionRangeCircle Ray.body}.
     *
     * @name Raycaster.Ray#collisionRange
-    * @type {integer}
+    * @type {number}
     * @default Phaser.Math.MAX_SAFE_INTEGER
     * @since 0.8.0
     */
@@ -152,7 +152,7 @@ export function Ray(options, raycaster) {
     * Physics body type.
     *
     * @name Raycaster.Ray#bodyType
-    * @type {(bolean|'arcade'|'matter')}
+    * @type {(boolean|'arcade'|'matter')}
     * @default false
     * @since 0.9.0
     */

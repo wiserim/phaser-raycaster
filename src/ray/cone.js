@@ -6,7 +6,7 @@
  * @instance
  * @since 0.7.0
  *
- * @param {float} [cone = 0] - Ray's cone angle in radians.
+ * @param {number} [cone = 0] - Ray's cone angle in radians.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
@@ -23,7 +23,7 @@ export function setCone(cone = 0) {
  * @instance
  * @since 0.7.0
  *
- * @param {float} [cone = 0] - Ray's cone angle in degrees.
+ * @param {number} [cone = 0] - Ray's cone angle in degrees.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */

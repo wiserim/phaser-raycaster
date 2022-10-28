@@ -2,7 +2,7 @@
  * Destroy object
  *
  * @method Raycaster.Map#destroy
- * @memberof Raycaster.Ray
+ * @memberof Raycaster.Map
  * @instance
  * @since 0.10.3
  */
