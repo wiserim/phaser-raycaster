@@ -34,7 +34,7 @@ npm install phaser-raycaster
 ### 1. Include plugin in your project:
 ```html
 <!--CDN-->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.10.4/dist/phaser-raycaster.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.10.5/dist/phaser-raycaster.min.js"></script>
 ```
 ```
 # NPM
@@ -42,6 +42,8 @@ npm install phaser-raycaster
 ```
 ### 2. Enable plugin in your Game config:
 ```javascript
+import PhaserRaycaster from 'phaser-raycaster'
+
 let config = {
     type: Phaser.Auto,
     parent: 'game',
@@ -72,6 +74,17 @@ create() {
   // additional code
 }
 ```
+If you're using TypeScript, you need to add to scene plugin class:
+```javascript
+import PhaserRaycaster from 'phaser-raycaster'
+
+export default class MyScene extends Phaser.Scene {
+  raycasterPlugin: PhaserRaycaster
+
+  // aditional code
+}
+```
+
 ### 4. Create new ray
 ```javascript
 create() {

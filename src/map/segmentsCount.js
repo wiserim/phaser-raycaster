@@ -7,7 +7,7 @@
  * @instance
  * @since 0.6.0
  *
- * @param {integer} count - Circle map's segment count.
+ * @param {number} count - Circle map's segment count.
  *
  * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
  */

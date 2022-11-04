@@ -8,7 +8,7 @@
 * @private
 * @since 0.6.0
 *
-* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+* @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
 * @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
 */

@@ -6,7 +6,7 @@
  * @instance
  * @since 0.6.0
  *
- * @param {float} [angle = 0] - Ray's angle in radians.
+ * @param {number} [angle = 0] - Ray's angle in radians.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
@@ -24,7 +24,7 @@ export function setAngle(angle = 0) {
  * @instance
  * @since 0.6.1
  *
- * @param {float} [angle = 0] - Ray's angle in degrees.
+ * @param {number} [angle = 0] - Ray's angle in degrees.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */

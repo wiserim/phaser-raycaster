@@ -6,10 +6,10 @@
  * @instance
  * @since 0.6.0
  *
- * @param {integer} x - X coordinate.
- * @param {integer} y - Y coordinate.
- * @param {float} [angle] - Ray's angle in radians.
- * @param {integer} [range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
+ * @param {number} x - X coordinate.
+ * @param {number} y - Y coordinate.
+ * @param {number} [angle] - Ray's angle in radians.
+ * @param {number} [range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */

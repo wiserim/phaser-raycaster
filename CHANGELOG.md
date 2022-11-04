@@ -1,5 +1,21 @@
 # Change Log
 
+## Version 0.10.5 - 2022.11.04
+
+### Features
+
+* Added TypeScript typings.
+
+### Updates
+
+* Updated `PhaserRaycaster` plugin class.
+
+### Bug fixes
+
+* Fixed docs typos
+
+---
+
 ## Version 0.10.4 - 2022.06.28
 
 ### Updates

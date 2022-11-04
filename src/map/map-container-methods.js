@@ -8,8 +8,8 @@
 * @private
 * @since 0.7.1
 *
-* @param {Raycatser.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
-* @param {bool} [isChild] - Flag definig if it is child container.
+* @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
+* @param {boolean} [isChild] - Flag definig if it is child container.
 *
 * @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
 */
@@ -175,7 +175,7 @@ export function updateMap() {
 * @param {object} [child] - Container's child object.
 * @param {Phaser.Geom.Point[]} [points] - Container's mapped points.
 * @param {Phaser.Geom.Line[]} [segments] - Container's mapped segments.
-* @param {float} [rotation] - Container's rotation.
+* @param {number} [rotation] - Container's rotation.
 * @param {Phaser.Geom.Point} [offset] - Container's offset.
 */
 export function _updateChildMap(child, points, segments, rotation, offset) {

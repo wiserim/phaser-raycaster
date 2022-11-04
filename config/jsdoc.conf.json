@@ -1,0 +1,61 @@
+{
+    "plugins": [],
+    "recurseDepth": 10,
+    "source": {
+        "include": [
+            //raycaster
+            "./src/raycaster-core.js",
+            //ray
+            "./src/ray/ray-core.js",
+            "./src/ray/config.js",
+            "./src/ray/cast.js",
+            "./src/ray/castCircle.js",
+            "./src/ray/castCone.js",
+            "./src/ray/ray.js",
+            "./src/ray/origin.js",
+            "./src/ray/angle.js",
+            "./src/ray/range.js",
+            "./src/ray/cone.js",
+            "./src/ray/overlap.js",
+            "./src/ray/enablePhysics.js",
+            "./src/ray/matter-physics-methods.js",
+            //map
+            "./src/map/map-core.js",
+            "./src/map/config.js",
+            "./src/map/segmentsCount.js",
+            "./src/map/boundingBox.js",
+            "./src/map/map-rectangle-methods.js",
+            "./src/map/map-line-methods.js",
+            "./src/map/map-circle-methods.js",
+            "./src/map/map-polygon-methods.js",
+            "./src/map/map-container-methods.js",
+            "./src/map/map-tilemap-methods.js",
+            "./src/map/map-matterBody-methods.js"
+        ],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "sourceType": "module",
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": ["jsdoc","closure"]
+    },
+    "opts": {
+        "template": "./node_modules/ink-docstrap/template",
+        "destination": "./docs"
+    },
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false,
+        "systemName": "Phaser-raycaster",
+        "footer": "<p class=\"text-center\"><a href=\"https://github.com/wiserim/phaser-raycaster\" target=\"_blank\" rel=\"noopener noreferrer\">Phaser-raycaster</a></p>",
+        "copyright": "&copy; Marcin Walczak 2022",
+        "includeDate": true,
+        "navType": "vertical",
+        "theme": "paper",
+        "inverseNav": true,
+        "linenums": true,
+        "outputSourceFiles": true,
+        "sort": false
+    }
+}

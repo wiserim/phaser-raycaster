@@ -6,7 +6,7 @@
  * @instance
  * @since 0.6.0
  *
- * @param {integer} [rayRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
+ * @param {number} [rayRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
@@ -25,7 +25,7 @@ export function setRayRange(rayRange = Phaser.Math.MAX_SAFE_INTEGER) {
  * @instance
  * @since 0.6.0
  *
- * @param {integer} [detectionRange = 0] - Maximum distance between ray's position and tested objects bounding boxes.
+ * @param {number} [detectionRange = 0] - Maximum distance between ray's position and tested objects bounding boxes.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
@@ -45,7 +45,7 @@ export function setDetectionRange(detectionRange = 0) {
  * @instance
  * @since 0.8.0
  *
- * @param {integer} [collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's collision range and physics body radius.
+ * @param {number} [collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's collision range and physics body radius.
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
