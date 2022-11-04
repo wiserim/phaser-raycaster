@@ -1,13 +1,14 @@
 {
   "name": "phaser-raycaster",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "Raycasting plugin for Phaser 3.",
   "main": "dist/phaser-raycaster.min.js",
   "types": "types/types.d.ts",
   "scripts": {
-    "dev": "webpack --mode development --config webpack/webpack.config.dev.js --watch",
-    "build": "webpack --mode development --config webpack/webpack.config.dev.js && webpack --mode production --config webpack/webpack.config.js",
-    "build-typings": "jsdoc -t node_modules/tsd-jsdoc/dist -r src -d ./types"
+    "dev": "webpack --mode development --config config/webpack.config.dev.js --watch",
+    "build": "webpack --mode development --config config/webpack.config.dev.js && webpack --mode production --config config/webpack.config.js",
+    "build-typings": "jsdoc -t node_modules/tsd-jsdoc/dist -r src -d ./types && Echo TS types build successfull. Add to types.d.ts line: \"declare module 'phaser-raycaster' {export = PhaserRaycaster;}\"",
+    "build-docs": "node node_modules/jsdoc/jsdoc.js -c config/jsdoc.conf.json -R README.md"
   },
   "browserslist": [
     "last 1 version",
@@ -31,6 +32,7 @@
     "@babel/preset-env": "^7.18.2",
     "@babel/register": "^7.17.7",
     "babel-loader": "^8.2.5",
+    "ink-docstrap": "^1.3.2",
     "jsdoc": "^3.6.11",
     "tsd-jsdoc": "^2.5.0",
     "webpack": "^5.73.0",

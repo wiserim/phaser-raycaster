@@ -1,6 +1,6 @@
 /**
 * @author       Marcin Walczak <contact@marcin-walczak.pl>
-* @copyright    2021 Marcin Walczak
+* @copyright    2022 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 
@@ -542,7 +542,19 @@ Raycaster.prototype = {
     * @instance
     * @since 0.6.0
     *
-    * @param {object} [options] - Ray options:
+    * @param {object} [options] - Ray's congfiguration options. May include:
+    * @param {Phaser.Geom.Point|Point} [options.origin = {x:0, y:0}] - Ray's position.
+    * @param {number} [options.angle = 0] - Ray's angle in radians.
+    * @param {number} [options.angleDeg = 0] - Ray's angle in degrees.
+    * @param {number} [options.cone = 0] - Ray's cone angle in radians.
+    * @param {number} [options.coneDeg = 0] - Ray's cone angle in degrees.
+    * @param {number} [options.range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
+    * @param {number} [options.collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's maximum collision range of ray's field of view.
+    * @param {number} [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
+    * @param {boolean} [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
+    * @param {boolean} [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
+    * @param {boolean} [options.round = false] - If set true, point where ray hit will be rounded.
+    * @param {(boolean|'arcade'|'matter')} [options.enablePhysics = false] - Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. If set true, arcade physics body will be added.
     *
     * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
     */

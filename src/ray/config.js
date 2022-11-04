@@ -7,7 +7,7 @@
  * @since 0.6.0
  *
  * @param {object} [options] - Ray's congfiguration options. May include:
- * @param {Phaser.Geom.Point} [options.origin = {x:0, y:0}] - Ray's position.
+ * @param {Phaser.Geom.Point|Point} [options.origin = {x:0, y:0}] - Ray's position.
  * @param {number} [options.angle = 0] - Ray's angle in radians.
  * @param {number} [options.angleDeg = 0] - Ray's angle in degrees.
  * @param {number} [options.cone = 0] - Ray's cone angle in radians.

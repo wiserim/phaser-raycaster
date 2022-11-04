@@ -1,18 +1,25 @@
 /**
- * Phaser raycaster plugin.
- * @param scene - Scene in which Raycaster will be used.
+ * Point object
  */
-declare class raycasterPlugin {
-    constructor(scene: Phaser.Scene);
+declare type Point = {
+    x: number;
+    y: number;
+};
+
+/**
+ * Raycaster plugin class.
+ */
+declare class PhaserRaycaster extends Phaser.Plugins.ScenePlugin {
+    constructor(scene: Phaser.Scene, pluginManager: Phaser.Plugins.PluginManager);
     /**
      * Create Raycaster object.
-     * @param [options] - Raycaster's configuration options. May include:
+     * @param [options] - Raycaster's congfiguration options. May include:
      * @param [options.mapSegmentCount = 0] - Number of segments of circle maps. If set to 0, map will be teste
      * @param [options.objects] - Game object or array of game objects to map.
      * @param [options.boundingBox] - Raycaster's bounding box. If not passed, {@link Raycaster Raycaster} will set it's bounding box based on Arcade Physics / Matter physics world bounds.
      * @param [options.autoUpdate = true] - If set true, automatically update dynamic maps on scene update event.
      * @param [options.debug] - Enable debug mode or configure it {@link Raycaster#debugOptions debugOptions}.
-     * @returns - Raycaster object.
+     * @returns {@link Raycaster Raycaster} instance
      */
     createRaycaster(options?: {
         mapSegmentCount?: number;
@@ -116,11 +123,36 @@ declare namespace Raycaster {
     }
     /**
      * Ray class responsible for casting ray's and testing their collisions with mapped objects.
-     * @param options - Ray specific configuration settings.
+     * @param [options] - Ray's congfiguration options. May include:
+     * @param [options.origin = {x:0, y:0}] - Ray's position.
+     * @param [options.angle = 0] - Ray's angle in radians.
+     * @param [options.angleDeg = 0] - Ray's angle in degrees.
+     * @param [options.cone = 0] - Ray's cone angle in radians.
+     * @param [options.coneDeg = 0] - Ray's cone angle in degrees.
+     * @param [options.range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
+     * @param [options.collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's maximum collision range of ray's field of view.
+     * @param [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
+     * @param [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
+     * @param [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
+     * @param [options.round = false] - If set true, point where ray hit will be rounded.
+     * @param [options.enablePhysics = false] - Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. If set true, arcade physics body will be added.
      * @param [raycaster] - Parent raycaster object.
      */
     class Ray {
-        constructor(options: any, raycaster?: Raycaster);
+        constructor(options?: {
+            origin?: Phaser.Geom.Point | Point;
+            angle?: number;
+            angleDeg?: number;
+            cone?: number;
+            coneDeg?: number;
+            range?: number;
+            collisionRange?: number;
+            detectionRange?: number;
+            ignoreNotIntersectedRays?: boolean;
+            autoSlice?: boolean;
+            round?: boolean;
+            enablePhysics?: boolean | 'arcade' | 'matter';
+        }, raycaster?: Raycaster);
         /**
          * Set ray's angle (direction) in radians.
          * @param [angle = 0] - Ray's angle in radians.
@@ -143,7 +175,7 @@ declare namespace Raycaster {
          */
         cast(options?: {
             objects?: object[];
-            target?: Phaser.Geom.Point;
+            target?: Phaser.Geom.Point | Point;
             internal?: boolean;
         }): Phaser.Geom.Point | boolean;
         /**
@@ -194,7 +226,7 @@ declare namespace Raycaster {
          * @returns {@link Raycaster.Ray Raycaster.Ray} instance
          */
         config(options?: {
-            origin?: Phaser.Geom.Point;
+            origin?: Phaser.Geom.Point | Point;
             angle?: number;
             angleDeg?: number;
             cone?: number;
@@ -518,10 +550,35 @@ declare class Raycaster {
     update(): Raycaster;
     /**
      * Create {@link Raycaster.Ray Raycaster.Ray} object.
-     * @param [options] - Ray options:
+     * @param [options] - Ray's congfiguration options. May include:
+     * @param [options.origin = {x:0, y:0}] - Ray's position.
+     * @param [options.angle = 0] - Ray's angle in radians.
+     * @param [options.angleDeg = 0] - Ray's angle in degrees.
+     * @param [options.cone = 0] - Ray's cone angle in radians.
+     * @param [options.coneDeg = 0] - Ray's cone angle in degrees.
+     * @param [options.range = Phaser.Math.MAX_SAFE_INTEGER] - Ray's range.
+     * @param [options.collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's maximum collision range of ray's field of view.
+     * @param [options.detectionRange = Phaser.Math.MAX_SAFE_INTEGER] - Maximum distance between ray's position and tested objects bounding boxes.
+     * @param [options.ignoreNotIntersectedRays = true] - If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
+     * @param [options.autoSlice = false] - If set true, ray will automatically slice intersections into array of triangles and store it in {@link Raycaster.Ray#slicedIntersections Ray.slicedIntersections}.
+     * @param [options.round = false] - If set true, point where ray hit will be rounded.
+     * @param [options.enablePhysics = false] - Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. If set true, arcade physics body will be added.
      * @returns {@link Raycaster.Ray Raycaster.Ray} instance
      */
-    createRay(options?: any): Raycaster.Ray;
+    createRay(options?: {
+        origin?: Phaser.Geom.Point | Point;
+        angle?: number;
+        angleDeg?: number;
+        cone?: number;
+        coneDeg?: number;
+        range?: number;
+        collisionRange?: number;
+        detectionRange?: number;
+        ignoreNotIntersectedRays?: boolean;
+        autoSlice?: boolean;
+        round?: boolean;
+        enablePhysics?: boolean | 'arcade' | 'matter';
+    }): Raycaster.Ray;
     /**
      * Get raycaster statistics.
      * @returns Raycaster statistics.
@@ -533,3 +590,6 @@ declare class Raycaster {
     destroy(): void;
 }
 
+declare module 'phaser-raycaster' {
+    export = PhaserRaycaster;
+}

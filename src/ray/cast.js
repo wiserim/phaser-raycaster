@@ -8,7 +8,7 @@
  *
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = {Raycaster#mappedObjects}] - Array of game objects to test. If not provided test all mapped game objects.
- * @param {Phaser.Geom.Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
+ * @param {Phaser.Geom.Point|Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
  * @param {boolean} [options.internal = false] - Flag determining if method is used by other casting method.
  *
  * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found. Additionally contains reference to hit mapped object and segment if available.
