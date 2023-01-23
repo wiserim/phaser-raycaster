@@ -1,5 +1,15 @@
 # Change Log
 
+## Version 0.11.0 - TBA
+
+### Updates
+
+* Added `Raycaster.dynamicMappedObjects` to store dynamic maps.
+* Optimized `Raycaster.update` method.
+* Setting `Raycaster.Map.dynamic` now updates `Raycaster.dynamicMappedObjects` and `Ratcaster._stats`.
+
+---
+
 ## Version 0.10.5 - 2022.11.04
 
 ### Features

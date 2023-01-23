@@ -42,12 +42,12 @@ export function Map(options, raycaster) {
     /**
     * If set true, map will be automatically updated on scene update event.
     *
-    * @name Raycaster.Map#dynamic
+    * @name Raycaster.Map_dynamic
     * @type {boolean}
     * @default false
     * @since 0.6.0
     */
-    this.dynamic;
+    this._dynamic = false;
     /**
     * If set true, map will be treated by ray as circle. Set automaticalyy on map update.
     *
@@ -142,7 +142,41 @@ export function Map(options, raycaster) {
 
 Map.prototype = {
     config: require('./config.js').config,
-    destroy: require('./destroy.js').destroy
+    destroy: require('./destroy.js').destroy,
+    get dynamic() {
+        return this._dynamic;
+    },
+    set dynamic(dynamic) {
+        if(this._dynamic == dynamic)
+            return this;
+    
+        if(dynamic) {
+            this._dynamic = true;
+            
+            //add object to raycaster's dynamic objects list
+            if(this._raycaster) {
+                this._raycaster.dynamicMappedObjects.push(this.object);
+    
+                this._raycaster._stats.mappedObjects.dynamic = this._raycaster.dynamicMappedObjects.length;
+                this._raycaster._stats.mappedObjects.static = this._raycaster._stats.mappedObjects.total - this._raycaster._stats.mappedObjects.dynamic;
+            }
+        }
+        else {
+            this._dynamic = false;
+            
+            //remove object from reycasters' dynamic objects list
+            if(this._raycaster) {
+                let index = this._raycaster.dynamicMappedObjects.indexOf(this.object);
+                if(index >= 0)
+                    this._raycaster.dynamicMappedObjects.splice(index, 1);
+    
+                this._raycaster._stats.mappedObjects.dynamic = this._raycaster.dynamicMappedObjects.length;
+                this._raycaster._stats.mappedObjects.static = this._raycaster._stats.mappedObjects.total - this._raycaster._stats.mappedObjects.dynamic;
+            }
+        }
+    
+        return this;
+     }
 };
 
 Map.prototype.constructor = Map;
