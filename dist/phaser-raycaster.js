@@ -2925,6 +2925,7 @@ __webpack_require__.r(__webpack_exports__);
  * @since 0.10.3
  */
 function destroy() {
+  if (this.graphics) this.graphics.destroy();
   for (var key in this) {
     delete this[key];
   }
@@ -4090,7 +4091,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.11.0';
+  this.version = '0.10.6';
   /**
   * Raycaster's scene
   *
@@ -4198,7 +4199,7 @@ function Raycaster(options) {
   *
   * @name Raycaster#dynamicMappedObjects
   * @type {object[]}
-  * @since 0.11.0
+  * @since 0.10.6
   */
   this.dynamicMappedObjects = [];
   /**
@@ -4222,10 +4223,10 @@ function Raycaster(options) {
     this.setOptions(options);
     if (options.autoUpdate === undefined || options.autoUpdate)
       //automatically update event
-      this.scene.events.on('update', this.update.bind(this));
+      this.scene.events.on('update', this.update, this);
   } else
     //automatically update event
-    this.scene.events.on('update', this.update.bind(this));
+    this.scene.events.on('update', this.update, this);
   return this;
 }
 Raycaster.prototype = {
@@ -4625,7 +4626,7 @@ Raycaster.prototype = {
       for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
         var object = _step6.value;
         var map = void 0;
-        if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap');
+        if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else if (object.data) map = object.data.get('raycasterMap');
         if (!map) continue;
 
         //draw bounding box
@@ -4685,6 +4686,10 @@ Raycaster.prototype = {
    */
   destroy: function destroy() {
     this.removeMappedObjects(this.mappedObjects);
+    if (this.graphics) this.graphics.destroy();
+    if (this.scene) {
+      this.scene.events.removeListener('update', null, this);
+    }
     for (var key in this) {
       delete this[key];
     }

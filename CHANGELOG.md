@@ -1,12 +1,19 @@
 # Change Log
 
-## Version 0.11.0 - TBA
+## Version 0.10.6 - TBA
 
 ### Updates
 
 * Added `Raycaster.dynamicMappedObjects` to store dynamic maps.
-* Optimized `Raycaster.update` method.
+* `Raycaster.update` method now traverse through `Raycaster.dynamicMappedObjects` to update maps.
 * Setting `Raycaster.Map.dynamic` now updates `Raycaster.dynamicMappedObjects` and `Ratcaster._stats`.
+
+### Bug fixes
+
+* `Raycaster.drawDebug` method isn't checking if mapped object has defined data property.
+* `Raycaster.destroy` method isn't destroying `Raycaster.graphics` object used for debug.
+* `Raycaster.destroy` method isn't removing scene's `update` event listener.
+* `Ray.destroy` method isn't destroying `Ray.graphics` object used for debug.
 
 ---
 

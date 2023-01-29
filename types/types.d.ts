@@ -74,10 +74,6 @@ declare namespace Raycaster {
          */
         active: boolean;
         /**
-         * If set true, map will be automatically updated on scene update event.
-         */
-        dynamic: boolean;
-        /**
          * If set true, map will be treated by ray as circle. Set automaticalyy on map update.
          */
         circle: boolean;
@@ -115,7 +111,7 @@ declare namespace Raycaster {
         setCollisionTiles(tiles?: any[]): Raycaster.Map;
         /**
          * Set segment count for cirle's map.
-        If set to 0, map won't be generating segments and relay only on tangent points calculated for currently testing ray.
+         * If set to 0, map won't be generating segments and relay only on tangent points calculated for currently testing ray.
          * @param count - Circle map's segment count.
          * @returns {@link Raycaster.Map Raycaster.Map} instance
          */
@@ -251,60 +247,60 @@ declare namespace Raycaster {
         enablePhysics(type?: 'arcade' | 'matter'): Raycaster.Ray;
         /**
          * Sets the collision category of this ray's Matter Body. This number must be a power of two between 2^0 (= 1) and 2^31.
-        Two bodies with different collision groups (see {@link #setCollisionGroup}) will only collide if their collision
-        categories are included in their collision masks (see {@link #setCollidesWith}).
+         * Two bodies with different collision groups (see {@link #setCollisionGroup}) will only collide if their collision
+         * categories are included in their collision masks (see {@link #setCollidesWith}).
          * @param value - Unique category bitfield.
          * @returns {@link Raycaster.Ray Raycaster.Ray} instance
          */
         setCollisionCategory(value: number): Raycaster.Ray;
         /**
          * Sets the collision category of this ray's Matter Body. This number must be a power of two between 2^0 (= 1) and 2^31.
-        Two bodies with different collision groups (see {@link #setCollisionGroup}) will only collide if their collision
-        categories are included in their collision masks (see {@link #setCollidesWith}).
+         * Two bodies with different collision groups (see {@link #setCollisionGroup}) will only collide if their collision
+         * categories are included in their collision masks (see {@link #setCollidesWith}).
          * @param value - Unique category bitfield.
          * @returns {@link Raycaster.Ray Raycaster.Ray} instance
          */
         setCollisionCategory(value: number): Raycaster.Ray;
         /**
          * Sets the collision mask for this ray's Matter Body. Two Matter Bodies with different collision groups will only
-        collide if each one includes the other's category in its mask based on a bitwise AND, i.e. `(categoryA & maskB) !== 0`
-        and `(categoryB & maskA) !== 0` are both true.*
+         * collide if each one includes the other's category in its mask based on a bitwise AND, i.e. `(categoryA & maskB) !== 0`
+         * and `(categoryB & maskA) !== 0` are both true.*
          * @param categories - A unique category bitfield, or an array of them.
          * @returns {@link Raycaster.Ray Raycaster.Ray} instance
          */
         setCollidesWith(categories: number | number[]): Raycaster.Ray;
         /**
          * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-        
-        This does not change the bodies collision category, group or filter. Those must be set in addition
-        to the callback.
+         *
+         * This does not change the bodies collision category, group or filter. Those must be set in addition
+         * to the callback.
          * @param callback - The callback to invoke when this body starts colliding with another.
          * @returns {@link Raycaster.Ray Raycaster.Ray} instance
          */
         setOnCollide(callback: (...params: any[]) => any): Raycaster.Ray;
         /**
          * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-        
-        This does not change the bodies collision category, group or filter. Those must be set in addition
-        to the callback.
+         *
+         * This does not change the bodies collision category, group or filter. Those must be set in addition
+         * to the callback.
          * @param callback - The callback to invoke when this body stops colliding with another.
          * @returns {@link Raycaster.Ray Raycaster.Ray} instance
          */
         setOnCollideEnd(callback: (...params: any[]) => any): Raycaster.Ray;
         /**
          * The callback is sent a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-        
-        This does not change the bodies collision category, group or filter. Those must be set in addition
-        to the callback.
+         *
+         * This does not change the bodies collision category, group or filter. Those must be set in addition
+         * to the callback.
          * @param callback - The callback to invoke for the duration of this body colliding with another.
          * @returns {@link Raycaster.Ray Raycaster.Ray} instance
          */
         setOnCollideActive(callback: (...params: any[]) => any): Raycaster.Ray;
         /**
          * The callback is sent a reference to the other body, along with a `Phaser.Types.Physics.Matter.MatterCollisionData` object.
-        
-        This does not change the bodies collision category, group or filter. Those must be set in addition
-        to the callback.
+         *
+         * This does not change the bodies collision category, group or filter. Those must be set in addition
+         * to the callback.
          * @param body - The body, or an array of bodies, to test for collisions with.
          * @param callback - The callback to invoke when this body collides with the given body or bodies.
          * @returns {@link Raycaster.Ray Raycaster.Ray} instance
@@ -338,14 +334,14 @@ declare namespace Raycaster {
         setRayRange(rayRange?: number): Raycaster.Ray;
         /**
          * Set ray's maximum detection range. Objects outside detection range won't be tested.
-        Ray tests all objects when set to 0.
+         * Ray tests all objects when set to 0.
          * @param [detectionRange = 0] - Maximum distance between ray's position and tested objects bounding boxes.
          * @returns {@link Raycaster.Ray Raycaster.Ray} instance
          */
         setDetectionRange(detectionRange?: number): Raycaster.Ray;
         /**
          * Set ray's field of view maximum collision range. Objects outside collision range won't be tested by {@link Raycaster.Ray#overlap Raycaster.Ray.overlap} method.
-        Determines ray's physics body radius.
+         * Determines ray's physics body radius.
          * @param [collisionRange = Phaser.Math.MAX_SAFE_INTEGER] - Ray's collision range and physics body radius.
          * @returns {@link Raycaster.Ray Raycaster.Ray} instance
          */
@@ -375,7 +371,7 @@ declare namespace Raycaster {
         rayRange: number;
         /**
          * Ray's maximum detection range. Objects outside detection range won't be tested.
-        Ray tests all objects when set to 0.
+         * Ray tests all objects when set to 0.
          */
         detectionRange: number;
         /**
@@ -458,6 +454,10 @@ declare class Raycaster {
         debug?: boolean | any;
     });
     /**
+     * If set true, map will be automatically updated on scene update event.
+     */
+    static Map_dynamic: boolean;
+    /**
      * Plugin version.
      */
     readonly version: string;
@@ -487,6 +487,10 @@ declare class Raycaster {
      * Array of mapped game objects.
      */
     mappedObjects: object[];
+    /**
+     * Array of dynamic mapped game objects.
+     */
+    dynamicMappedObjects: object[];
     /**
      * Number of segments of circle maps.
      */
