@@ -34,7 +34,7 @@ npm install phaser-raycaster
 ### 1. Include plugin in your project:
 ```html
 <!--CDN-->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.10.5/dist/phaser-raycaster.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.10.6/dist/phaser-raycaster.min.js"></script>
 ```
 ```
 # NPM
@@ -255,7 +255,21 @@ this.ray.setOnCollide(function(collisionInfo){
   }
 });
 ```
-### 10. Statistics
+
+### 10. Destroy objects
+```javascript
+//remove mapped objects
+this.raycaster.removeMappedObjects(object);
+this.raycaster.removeMappedObjects(arrayOfObjects);
+
+//destroy ray
+this.ray.destroy();
+
+//destroy raycaster
+this.raycaster.destroy();
+```
+
+### 11. Statistics
 ```javascript
 //get raycaster statistics
 let statistics = this.raycaster.getStats();
@@ -290,7 +304,7 @@ let rayStatistics = this.ray.getStats();
 */
 ```
 
-### 11. Debug mode
+### 12. Debug mode
 ```javascript
   //enable debug mode
   this.raycaster = this.raycasterPlugin.createRaycaster({

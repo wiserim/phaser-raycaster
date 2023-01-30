@@ -1,6 +1,6 @@
 /**
 * @author       Marcin Walczak <contact@marcin-walczak.pl>
-* @copyright    2022 Marcin Walczak
+* @copyright    2023 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 
@@ -31,7 +31,7 @@ export function Raycaster(options) {
     * @readonly
     * @since 0.6.0
     */
-    this.version = '0.10.5';
+    this.version = '0.10.6';
     /**
     * Raycaster's scene
     *
@@ -134,7 +134,14 @@ export function Raycaster(options) {
     * @since 0.6.0
     */
     this.mappedObjects = [];
-    this.sortedPoints = [];
+    /**
+    * Array of dynamic mapped game objects.
+    *
+    * @name Raycaster#dynamicMappedObjects
+    * @type {object[]}
+    * @since 0.10.6
+    */
+     this.dynamicMappedObjects = [];
     /**
     * Number of segments of circle maps.
     *
@@ -167,11 +174,11 @@ export function Raycaster(options) {
 
         if(options.autoUpdate === undefined || options.autoUpdate)
             //automatically update event
-            this.scene.events.on('update', this.update.bind(this));
+            this.scene.events.on('update', this.update, this);
     }
     else
         //automatically update event
-        this.scene.events.on('update', this.update.bind(this));
+        this.scene.events.on('update', this.update, this);
 
     return this;
 }
@@ -315,12 +322,7 @@ Raycaster.prototype = {
 
             this.mappedObjects.push(object);
 
-            //update stats
-            if(object.dynamic)
-                this._stats.mappedObjects.dynamic++;
-            else
-                this._stats.mappedObjects.static++;
-            
+            //update stats            
             switch(object.type) {
                 case 'Polygon':
                     this._stats.mappedObjects.polygonMaps++;
@@ -352,6 +354,7 @@ Raycaster.prototype = {
         }
 
         this._stats.mappedObjects.total = this.mappedObjects.length;
+        this._stats.mappedObjects.static = this._stats.mappedObjects.total - this.dynamicMappedObjects.length;
 
         return this;
     },
@@ -373,21 +376,21 @@ Raycaster.prototype = {
             objects = [objects];
 
         for(let object of objects) {
+            //remove object from mapped objects list
             let index = this.mappedObjects.indexOf(object);
             if(index >= 0)
                 this.mappedObjects.splice(index, 1);
+            //remove object from dynamic mapped objects list
+            index = this.dynamicMappedObjects.indexOf(object);
+            if(index >= 0)
+                this.dynamicMappedObjects.splice(index, 1);
             
             if(object.type === 'body' || object.type === 'composite')
                 object.raycasterMap.destroy();
             else
                 object.data.get('raycasterMap').destroy();
             
-            //update stats
-            if(object.dynamic)
-                this._stats.mappedObjects.dynamic--;
-            else
-                this._stats.mappedObjects.static--;
-            
+            //update stats            
             switch(object.type) {
                 case 'Polygon':
                     this._stats.mappedObjects.polygonMaps--;
@@ -419,6 +422,8 @@ Raycaster.prototype = {
         }
 
         this._stats.mappedObjects.total = this.mappedObjects.length;
+        this._stats.mappedObjects.dynamic = this.dynamicMappedObjects.length;
+        this._stats.mappedObjects.static = this._stats.mappedObjects.total - this.dynamicMappedObjects.length;
 
         return this;
     },
@@ -501,9 +506,8 @@ Raycaster.prototype = {
     */
     update: function() {
         //update dynamic maps
-        let dynamicMaps = 0;
-        if(this.mappedObjects.length > 0) {
-            for(let mapppedObject of this.mappedObjects) {
+        if(this.dynamicMappedObjects.length > 0) {
+            for(let mapppedObject of this.dynamicMappedObjects) {
                 let map;
 
                 if(mapppedObject.type === 'body' || mapppedObject.type === 'composite') {
@@ -516,20 +520,15 @@ Raycaster.prototype = {
                 if(!map)
                     continue;
 
-                if(map.dynamic) {
+                if(map.active) {
                     map.updateMap();
-                    dynamicMaps++;
                 }
             }
-
-            //update stats
-            this._stats.mappedObjects.static = this.mappedObjects.length - dynamicMaps;
-            this._stats.mappedObjects.dynamic = dynamicMaps;
-
-            //debug
-            if(this.debugOptions.enabled)
-                this.drawDebug();
         }
+
+        //debug
+        if(this.debugOptions.enabled)
+            this.drawDebug();
 
         return this;
     },
@@ -595,14 +594,14 @@ Raycaster.prototype = {
 
         if(!this.debugOptions.maps)
             return this;
-
+            
         for(let object of this.mappedObjects)
         {
             let map;
         
             if(object.type === 'body' || object.type === 'composite')
                 map = object.raycasterMap;
-            else
+            else if(object.data)
                 map = object.data.get('raycasterMap');
             
             if(!map)
@@ -644,6 +643,13 @@ Raycaster.prototype = {
      */
     destroy: function() {
         this.removeMappedObjects(this.mappedObjects);
+        
+        if(this.graphics)
+            this.graphics.destroy();
+        
+        if(this.scene) {
+            this.scene.events.removeListener('update', null, this);
+        }
 
         for(let key in this) {
             delete this[key];
