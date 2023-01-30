@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 0.10.6 - TBA
+## Version 0.10.6 - 2023.01.30
 
 ### Updates
 
