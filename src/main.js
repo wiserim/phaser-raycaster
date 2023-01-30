@@ -1,6 +1,6 @@
 /**
 * @author       Marcin Walczak <contact@marcin-walczak.pl>
-* @copyright    2022 Marcin Walczak
+* @copyright    2023 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 
