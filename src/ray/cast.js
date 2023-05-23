@@ -64,7 +64,7 @@ export function cast(options = {}) {
     }
     
     for(let object of options.objects) {
-        let map, boundingBox;
+        let map, boundingBox, boundingBoxIntersections = [], canTestMap = false;
         
         if(object.type === 'body' || object.type === 'composite')
             map = object.raycasterMap;
@@ -83,7 +83,18 @@ export function cast(options = {}) {
         }
 
         //check if object is intersected by ray
-        if(Phaser.Geom.Intersects.GetLineToRectangle(this._ray, boundingBox).length === 0)
+        if(Phaser.Geom.Intersects.GetLineToRectangle(this._ray, boundingBox, boundingBoxIntersections).length === 0)
+            continue;
+
+        //check if bounding box is closer than closest intersection
+        for(let boundingBoxIntersection of boundingBoxIntersections) {
+            if(Phaser.Math.Distance.Between(this.origin.x, this.origin.y, boundingBoxIntersection.x, boundingBoxIntersection.y) < closestDistance) {
+                canTestMap = true;
+                break;
+            }
+        }
+
+        if(!canTestMap)
             continue;
 
         stats.hitMappedObjects++;

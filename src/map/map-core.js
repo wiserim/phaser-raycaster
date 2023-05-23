@@ -6,7 +6,7 @@
  * @namespace Raycaster.Map
  * @class Raycaster.Map
  * @constructor
- * @since 6.0.0
+ * @since 0.6.0
  *
  * @param {object} options - Map specific configuration settings.
  * @param {Raycaster} [raycaster] - Parent raycaster object.

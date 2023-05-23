@@ -1,5 +1,17 @@
 # Change Log
 
+## Version 0.10.7
+
+### Updates
+
+* `Ray.cast` method now won't test mapped object if current closest intersection is closer to ray than it's bounding box.
+
+### Bug fixes
+
+* Fixed docs typos
+
+---
+
 ## Version 0.10.6 - 2023.01.30
 
 ### Updates

@@ -20,7 +20,7 @@
  * @class PhaserRaycaster
  * @extends Phaser.Plugins.ScenePlugin
  * @constructor
- * @since 6.0.0
+ * @since 0.6.0
  *
  * @param {Phaser.Scene} scene
  * @param {Phaser.Plugins.PluginManager} pluginManager
