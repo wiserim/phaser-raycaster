@@ -32,7 +32,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 /**
 * @author       Marcin Walczak <contact@marcin-walczak.pl>
-* @copyright    2022 Marcin Walczak
+* @copyright    2023 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 /**
@@ -50,7 +50,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
  * @class PhaserRaycaster
  * @extends Phaser.Plugins.ScenePlugin
  * @constructor
- * @since 6.0.0
+ * @since 0.6.0
  *
  * @param {Phaser.Scene} scene
  * @param {Phaser.Plugins.PluginManager} pluginManager
@@ -106,7 +106,7 @@ module.exports = PhaserRaycaster;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getBoundingBox": function() { return /* binding */ getBoundingBox; }
+/* harmony export */   getBoundingBox: function() { return /* binding */ getBoundingBox; }
 /* harmony export */ });
 /**
 * Get mapped object's bounding box.
@@ -134,7 +134,7 @@ function getBoundingBox() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "config": function() { return /* binding */ config; }
+/* harmony export */   config: function() { return /* binding */ config; }
 /* harmony export */ });
 var rectangle = __webpack_require__(/*! ./map-rectangle-methods.js */ "./src/map/map-rectangle-methods.js");
 var line = __webpack_require__(/*! ./map-line-methods.js */ "./src/map/map-line-methods.js");
@@ -284,7 +284,7 @@ function config(options) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "destroy": function() { return /* binding */ destroy; }
+/* harmony export */   destroy: function() { return /* binding */ destroy; }
 /* harmony export */ });
 /**
  * Destroy object
@@ -297,7 +297,7 @@ __webpack_require__.r(__webpack_exports__);
 function destroy() {
   //destroy reference to map object in mapped object
   if (this.object.type === 'body' || this.object.type === 'composite') {
-    delete object.raycasterMap;
+    delete this.object.raycasterMap;
   } else if (this.object.data) {
     this.object.data.remove('raycasterMap');
   }
@@ -317,9 +317,9 @@ function destroy() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -483,10 +483,10 @@ function updateMap() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "_updateChildMap": function() { return /* binding */ _updateChildMap; },
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   _updateChildMap: function() { return /* binding */ _updateChildMap; },
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -797,7 +797,7 @@ function _updateChildMap(child, points, segments, rotation, offset) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Map": function() { return /* binding */ Map; }
+/* harmony export */   Map: function() { return /* binding */ Map; }
 /* harmony export */ });
 /**
  * @classdesc
@@ -807,7 +807,7 @@ __webpack_require__.r(__webpack_exports__);
  * @namespace Raycaster.Map
  * @class Raycaster.Map
  * @constructor
- * @since 6.0.0
+ * @since 0.6.0
  *
  * @param {object} options - Map specific configuration settings.
  * @param {Raycaster} [raycaster] - Parent raycaster object.
@@ -982,9 +982,9 @@ Map.prototype.constructor = Map;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 /*Map methods for lines*/
 /**
@@ -1088,10 +1088,10 @@ function updateMap() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getBoundingBox": function() { return /* binding */ getBoundingBox; },
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getBoundingBox: function() { return /* binding */ getBoundingBox; },
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -1295,9 +1295,9 @@ function getBoundingBox() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -1421,9 +1421,9 @@ function updateMap() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 /*Map methods for rectangles*/
 /**
@@ -1503,10 +1503,10 @@ function updateMap() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "setCollisionTiles": function() { return /* binding */ setCollisionTiles; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   setCollisionTiles: function() { return /* binding */ setCollisionTiles; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -1848,7 +1848,7 @@ function setCollisionTiles() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setSegmentCount": function() { return /* binding */ setSegmentCount; }
+/* harmony export */   setSegmentCount: function() { return /* binding */ setSegmentCount; }
 /* harmony export */ });
 /**
  * Set segment count for cirle's map.
@@ -1881,8 +1881,8 @@ function setSegmentCount(count) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setAngle": function() { return /* binding */ setAngle; },
-/* harmony export */   "setAngleDeg": function() { return /* binding */ setAngleDeg; }
+/* harmony export */   setAngle: function() { return /* binding */ setAngle; },
+/* harmony export */   setAngleDeg: function() { return /* binding */ setAngleDeg; }
 /* harmony export */ });
 /**
  * Set ray's angle (direction) in radians.
@@ -1933,7 +1933,7 @@ function setAngleDeg() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "cast": function() { return /* binding */ cast; }
+/* harmony export */   cast: function() { return /* binding */ cast; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2013,7 +2013,9 @@ function cast() {
     for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var object = _step2.value;
       var map = void 0,
-        boundingBox = void 0;
+        boundingBox = void 0,
+        boundingBoxIntersections = [],
+        canTestMap = false;
       if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap');
       stats.testedMappedObjects++;
 
@@ -2026,7 +2028,17 @@ function cast() {
       }
 
       //check if object is intersected by ray
-      if (Phaser.Geom.Intersects.GetLineToRectangle(this._ray, boundingBox).length === 0) continue;
+      if (Phaser.Geom.Intersects.GetLineToRectangle(this._ray, boundingBox, boundingBoxIntersections).length === 0) continue;
+
+      //check if bounding box is closer than closest intersection
+      for (var _i = 0, _boundingBoxIntersect = boundingBoxIntersections; _i < _boundingBoxIntersect.length; _i++) {
+        var boundingBoxIntersection = _boundingBoxIntersect[_i];
+        if (Phaser.Math.Distance.Between(this.origin.x, this.origin.y, boundingBoxIntersection.x, boundingBoxIntersection.y) < closestDistance) {
+          canTestMap = true;
+          break;
+        }
+      }
+      if (!canTestMap) continue;
       stats.hitMappedObjects++;
       stats.segments += map.getSegments(this).length;
 
@@ -2243,7 +2255,7 @@ function cast() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "castCircle": function() { return /* binding */ castCircle; }
+/* harmony export */   castCircle: function() { return /* binding */ castCircle; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2452,7 +2464,7 @@ function castCircle() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "castCone": function() { return /* binding */ castCone; }
+/* harmony export */   castCone: function() { return /* binding */ castCone; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2700,8 +2712,8 @@ function castCone() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setCone": function() { return /* binding */ setCone; },
-/* harmony export */   "setConeDeg": function() { return /* binding */ setConeDeg; }
+/* harmony export */   setCone: function() { return /* binding */ setCone; },
+/* harmony export */   setConeDeg: function() { return /* binding */ setConeDeg; }
 /* harmony export */ });
 /**
  * Set ray's cone angle (width) in radians.
@@ -2750,7 +2762,7 @@ function setConeDeg() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "config": function() { return /* binding */ config; }
+/* harmony export */   config: function() { return /* binding */ config; }
 /* harmony export */ });
 /**
  * Configure ray.
@@ -2841,7 +2853,7 @@ function config(options) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "drawDebug": function() { return /* binding */ drawDebug; }
+/* harmony export */   drawDebug: function() { return /* binding */ drawDebug; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2852,7 +2864,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @method Raycaster.Ray#drawDebug
  * @memberof Raycaster
  * @private
- * @since 0.10
+ * @since 0.10.0
  * 
  * @param {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
  * 
@@ -2914,7 +2926,7 @@ function drawDebug(intersections) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "destroy": function() { return /* binding */ destroy; }
+/* harmony export */   destroy: function() { return /* binding */ destroy; }
 /* harmony export */ });
 /**
  * Destroy object
@@ -2942,7 +2954,7 @@ function destroy() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "enablePhysics": function() { return /* binding */ enablePhysics; }
+/* harmony export */   enablePhysics: function() { return /* binding */ enablePhysics; }
 /* harmony export */ });
 /**
  * Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. Physics body can be added only once.
@@ -3011,13 +3023,13 @@ function enablePhysics() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setCollidesWith": function() { return /* binding */ setCollidesWith; },
-/* harmony export */   "setCollisionCategory": function() { return /* binding */ setCollisionCategory; },
-/* harmony export */   "setCollisionGroup": function() { return /* binding */ setCollisionGroup; },
-/* harmony export */   "setOnCollide": function() { return /* binding */ setOnCollide; },
-/* harmony export */   "setOnCollideActive": function() { return /* binding */ setOnCollideActive; },
-/* harmony export */   "setOnCollideEnd": function() { return /* binding */ setOnCollideEnd; },
-/* harmony export */   "setOnCollideWith": function() { return /* binding */ setOnCollideWith; }
+/* harmony export */   setCollidesWith: function() { return /* binding */ setCollidesWith; },
+/* harmony export */   setCollisionCategory: function() { return /* binding */ setCollisionCategory; },
+/* harmony export */   setCollisionGroup: function() { return /* binding */ setCollisionGroup; },
+/* harmony export */   setOnCollide: function() { return /* binding */ setOnCollide; },
+/* harmony export */   setOnCollideActive: function() { return /* binding */ setOnCollideActive; },
+/* harmony export */   setOnCollideEnd: function() { return /* binding */ setOnCollideEnd; },
+/* harmony export */   setOnCollideWith: function() { return /* binding */ setOnCollideWith; }
 /* harmony export */ });
 /*Matter physics methods for ray body*/
 /**
@@ -3233,7 +3245,7 @@ function setOnCollideWith(body, callback) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setOrigin": function() { return /* binding */ setOrigin; }
+/* harmony export */   setOrigin: function() { return /* binding */ setOrigin; }
 /* harmony export */ });
 /**
  * Set ray's source position.
@@ -3273,10 +3285,10 @@ function setOrigin(x, y) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "overlap": function() { return /* binding */ overlap; },
-/* harmony export */   "processOverlap": function() { return /* binding */ processOverlap; },
-/* harmony export */   "testArcadeOverlap": function() { return /* binding */ testArcadeOverlap; },
-/* harmony export */   "testMatterOverlap": function() { return /* binding */ testMatterOverlap; }
+/* harmony export */   overlap: function() { return /* binding */ overlap; },
+/* harmony export */   processOverlap: function() { return /* binding */ processOverlap; },
+/* harmony export */   testArcadeOverlap: function() { return /* binding */ testArcadeOverlap; },
+/* harmony export */   testMatterOverlap: function() { return /* binding */ testMatterOverlap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -3557,10 +3569,10 @@ function testMatterOverlap(object) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "boundsInRange": function() { return /* binding */ boundsInRange; },
-/* harmony export */   "setCollisionRange": function() { return /* binding */ setCollisionRange; },
-/* harmony export */   "setDetectionRange": function() { return /* binding */ setDetectionRange; },
-/* harmony export */   "setRayRange": function() { return /* binding */ setRayRange; }
+/* harmony export */   boundsInRange: function() { return /* binding */ boundsInRange; },
+/* harmony export */   setCollisionRange: function() { return /* binding */ setCollisionRange; },
+/* harmony export */   setDetectionRange: function() { return /* binding */ setDetectionRange; },
+/* harmony export */   setRayRange: function() { return /* binding */ setRayRange; }
 /* harmony export */ });
 /**
  * Set ray's range.
@@ -3687,7 +3699,7 @@ function boundsInRange(object) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Ray": function() { return /* binding */ Ray; }
+/* harmony export */   Ray: function() { return /* binding */ Ray; }
 /* harmony export */ });
 /**
  * @classdesc
@@ -3697,7 +3709,7 @@ __webpack_require__.r(__webpack_exports__);
  * @namespace Raycaster.Ray
  * @class Raycaster.Ray
  * @constructor
- * @since 6.0.0
+ * @since 0.6.0
  *
  * @param {object} [options] - Ray's congfiguration options. May include:
  * @param {Phaser.Geom.Point|Point} [options.origin = {x:0, y:0}] - Ray's position.
@@ -3941,7 +3953,7 @@ Ray.prototype = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setRay": function() { return /* binding */ setRay; }
+/* harmony export */   setRay: function() { return /* binding */ setRay; }
 /* harmony export */ });
 /**
  * Set ray's position, direction (angle) and range.
@@ -3979,7 +3991,7 @@ function setRay(x, y, angle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "slice": function() { return /* binding */ slice; }
+/* harmony export */   slice: function() { return /* binding */ slice; }
 /* harmony export */ });
 /**
  * Slice ray's field of view represented by polygon or array of points into array of triangles.
@@ -4021,7 +4033,7 @@ function slice() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getStats": function() { return /* binding */ getStats; }
+/* harmony export */   getStats: function() { return /* binding */ getStats; }
 /* harmony export */ });
 /**
  * Get ray statistics for last casting. Stats include
@@ -4052,7 +4064,7 @@ function getStats() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Raycaster": function() { return /* binding */ Raycaster; }
+/* harmony export */   Raycaster: function() { return /* binding */ Raycaster; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -4072,7 +4084,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  * @namespace Raycaster
  * @class Raycaster
  * @constructor
- * @since 6.0.0
+ * @since 0.6.0
  *
  * @param {object} [options] - Raycaster's configuration options. May include:
  * @param {Phaser.Scene} [options.scene] - Scene in which Raycaster will be used.
@@ -4091,7 +4103,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.10.6';
+  this.version = '0.10.7';
   /**
   * Raycaster's scene
   *
@@ -4409,11 +4421,19 @@ Raycaster.prototype = {
         var object = _step2.value;
         //remove object from mapped objects list
         var index = this.mappedObjects.indexOf(object);
-        if (index >= 0) this.mappedObjects.splice(index, 1);
+        if (index === -1) {
+          continue;
+        }
+        this.mappedObjects.splice(index, 1);
+
         //remove object from dynamic mapped objects list
         index = this.dynamicMappedObjects.indexOf(object);
         if (index >= 0) this.dynamicMappedObjects.splice(index, 1);
-        if (object.type === 'body' || object.type === 'composite') object.raycasterMap.destroy();else object.data.get('raycasterMap').destroy();
+        if (object.type === 'body' || object.type === 'composite') {
+          object.raycasterMap.destroy();
+        } else {
+          object.data.get('raycasterMap').destroy();
+        }
 
         //update stats            
         switch (object.type) {

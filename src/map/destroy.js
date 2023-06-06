@@ -9,7 +9,7 @@
  export function destroy() {
     //destroy reference to map object in mapped object
     if(this.object.type === 'body' || this.object.type === 'composite') {
-        delete object.raycasterMap;
+        delete this.object.raycasterMap;
     }
     else if(this.object.data) {
         this.object.data.remove('raycasterMap');

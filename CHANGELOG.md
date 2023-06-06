@@ -8,6 +8,8 @@
 
 ### Bug fixes
 
+* `Raycaster.removeMappedObjects` method isn't checking if passed objects are mapped.
+* `Map.destroy` method doesn't work properly for Arcade and Matter bodies (fixed by @dreasgrech). 
 * Fixed docs typos
 
 ---

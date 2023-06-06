@@ -378,17 +378,23 @@ Raycaster.prototype = {
         for(let object of objects) {
             //remove object from mapped objects list
             let index = this.mappedObjects.indexOf(object);
-            if(index >= 0)
-                this.mappedObjects.splice(index, 1);
+            if(index === -1) {
+                continue;
+            }
+            
+            this.mappedObjects.splice(index, 1);
+            
             //remove object from dynamic mapped objects list
             index = this.dynamicMappedObjects.indexOf(object);
             if(index >= 0)
                 this.dynamicMappedObjects.splice(index, 1);
             
-            if(object.type === 'body' || object.type === 'composite')
+            if(object.type === 'body' || object.type === 'composite') {
                 object.raycasterMap.destroy();
-            else
+            }
+            else {
                 object.data.get('raycasterMap').destroy();
+            }
             
             //update stats            
             switch(object.type) {
