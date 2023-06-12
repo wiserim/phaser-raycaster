@@ -1484,8 +1484,21 @@ function updateMap() {
 
   //set segments
   for (var i = 0, length = points.length; i < length; i++) {
-    if (i + 1 < length) segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y));else segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
+    var prevPoint = i > 0 ? points[i - 1] : points.slice(-1),
+      nextPoint = i < length - 1 ? points[i + 1] : points[0];
+    segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+    points[i].intersection = new Phaser.Geom.Line(prevPoint.x, prevPoint.y, nextPoint.x, nextPoint.y);
+
+    /*
+    if(i+1 < length) {
+        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i+1].x, points[i+1].y));
+    }
+    else {
+        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
+    }
+    */
   }
+
   this._points = points;
   this._segments = segments;
   return this;
@@ -2368,10 +2381,12 @@ function castCircle() {
               var segmentB = _step4.value;
               var intersection = [];
               if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
-              rayTargets.push({
+              var target = {
                 point: new Phaser.Geom.Point(intersection.x, intersection.y),
                 angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y)
-              });
+              };
+              target.point.intersection = false;
+              rayTargets.push(target);
             }
           } catch (err) {
             _iterator4.e(err);
@@ -2401,29 +2416,34 @@ function castCircle() {
 
   //cast rays
   for (var _i = 0, _rayTargets = rayTargets; _i < _rayTargets.length; _i++) {
-    var target = _rayTargets[_i];
+    var _target = _rayTargets[_i];
     //if current target is the same as previous one skip loop
-    if (target.angle === previousTarget.angle) {
+    if (_target.angle === previousTarget.angle) {
       continue;
     }
-    previousTarget = target;
-    this.setAngle(target.angle);
+    previousTarget = _target;
+    this.setAngle(_target.angle);
     var _intersection = this.cast({
       objects: testedObjects,
-      target: target.point,
+      target: _target.point,
       internal: true
     });
     if (_intersection) {
       //if intersection hits target point cast two additional rays
       var castSides = false;
       if (this.round) {
-        var roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
+        var roundedTarget = new Phaser.Geom.Point(Math.round(_target.point.x), Math.round(_target.point.y));
         castSides = Phaser.Geom.Point.Equals(roundedTarget, _intersection);
       } else {
-        castSides = Phaser.Geom.Point.Equals(target.point, _intersection);
+        castSides = Phaser.Geom.Point.Equals(_target.point, _intersection);
+      }
+
+      //tmp
+      if (castSides) {
+        if (_target.point.intersection === false) castSides = false;else if (_target.point.intersection && Phaser.Geom.Intersects.LineToLine(this._ray, _target.point.intersection)) castSides = false;
       }
       if (castSides) {
-        this.setAngle(target.angle - 0.0001);
+        this.setAngle(_target.angle - 0.0001);
         var intersectionA = this.cast({
           objects: testedObjects,
           internal: true
@@ -2432,7 +2452,7 @@ function castCircle() {
           intersections.push(intersectionA);
         }
         intersections.push(_intersection);
-        this.setAngle(target.angle + 0.0001);
+        this.setAngle(_target.angle + 0.0001);
         var intersectionB = this.cast({
           objects: testedObjects,
           internal: true

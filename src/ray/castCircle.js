@@ -95,10 +95,12 @@ export function castCircle(options = {}) {
                     if(!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection))
                         continue;
                     
-                    rayTargets.push({
+                    let target = {
                         point: new Phaser.Geom.Point(intersection.x, intersection.y),
                         angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y)
-                    });
+                    };
+                    target.point.intersection = false;
+                    rayTargets.push(target);
                 }
             }
         }
@@ -146,6 +148,14 @@ export function castCircle(options = {}) {
             }
             else {
                 castSides = Phaser.Geom.Point.Equals(target.point, intersection);
+            }
+
+            //tmp
+            if(castSides) {
+                if(target.point.intersection === false)
+                    castSides = false;
+                else if(target.point.intersection && Phaser.Geom.Intersects.LineToLine(this._ray, target.point.intersection))
+                    castSides = false;
             }
             
             if(castSides) {

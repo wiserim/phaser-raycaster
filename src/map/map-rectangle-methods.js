@@ -63,10 +63,21 @@ export function updateMap() {
 
     //set segments
     for(let i = 0, length = points.length; i < length; i++) {
-        if(i+1 < length)
-        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i+1].x, points[i+1].y));
-        else
-        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
+        let prevPoint = i > 0 ? points[i - 1] : points.slice(-1),
+            nextPoint = i < length - 1 ? points[i + 1] : points[0];
+
+        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+        points[i].intersection = new Phaser.Geom.Line(prevPoint.x, prevPoint.y, nextPoint.x, nextPoint.y);
+
+
+        /*
+        if(i+1 < length) {
+            segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i+1].x, points[i+1].y));
+        }
+        else {
+            segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
+        }
+        */
     }
 
     this._points = points;
