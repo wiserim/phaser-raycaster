@@ -51,9 +51,12 @@ export function getPoints(ray = false) {
         Phaser.Geom.Line.SetToAngle(rayA, ray.origin.x, ray.origin.y, angle - dAngle, rayLength);
         Phaser.Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
 
-        //adding tangent points
+        //add tangent points
         points.push(rayA.getPointB());
         points.push(rayB.getPointB());
+        //assign neighbours
+        points[0].neighbours = [points[1]];
+        points[1].neighbours = [points[0]];
     }
 
     return points;
@@ -91,7 +94,7 @@ export function getSegments() {
 export function updateMap() {
     if(!this.active)
         return this;
-
+    
     if(!this.segmentCount) {
         this._points = [];
         this._segments = [];
@@ -129,10 +132,15 @@ export function updateMap() {
 
     //set segments
     for(let i = 0, length = points.length; i < length; i++) {
-        if(i+1 < length)
-        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i+1].x, points[i+1].y));
-        else
-        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
+        let prevPoint = i > 0 ? points[i - 1] : points.slice(-1)[0],
+            nextPoint = i < length - 1 ? points[i + 1] : points[0];
+
+        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+        
+        points[i].neighbours = [
+            prevPoint,
+            nextPoint
+        ];
     }
 
     this._points = points;

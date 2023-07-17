@@ -183,8 +183,9 @@ export function castCone(options = {}) {
             target: target.point,
             internal: true
         });
-        if(intersection){
-            //if intersection hits target point cast two additional rays
+
+        if(intersection) {
+            //if intersection hits target point check if ray "glanced" mapped object.
             let castSides = false;
             if(this.round) {
                 let roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
@@ -193,6 +194,34 @@ export function castCone(options = {}) {
             else {
                 castSides = Phaser.Geom.Point.Equals(target.point, intersection);
             }
+            
+            if(!castSides) {
+                //castSides = false;
+            }
+            else if(!target.point.neighbours || target.point.neighbours.length < 2) {
+                //castSides = true;
+            }
+            //check if ray and at least one line between target point and it's neighbours are parallel
+            else if(Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, target.point.neighbours[0])) < 0.0001
+                || Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, target.point.neighbours[1])) < 0.0001) {
+                //castSides = true;
+            }
+            //check if ray crossed more than 1 points of triangle created by tatget point and it's neighbours
+            else {
+                let triangleIntersections = [];
+                let triangle = new Phaser.Geom.Triangle(target.point.x, target.point.y, target.point.neighbours[0].x, target.point.neighbours[0].y, target.point.neighbours[1].x, target.point.neighbours[1].y);
+                Phaser.Geom.Intersects.GetTriangleToLine(triangle, this._ray, triangleIntersections);
+                
+                //if point of intersection of ray and tirangle are close to arget point, assume ray "glanced" triangle.
+                for(let triangleIntersection of triangleIntersections) {
+                    if(Math.abs(target.point.x - triangleIntersection.x) > 0.0001 && Math.abs(target.point.y - triangleIntersection.y) > 0.0001) {
+                        castSides = false;
+                        break;
+                    }
+                }
+            }
+            
+            //if ray "glanced" mapped object cast two additional rays
             if(castSides) {
                 this.setAngle(target.angle - 0.0001);
                 let intersectionA = this.cast({

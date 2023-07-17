@@ -370,9 +370,12 @@ function getPoints() {
     Phaser.Geom.Line.SetToAngle(rayA, ray.origin.x, ray.origin.y, angle - dAngle, rayLength);
     Phaser.Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
 
-    //adding tangent points
+    //add tangent points
     points.push(rayA.getPointB());
     points.push(rayB.getPointB());
+    //assign neighbours
+    points[0].neighbours = [points[1]];
+    points[1].neighbours = [points[0]];
   }
   return points;
 }
@@ -464,7 +467,10 @@ function updateMap() {
 
   //set segments
   for (var i = 0, length = points.length; i < length; i++) {
-    if (i + 1 < length) segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y));else segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
+    var prevPoint = i > 0 ? points[i - 1] : points.slice(-1)[0],
+      nextPoint = i < length - 1 ? points[i + 1] : points[0];
+    segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+    points[i].neighbours = [prevPoint, nextPoint];
   }
   this._points = points;
   this._segments = segments;
@@ -1071,6 +1077,10 @@ function updateMap() {
     //set segment
     segments.push(new Phaser.Geom.Line(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y, pointB.x + offset.x * this.object.scaleX, pointB.y * this.object.scaleY + offset.y));
   }
+
+  //assign neighbours
+  points[0].neighbours = [points[1]];
+  points[1].neighbours = [points[0]];
   this._points = points;
   this._segments = segments;
   return this;
@@ -1394,15 +1404,22 @@ function updateMap() {
       _iterator2.f();
     }
   }
+  for (var i = 0, length = points.length; i < length; i++) {
+    var prevPoint = i > 0 ? points[i - 1] : points.slice(-1)[0],
+      nextPoint = i < length - 1 ? points[i + 1] : points[0];
+    segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+    points[i].neighbours = [prevPoint, nextPoint];
+  }
 
   //set segments
-  for (var i = 0, length = points.length; i < length; i++) {
-    if (i + 1 < length) segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y));
+  for (var _i = 0, _length = points.length; _i < _length; _i++) {
+    if (_i + 1 < _length) segments.push(new Phaser.Geom.Line(points[_i].x, points[_i].y, points[_i + 1].x, points[_i + 1].y));
   }
-  //if polygon is closed
-  if (this.object.closePath) {
-    var last = points.length - 1;
-    segments.push(new Phaser.Geom.Line(points[last].x, points[last].y, points[0].x, points[0].y));
+  //if polygon is not closed
+  if (!this.object.closePath) {
+    segments.pop();
+    points[0].neighbours.shift();
+    points[points.lenght - 1].neighbours.pop();
   }
   this._points = points;
   this._segments = segments;
@@ -1484,21 +1501,11 @@ function updateMap() {
 
   //set segments
   for (var i = 0, length = points.length; i < length; i++) {
-    var prevPoint = i > 0 ? points[i - 1] : points.slice(-1),
+    var prevPoint = i > 0 ? points[i - 1] : points.slice(-1)[0],
       nextPoint = i < length - 1 ? points[i + 1] : points[0];
     segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
-    points[i].intersection = new Phaser.Geom.Line(prevPoint.x, prevPoint.y, nextPoint.x, nextPoint.y);
-
-    /*
-    if(i+1 < length) {
-        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i+1].x, points[i+1].y));
-    }
-    else {
-        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
-    }
-    */
+    points[i].neighbours = [prevPoint, nextPoint];
   }
-
   this._points = points;
   this._segments = segments;
   return this;
@@ -2429,7 +2436,7 @@ function castCircle() {
       internal: true
     });
     if (_intersection) {
-      //if intersection hits target point cast two additional rays
+      //if intersection hits target point check if ray "glanced" mapped object.
       var castSides = false;
       if (this.round) {
         var roundedTarget = new Phaser.Geom.Point(Math.round(_target.point.x), Math.round(_target.point.y));
@@ -2437,11 +2444,32 @@ function castCircle() {
       } else {
         castSides = Phaser.Geom.Point.Equals(_target.point, _intersection);
       }
-
-      //tmp
-      if (castSides) {
-        if (_target.point.intersection === false) castSides = false;else if (_target.point.intersection && Phaser.Geom.Intersects.LineToLine(this._ray, _target.point.intersection)) castSides = false;
+      if (!castSides) {
+        //castSides = false;
+      } else if (!_target.point.neighbours || _target.point.neighbours.length < 2) {
+        //castSides = true;
       }
+      //check if ray and at least one line between target point and it's neighbours are parallel
+      else if (Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, _target.point.neighbours[0])) < 0.0001 || Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, _target.point.neighbours[1])) < 0.0001) {
+        //castSides = true;
+      }
+      //check if ray crossed more than 1 points of triangle created by tatget point and it's neighbours
+      else {
+        var triangleIntersections = [];
+        var triangle = new Phaser.Geom.Triangle(_target.point.x, _target.point.y, _target.point.neighbours[0].x, _target.point.neighbours[0].y, _target.point.neighbours[1].x, _target.point.neighbours[1].y);
+        Phaser.Geom.Intersects.GetTriangleToLine(triangle, this._ray, triangleIntersections);
+
+        //if point of intersection of ray and tirangle are close to arget point, assume ray "glanced" triangle.
+        for (var _i2 = 0, _triangleIntersection = triangleIntersections; _i2 < _triangleIntersection.length; _i2++) {
+          var triangleIntersection = _triangleIntersection[_i2];
+          if (Math.abs(_target.point.x - triangleIntersection.x) > 0.0001 && Math.abs(_target.point.y - triangleIntersection.y) > 0.0001) {
+            castSides = false;
+            break;
+          }
+        }
+      }
+
+      //if ray "glanced" mapped object cast two additional rays
       if (castSides) {
         this.setAngle(_target.angle - 0.0001);
         var intersectionA = this.cast({
@@ -2682,7 +2710,7 @@ function castCone() {
       internal: true
     });
     if (_intersection) {
-      //if intersection hits target point cast two additional rays
+      //if intersection hits target point check if ray "glanced" mapped object.
       var castSides = false;
       if (this.round) {
         var roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
@@ -2690,6 +2718,32 @@ function castCone() {
       } else {
         castSides = Phaser.Geom.Point.Equals(target.point, _intersection);
       }
+      if (!castSides) {
+        //castSides = false;
+      } else if (!target.point.neighbours || target.point.neighbours.length < 2) {
+        //castSides = true;
+      }
+      //check if ray and at least one line between target point and it's neighbours are parallel
+      else if (Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, target.point.neighbours[0])) < 0.0001 || Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, target.point.neighbours[1])) < 0.0001) {
+        //castSides = true;
+      }
+      //check if ray crossed more than 1 points of triangle created by tatget point and it's neighbours
+      else {
+        var triangleIntersections = [];
+        var triangle = new Phaser.Geom.Triangle(target.point.x, target.point.y, target.point.neighbours[0].x, target.point.neighbours[0].y, target.point.neighbours[1].x, target.point.neighbours[1].y);
+        Phaser.Geom.Intersects.GetTriangleToLine(triangle, this._ray, triangleIntersections);
+
+        //if point of intersection of ray and tirangle are close to arget point, assume ray "glanced" triangle.
+        for (var _i2 = 0, _triangleIntersection = triangleIntersections; _i2 < _triangleIntersection.length; _i2++) {
+          var triangleIntersection = _triangleIntersection[_i2];
+          if (Math.abs(target.point.x - triangleIntersection.x) > 0.0001 && Math.abs(target.point.y - triangleIntersection.y) > 0.0001) {
+            castSides = false;
+            break;
+          }
+        }
+      }
+
+      //if ray "glanced" mapped object cast two additional rays
       if (castSides) {
         this.setAngle(target.angle - 0.0001);
         var intersectionA = this.cast({

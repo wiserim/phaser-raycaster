@@ -4,6 +4,8 @@
 
 ### Updates
 
+* `Map.update` method now add array of neighbours to points in `Map.points`.
+* `Ray.castCircle` and `Ray.castCone` methods now checks if ray is "glancing" mapped objects.
 * `Ray.cast` method now won't test mapped object if current closest intersection is closer to ray than it's bounding box.
 
 ### Bug fixes
