@@ -1630,207 +1630,159 @@ function getSegments() {
 * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
 */
 function updateMap() {
-  var _this = this;
   if (!this.active) return this;
-  var points = [];
-  var segments = [];
+  var points = [],
+    segments = [],
+    columns = Array(this.object.layer.data[0].length + 1);
+  for (var _i = 0, iLength = columns.length; _i < iLength; _i++) {
+    columns[_i] = [];
+  }
 
   //calculate offset based on object position and origin point
-  var offset = new Phaser.Geom.Point();
-  offset.x = this.object.x;
-  offset.y = this.object.y;
-  var horizontal = false;
-  var horizontals = [];
-  var verticals = [];
+  var offset = new Phaser.Geom.Point(this.object.x, this.object.y);
+  var row = this.object.layer.data[0],
+    tileWidth = this.object.layer.tileWidth * this.object.scaleX,
+    tileHeight = this.object.layer.tileHeight * this.object.scaleY,
+    startPoint,
+    endPoint;
 
-  //iterate rows
-  for (var i = 0, iLength = this.object.layer.data.length; i < iLength; i++) {
-    var row = this.object.layer.data[i];
-
-    //iterate row's tiles
-    for (var j = 0, jLength = row.length; j < jLength; j++) {
-      var tile = row[j];
-
-      //check if tile and its top and left neighbours have different are from different sets (rays blocking and non-bloking)
-      var upperEdge = i > 0 && this.collisionTiles.includes(this.object.layer.data[i - 1][j].index) != this.collisionTiles.includes(tile.index) || i == 0 && this.collisionTiles.includes(tile.index) ? true : false;
-      var leftEdge = j > 0 && this.collisionTiles.includes(this.object.layer.data[i][j - 1].index) != this.collisionTiles.includes(tile.index) || j == 0 && this.collisionTiles.includes(tile.index) ? true : false;
-
-      //get current tile's column last vertical line
-      var _vertical = false;
-      if (verticals.length <= j) verticals[j] = [];else if (verticals[j].length > 0) _vertical = verticals[j][verticals[j].length - 1];
-
-      //check if tile has edge from left
-      if (leftEdge) {
-        if (_vertical && _vertical.y + _vertical.height == i) _vertical.height++;else {
-          verticals[j].push({
-            x: tile.x,
-            y: tile.y,
-            height: 1
-          });
-        }
+  //set top horizontal lines
+  if (this.collisionTiles.includes(row[0].index)) {
+    startPoint = new Phaser.Geom.Point(offset.x, offset.y);
+    endPoint = new Phaser.Geom.Point(tileWidth + offset.x, offset.y);
+    columns[0].push(startPoint);
+  }
+  for (var _i2 = 1, _iLength = row.length; _i2 < _iLength; _i2++) {
+    var tile = row[_i2];
+    if (!this.collisionTiles.includes(tile.index)) {
+      if (startPoint) {
+        startPoint.neighbours = [endPoint];
+        endPoint.neighbours = [startPoint];
+        points.push(startPoint, endPoint);
+        segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+        columns[_i2].push(endPoint);
+        startPoint = false;
+        endPoint = false;
       }
-
-      //check if tile has edge from top
-      if (upperEdge) {
-        if (horizontal) horizontal.width++;else horizontal = {
-          x: tile.x,
-          y: tile.y,
-          width: 1
-        };
-        continue;
-      }
-      if (horizontal) {
-        var x = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
-        var _y = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
-        var segment = new Phaser.Geom.Line(x, _y, x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y);
-        segments.push(segment);
-        horizontals.push(segment);
-        points.push(new Phaser.Geom.Point(x, _y));
-        points.push(new Phaser.Geom.Point(x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y));
-        horizontal = false;
-      }
+      continue;
     }
-
-    //at the end of row add segment if exist
-    if (horizontal) {
-      var _x = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
-      var _y2 = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
-      var _segment = new Phaser.Geom.Line(_x, _y2, _x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y2);
-      segments.push(_segment);
-      horizontals.push(_segment);
-      points.push(new Phaser.Geom.Point(_x, _y2));
-      points.push(new Phaser.Geom.Point(_x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y2));
-      horizontal = false;
+    var x = _i2 * tileWidth + offset.x,
+      _y = offset.y;
+    if (!startPoint) {
+      startPoint = new Phaser.Geom.Point(x, _y);
+      columns[_i2].push(startPoint);
+    }
+    if (!endPoint) {
+      endPoint = new Phaser.Geom.Point(x + tileWidth, _y);
+    } else {
+      endPoint.x = x + tileWidth;
     }
   }
-
-  //add bottom horizontal segments
-  var _iterator4 = _createForOfIteratorHelper(this.object.layer.data[this.object.layer.data.length - 1]),
-    _step4;
-  try {
-    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-      var _tile = _step4.value;
-      if (this.collisionTiles.includes(_tile.index)) {
-        if (horizontal) horizontal.width++;else horizontal = {
-          x: _tile.x,
-          y: _tile.y + 1,
-          width: 1
-        };
-        continue;
-      }
-      if (horizontal) {
-        var _x3 = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
-        var _y4 = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
-        var _segment3 = new Phaser.Geom.Line(_x3, _y4, _x3 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y4);
-        segments.push(_segment3);
-        horizontals.push(_segment3);
-        points.push(new Phaser.Geom.Point(_x3, _y4));
-        points.push(new Phaser.Geom.Point(_x3 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y4));
-        horizontal = false;
-      }
+  if (startPoint) {
+    startPoint.neighbours = [endPoint];
+    endPoint.neighbours = [startPoint];
+    points.push(startPoint, endPoint);
+    segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+    columns[row.length].push(endPoint);
+  }
+  startPoint = false;
+  endPoint = false;
+  for (var _i3 = 1, _iLength2 = this.object.layer.data.length - 1; _i3 < _iLength2; _i3++) {
+    row = this.object.layer.data[_i3];
+    var higherRow = this.object.layer.data[_i3 - 1];
+    if (this.collisionTiles.includes(row[0].index) != this.collisionTiles.includes(higherRow[0].index)) {
+      startPoint = new Phaser.Geom.Point(offset.x, _i3 * tileHeight + offset.y);
+      endPoint = new Phaser.Geom.Point(tileWidth + offset.x, _i3 * tileHeight + offset.y);
+      columns[0].push(startPoint);
     }
-
-    //add segment if exist
-  } catch (err) {
-    _iterator4.e(err);
-  } finally {
-    _iterator4.f();
-  }
-  if (horizontal) {
-    var _x2 = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
-    var _y3 = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
-    var _segment2 = new Phaser.Geom.Line(_x2, _y3, _x2 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y3);
-    segments.push(_segment2);
-    horizontals.push(_segment2);
-    points.push(new Phaser.Geom.Point(_x2, _y3));
-    points.push(new Phaser.Geom.Point(_x2 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y3));
-    horizontal = false;
-  }
-
-  //add right vertical segments
-  var vertical = false;
-  var verticalsLastColumn = [];
-  var _iterator5 = _createForOfIteratorHelper(this.object.layer.data),
-    _step5;
-  try {
-    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-      var _row = _step5.value;
-      var _tile2 = _row[_row.length - 1];
-
-      //if tile blocks ray
-      if (this.collisionTiles.includes(_tile2.index)) {
-        if (vertical) {
-          vertical.height++;
-        } else {
-          vertical = {
-            x: _tile2.x + 1,
-            y: _tile2.y,
-            height: 1
-          };
+    for (var j = 1, jLength = row.length; j < jLength; j++) {
+      var _tile = row[j],
+        isCollisionTile = this.collisionTiles.includes(_tile.index),
+        isCollisionHigherTile = this.collisionTiles.includes(higherRow[j].index);
+      if (isCollisionTile == isCollisionHigherTile) {
+        if (startPoint) {
+          startPoint.neighbours = [endPoint];
+          endPoint.neighbours = [startPoint];
+          points.push(startPoint, endPoint);
+          segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+          columns[j].push(endPoint);
+          startPoint = false;
+          endPoint = false;
         }
         continue;
       }
-      if (vertical) {
-        verticalsLastColumn.push(vertical);
-        vertical = false;
+      var _x = j * tileWidth + offset.x,
+        _y2 = _i3 * tileHeight + offset.y;
+      if (!startPoint) {
+        startPoint = new Phaser.Geom.Point(_x, _y2);
+        columns[j].push(startPoint);
+      }
+      if (!endPoint) {
+        endPoint = new Phaser.Geom.Point(_x + tileWidth, _y2);
+      } else {
+        endPoint.x = _x + tileWidth;
       }
     }
-  } catch (err) {
-    _iterator5.e(err);
-  } finally {
-    _iterator5.f();
+    if (startPoint) {
+      startPoint.neighbours = [endPoint];
+      endPoint.neighbours = [startPoint];
+      points.push(startPoint, endPoint);
+      segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+      columns[row.length].push(endPoint);
+    }
+    startPoint = false;
+    endPoint = false;
   }
-  verticals.push(verticalsLastColumn);
 
-  //add vertical segments
-  for (var _i = 0, _verticals = verticals; _i < _verticals.length; _i++) {
-    var column = _verticals[_i];
-    if (!column) continue;
-    var _iterator6 = _createForOfIteratorHelper(column),
-      _step6;
-    try {
-      var _loop = function _loop() {
-        var vertical = _step6.value;
-        var x = vertical.x * _this.object.layer.tileWidth * _this.object.scaleX + offset.x;
-        var y1 = vertical.y * _this.object.layer.tileHeight * _this.object.scaleY + offset.y;
-        var y2 = y1 + _this.object.layer.tileHeight * _this.object.scaleY * vertical.height;
-        var segment = new Phaser.Geom.Line(x, y1, x, y2);
-        segments.push(segment);
-
-        //add points if they're not already there
-        if (!points.filter(function (point) {
-          return point.x == x && point.y == y1;
-        })) points.push(new Phaser.Geom.Point(x, y));
-        if (!points.filter(function (point) {
-          return point.x == x && point.y == y2;
-        })) points.push(new Phaser.Geom.Point(x, y));
-
-        //get intersections between horizontal segments and vertical
-        var _iterator7 = _createForOfIteratorHelper(horizontals),
-          _step7;
-        try {
-          for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
-            var horizontalSegment = _step7.value;
-            if (segment.x1 == horizontalSegment.x1 || segment.x1 == horizontalSegment.x2 || segment.x2 == horizontalSegment.x1 || segment.x2 == horizontalSegment.x2) continue;
-            if (segment.y1 == horizontalSegment.y1 || segment.y1 == horizontalSegment.y2 || segment.y2 == horizontalSegment.y1 || segment.y2 == horizontalSegment.y2) continue;
-            var point = new Phaser.Geom.Point();
-            if (Phaser.Geom.Intersects.LineToLine(segment, horizontalSegment, point)) {
-              points.push(point);
-            }
-          }
-        } catch (err) {
-          _iterator7.e(err);
-        } finally {
-          _iterator7.f();
-        }
-      };
-      for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-        _loop();
+  //set bottom horizontal lines
+  row = this.object.layer.data.slice(-1)[0];
+  var y = this.object.layer.data.length * tileHeight + offset.y;
+  if (this.collisionTiles.includes(row[0].index)) {
+    startPoint = new Phaser.Geom.Point(offset.x, y);
+    endPoint = new Phaser.Geom.Point(tileWidth + offset.x, y);
+    columns[0].push(startPoint);
+  }
+  for (var _i4 = 1, _iLength3 = row.length; _i4 < _iLength3; _i4++) {
+    var _tile2 = row[_i4];
+    if (!this.collisionTiles.includes(_tile2.index)) {
+      if (startPoint) {
+        startPoint.neighbours = [endPoint];
+        endPoint.neighbours = [startPoint];
+        points.push(startPoint, endPoint);
+        segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+        columns[_i4].push(endPoint);
+        startPoint = false;
+        endPoint = false;
       }
-    } catch (err) {
-      _iterator6.e(err);
-    } finally {
-      _iterator6.f();
+      continue;
+    }
+    var _x2 = _i4 * tileWidth + offset.x;
+    if (!startPoint) {
+      startPoint = new Phaser.Geom.Point(_x2, y);
+      columns[_i4].push(startPoint);
+    }
+    if (!endPoint) {
+      endPoint = new Phaser.Geom.Point(_x2 + tileWidth, y);
+    } else {
+      endPoint.x = _x2 + tileWidth;
+    }
+  }
+  if (startPoint) {
+    startPoint.neighbours = [endPoint];
+    endPoint.neighbours = [startPoint];
+    points.push(startPoint, endPoint);
+    segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+    columns[i].push(endPoint);
+  }
+
+  //set vertical lines
+  for (var _i5 = 0, _iLength4 = columns.length; _i5 < _iLength4; _i5++) {
+    var column = columns[_i5];
+    for (var _j = 0, _jLength = column.length - 1; _j < _jLength; _j++) {
+      segments.push(new Phaser.Geom.Line(column[_j].x, column[_j].y, column[_j + 1].x, column[_j + 1].y));
+      column[_j].neighbours.push(column[_j + 1]);
+      column[_j + 1].neighbours.push(column[_j]);
+      _j++;
     }
   }
   this._points = points;
