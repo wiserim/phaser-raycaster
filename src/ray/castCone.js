@@ -209,8 +209,11 @@ export function castCone(options = {}) {
             //check if ray crossed more than 1 points of triangle created by tatget point and it's neighbours
             else {
                 let triangleIntersections = [];
-                let triangle = new Phaser.Geom.Triangle(target.point.x, target.point.y, target.point.neighbours[0].x, target.point.neighbours[0].y, target.point.neighbours[1].x, target.point.neighbours[1].y);
-                Phaser.Geom.Intersects.GetTriangleToLine(triangle, this._ray, triangleIntersections);
+                if(!target.point.neighboursTriangle) {
+                    target.point.neighboursTriangle = new Phaser.Geom.Triangle(target.point.x, target.point.y, target.point.neighbours[0].x, target.point.neighbours[0].y, target.point.neighbours[1].x, target.point.neighbours[1].y);
+                }
+
+                Phaser.Geom.Intersects.GetTriangleToLine(target.point.neighboursTriangle, this._ray, triangleIntersections);
                 
                 //if point of intersection of ray and tirangle are close to arget point, assume ray "glanced" triangle.
                 for(let triangleIntersection of triangleIntersections) {

@@ -528,17 +528,11 @@ function getPoints() {
       //create temporary ray
       var vector = new Phaser.Geom.Line(0, 0, ray.origin.x - offset.x, ray.origin.y - offset.y);
       Phaser.Geom.Line.SetToAngle(vector, 0, 0, Phaser.Geom.Line.Angle(vector) - this.object.rotation, Phaser.Geom.Line.Length(vector));
-      var tempRay = ray._raycaster.createRay({
-        origin: {
-          x: vector.getPointB().x,
-          y: vector.getPointB().y
-        }
-      });
 
       //calculate tangent rays
-      var rayA = new Phaser.Geom.Line();
-      var rayB = new Phaser.Geom.Line();
-      var c;
+      var rayA = new Phaser.Geom.Line(),
+        rayB = new Phaser.Geom.Line(),
+        c;
       var _iterator = _createForOfIteratorHelper(this._circles),
         _step;
       try {
@@ -716,23 +710,33 @@ function _updateChildMap(child, points, segments, rotation, offset) {
   try {
     for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
       var point = _step4.value;
+      var childPoint = void 0;
+
       //calculate positions after container's rotation
       if (rotation !== 0) {
         var _vector2 = new Phaser.Geom.Line(this.object.x, this.object.y, point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y);
         Phaser.Geom.Line.SetToAngle(_vector2, this.object.x, this.object.y, Phaser.Geom.Line.Angle(_vector2) + rotation, Phaser.Geom.Line.Length(_vector2));
-        points.push(_vector2.getPointB());
+        childPoint = _vector2.getPointB();
       }
       //if rotation === 0
-      else points.push(new Phaser.Geom.Point(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y));
-      childPoints.push(points[points.length - 1]);
+      else childPoint = new Phaser.Geom.Point(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y);
+      childPoint.neighbours = [];
+      if (childPoints.lenght > 0) {
+        var previousPoint = childPoints.splice(-1)[0];
+        previousPoint.neighbours.push(childPoint);
+        childPoint.neighbours.push(previousPoint);
+      }
+      childPoints.push(childPoint);
+      points.push(childPoint);
     }
-
-    //add child segments
   } catch (err) {
     _iterator4.e(err);
   } finally {
     _iterator4.f();
   }
+  childPoints.splice(-1)[0].neighbours.push(childPoints[0]);
+
+  //add child segments
   var _iterator5 = _createForOfIteratorHelper(map.getSegments()),
     _step5;
   try {
@@ -1140,8 +1144,7 @@ function getPoints() {
     Phaser.Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
 
     //adding tangent points
-    points.push(rayA.getPointB());
-    points.push(rayB.getPointB());
+    points.push(rayA.getPointB(), rayB.getPointB());
     return points;
   }
   return this._points;
@@ -1203,9 +1206,14 @@ function updateMap() {
       if (bodyItem.parts.length === 1 || this.forceConvex) {
         var vertices = bodyItem.parts[0].vertices;
         points.push(new Phaser.Geom.Point(vertices[0].x, vertices[0].y));
+        points[0].neighbours = [];
         for (var i = 1, length = vertices.length; i < length; i++) {
-          var pointA = new Phaser.Geom.Point(vertices[i - 1].x, vertices[i - 1].y);
-          var pointB = new Phaser.Geom.Point(vertices[i].x, vertices[i].y);
+          //let pointA = new Phaser.Geom.Point(vertices[i - 1].x, vertices[i - 1].y);
+          var pointA = points.slice(-1)[0],
+            pointB = new Phaser.Geom.Point(vertices[i].x, vertices[i].y);
+          if (!pointA.neighbours) pointA.neighbours = [];
+          pointA.neighbours.push(pointB);
+          pointB.neighbours = [pointA];
           points.push(pointB);
 
           //add segment
@@ -1216,6 +1224,7 @@ function updateMap() {
         //closing segment
         var segment = new Phaser.Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
         segments.push(segment);
+        points[0].neighbours.push(points.slice(-1)[0]);
       }
 
       //if concave body
@@ -1225,9 +1234,13 @@ function updateMap() {
           var pointA = new Phaser.Geom.Point(vertices[0].x, vertices[0].y);
           if (points.find(function (point) {
             return point.x == pointA.x && point.y == pointA.y;
-          }) === undefined) points.push(pointA);
+          }) === undefined) {
+            pointA.neighbours = [];
+            points.push(pointA);
+          }
           var _loop2 = function _loop2() {
             var pointB = new Phaser.Geom.Point(vertices[j].x, vertices[j].y);
+            pointB.neighbours = [];
             //check if segment was already added
             var segmentIndex = segments.findIndex(function (segment) {
               return segment.x1 == pointA.x && segment.y1 == pointA.y && segment.x2 == pointB.x && segment.y2 == pointB.y || segment.x1 == pointB.x && segment.y1 == pointB.y && segment.x2 == pointA.x && segment.y2 == pointA.y;
@@ -1239,7 +1252,11 @@ function updateMap() {
             }
             if (points.find(function (point) {
               return point.x == pointB.x && point.y == pointB.y;
-            }) === undefined) points.push(pointB);
+            }) === undefined) {
+              pointA.neighbours.push(pointB);
+              pointB.neighbours.push(pointA);
+              points.push(pointB);
+            }
 
             //add segment
             var segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
@@ -1256,7 +1273,9 @@ function updateMap() {
           var segmentIndex = segments.findIndex(function (segment) {
             return segment.x1 == closingSegment.x1 && segment.y1 == closingSegment.y1 && segment.x2 == closingSegment.x2 && segment.y2 == closingSegment.y2 || segment.x1 == closingSegment.x2 && segment.y1 == closingSegment.y2 && segment.x2 == closingSegment.x1 && segment.y2 == closingSegment.y1;
           });
-          if (segmentIndex === undefined) segments.push(closingSegment);
+          if (segmentIndex === undefined) {
+            segments.push(closingSegment);
+          }
         };
         for (var _i = 1, _length = bodyItem.parts.length; _i < _length; _i++) {
           _loop();
@@ -2408,10 +2427,12 @@ function castCircle() {
       //check if ray crossed more than 1 points of triangle created by tatget point and it's neighbours
       else {
         var triangleIntersections = [];
-        var triangle = new Phaser.Geom.Triangle(_target.point.x, _target.point.y, _target.point.neighbours[0].x, _target.point.neighbours[0].y, _target.point.neighbours[1].x, _target.point.neighbours[1].y);
-        Phaser.Geom.Intersects.GetTriangleToLine(triangle, this._ray, triangleIntersections);
+        if (!_target.point.neighboursTriangle) {
+          _target.point.neighboursTriangle = new Phaser.Geom.Triangle(_target.point.x, _target.point.y, _target.point.neighbours[0].x, _target.point.neighbours[0].y, _target.point.neighbours[1].x, _target.point.neighbours[1].y);
+        }
+        Phaser.Geom.Intersects.GetTriangleToLine(_target.point.neighboursTriangle, this._ray, triangleIntersections);
 
-        //if point of intersection of ray and tirangle are close to arget point, assume ray "glanced" triangle.
+        //if point of intersection of ray and tirangle are close to target point, assume ray "glanced" triangle.
         for (var _i2 = 0, _triangleIntersection = triangleIntersections; _i2 < _triangleIntersection.length; _i2++) {
           var triangleIntersection = _triangleIntersection[_i2];
           if (Math.abs(_target.point.x - triangleIntersection.x) > 0.0001 && Math.abs(_target.point.y - triangleIntersection.y) > 0.0001) {
@@ -2682,8 +2703,10 @@ function castCone() {
       //check if ray crossed more than 1 points of triangle created by tatget point and it's neighbours
       else {
         var triangleIntersections = [];
-        var triangle = new Phaser.Geom.Triangle(target.point.x, target.point.y, target.point.neighbours[0].x, target.point.neighbours[0].y, target.point.neighbours[1].x, target.point.neighbours[1].y);
-        Phaser.Geom.Intersects.GetTriangleToLine(triangle, this._ray, triangleIntersections);
+        if (!target.point.neighboursTriangle) {
+          target.point.neighboursTriangle = new Phaser.Geom.Triangle(target.point.x, target.point.y, target.point.neighbours[0].x, target.point.neighbours[0].y, target.point.neighbours[1].x, target.point.neighbours[1].y);
+        }
+        Phaser.Geom.Intersects.GetTriangleToLine(target.point.neighboursTriangle, this._ray, triangleIntersections);
 
         //if point of intersection of ray and tirangle are close to arget point, assume ray "glanced" triangle.
         for (var _i2 = 0, _triangleIntersection = triangleIntersections; _i2 < _triangleIntersection.length; _i2++) {

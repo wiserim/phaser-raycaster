@@ -29,18 +29,11 @@ export function getPoints(ray = false, isChild = false) {
             //create temporary ray
             let vector = new Phaser.Geom.Line(0, 0, ray.origin.x - offset.x, ray.origin.y - offset.y);
             Phaser.Geom.Line.SetToAngle(vector, 0, 0, Phaser.Geom.Line.Angle(vector) - this.object.rotation, Phaser.Geom.Line.Length(vector));
-    
-            let tempRay = ray._raycaster.createRay({
-                origin: {
-                    x: vector.getPointB().x,
-                    y: vector.getPointB().y
-                }
-            });
 
             //calculate tangent rays
-            let rayA = new Phaser.Geom.Line();
-            let rayB = new Phaser.Geom.Line();
-            let c;
+            let rayA = new Phaser.Geom.Line(),
+                rayB = new Phaser.Geom.Line(),
+                c;
 
             for(let circle of this._circles) {
                 circle.points = [];
@@ -208,18 +201,30 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
     //add child points
     let childPoints = [];
     for(let point of map.getPoints(false, true)) {
+        let childPoint;
+
         //calculate positions after container's rotation
         if(rotation !== 0) {
             let vector = new Phaser.Geom.Line(this.object.x, this.object.y, point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y);
             Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
-            points.push(vector.getPointB());
+            childPoint = vector.getPointB();
         }
         //if rotation === 0
         else
-            points.push(new Phaser.Geom.Point(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y));
+            childPoint = new Phaser.Geom.Point(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y);
 
-        childPoints.push(points[points.length - 1])
+        childPoint.neighbours = [];
+        if(childPoints.lenght > 0) {
+            let previousPoint = childPoints.splice(-1)[0];
+            previousPoint.neighbours.push(childPoint);
+            childPoint.neighbours.push(previousPoint);
+        }
+        
+        childPoints.push(childPoint);
+        points.push(childPoint);
     }
+
+    childPoints.splice(-1)[0].neighbours.push(childPoints[0]);
 
     //add child segments
     for(let segment of map.getSegments()) {

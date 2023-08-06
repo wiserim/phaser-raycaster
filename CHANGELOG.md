@@ -1,6 +1,6 @@
 # Change Log
 
-## Version 0.10.7
+## Version 0.10.7 - 2023.08.06
 
 ### Updates
 

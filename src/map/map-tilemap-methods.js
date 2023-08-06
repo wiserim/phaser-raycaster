@@ -54,7 +54,7 @@ export function getPoints(ray = false) {
 export function getSegments(ray = false) {
     if(!this.active)
         return [];
-    if(!ray || ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER))
+    if(!ray || (ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER)))
         return this._segments;
 
     let segments = [];
