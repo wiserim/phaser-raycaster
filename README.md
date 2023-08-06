@@ -3,8 +3,7 @@ Raycasting plugin for Phaser 3.
 
 [![GitHub release](https://img.shields.io/github/release/wiserim/phaser-raycaster.svg)](https://github.com/wiserim/phaser-raycaster/releases) [![npm](https://img.shields.io/npm/v/phaser-raycaster.svg)](https://www.npmjs.com/package/phaser-raycaster) [![GitHub](https://img.shields.io/github/license/wiserim/phaser-raycaster.svg)](https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE) [![Github file size](https://img.shields.io/github/size/wiserim/phaser-raycaster/dist/phaser-raycaster.min.js.svg)](https://github.com/wiserim/phaser-raycaster) [![](https://data.jsdelivr.com/v1/package/npm/phaser-raycaster/badge?style=rounded)](https://www.jsdelivr.com/package/npm/phaser-raycaster)
 
-Phaser Raycaster is a [Phaser 3](https://github.com/photonstorm/phaser) plugin which provide raycasting for geometric game objects, sprites and Matter.js bodies.
-It can be used with arcade physics Matter.js.
+Phaser Raycaster is a [Phaser 3](https://github.com/photonstorm/phaser) plugin which provide raycasting for geometric game objects, sprites, Arcade Physics and Matter.js bodies.
 
 Documentation: [https://wiserim.github.io/phaser-raycaster/](https://wiserim.github.io/phaser-raycaster/)
 
@@ -34,7 +33,7 @@ npm install phaser-raycaster
 ### 1. Include plugin in your project:
 ```html
 <!--CDN-->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.10.6/dist/phaser-raycaster.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/phaser-raycaster@0.10.7/dist/phaser-raycaster.min.js"></script>
 ```
 ```
 # NPM

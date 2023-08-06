@@ -74,15 +74,28 @@ export function updateMap() {
         }
     }
 
+    for(let i = 0, length = points.length; i < length; i++) {
+        let prevPoint = i > 0 ? points[i - 1] : points.slice(-1)[0],
+            nextPoint = i < length - 1 ? points[i + 1] : points[0];
+
+        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+        
+        points[i].neighbours = [
+            prevPoint,
+            nextPoint
+        ];
+    }
+
     //set segments
     for(let i = 0, length = points.length; i < length; i++) {
         if(i+1 < length)
             segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i+1].x, points[i+1].y));   
     }
-    //if polygon is closed
-    if(this.object.closePath) {
-        let last = points.length - 1;
-        segments.push(new Phaser.Geom.Line(points[last].x, points[last].y, points[0].x, points[0].y));
+    //if polygon is not closed
+    if(!this.object.closePath) {
+       segments.pop();
+       points[0].neighbours.shift();
+       points[points.lenght - 1].neighbours.pop();
     }
 
     this._points = points;

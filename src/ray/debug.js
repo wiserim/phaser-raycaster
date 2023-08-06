@@ -4,7 +4,7 @@
  * @method Raycaster.Ray#drawDebug
  * @memberof Raycaster
  * @private
- * @since 0.10
+ * @since 0.10.0
  * 
  * @param {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
  * 

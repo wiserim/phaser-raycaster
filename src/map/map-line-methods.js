@@ -86,6 +86,9 @@ export function updateMap() {
         segments.push(new Phaser.Geom.Line(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y, pointB.x + offset.x * this.object.scaleX, pointB.y * this.object.scaleY + offset.y));
     }
     
+    //assign neighbours
+    points[0].neighbours = [points[1]];
+    points[1].neighbours = [points[0]];
 
     this._points = points;
     this._segments = segments;

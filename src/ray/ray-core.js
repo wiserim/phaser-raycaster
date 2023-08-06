@@ -6,7 +6,7 @@
  * @namespace Raycaster.Ray
  * @class Raycaster.Ray
  * @constructor
- * @since 6.0.0
+ * @since 0.6.0
  *
  * @param {object} [options] - Ray's congfiguration options. May include:
  * @param {Phaser.Geom.Point|Point} [options.origin = {x:0, y:0}] - Ray's position.

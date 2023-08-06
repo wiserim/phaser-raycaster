@@ -32,7 +32,7 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 /**
 * @author       Marcin Walczak <contact@marcin-walczak.pl>
-* @copyright    2022 Marcin Walczak
+* @copyright    2023 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 /**
@@ -50,7 +50,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
  * @class PhaserRaycaster
  * @extends Phaser.Plugins.ScenePlugin
  * @constructor
- * @since 6.0.0
+ * @since 0.6.0
  *
  * @param {Phaser.Scene} scene
  * @param {Phaser.Plugins.PluginManager} pluginManager
@@ -106,7 +106,7 @@ module.exports = PhaserRaycaster;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getBoundingBox": function() { return /* binding */ getBoundingBox; }
+/* harmony export */   getBoundingBox: function() { return /* binding */ getBoundingBox; }
 /* harmony export */ });
 /**
 * Get mapped object's bounding box.
@@ -134,7 +134,7 @@ function getBoundingBox() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "config": function() { return /* binding */ config; }
+/* harmony export */   config: function() { return /* binding */ config; }
 /* harmony export */ });
 var rectangle = __webpack_require__(/*! ./map-rectangle-methods.js */ "./src/map/map-rectangle-methods.js");
 var line = __webpack_require__(/*! ./map-line-methods.js */ "./src/map/map-line-methods.js");
@@ -284,7 +284,7 @@ function config(options) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "destroy": function() { return /* binding */ destroy; }
+/* harmony export */   destroy: function() { return /* binding */ destroy; }
 /* harmony export */ });
 /**
  * Destroy object
@@ -297,7 +297,7 @@ __webpack_require__.r(__webpack_exports__);
 function destroy() {
   //destroy reference to map object in mapped object
   if (this.object.type === 'body' || this.object.type === 'composite') {
-    delete object.raycasterMap;
+    delete this.object.raycasterMap;
   } else if (this.object.data) {
     this.object.data.remove('raycasterMap');
   }
@@ -317,9 +317,9 @@ function destroy() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -370,9 +370,12 @@ function getPoints() {
     Phaser.Geom.Line.SetToAngle(rayA, ray.origin.x, ray.origin.y, angle - dAngle, rayLength);
     Phaser.Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
 
-    //adding tangent points
+    //add tangent points
     points.push(rayA.getPointB());
     points.push(rayB.getPointB());
+    //assign neighbours
+    points[0].neighbours = [points[1]];
+    points[1].neighbours = [points[0]];
   }
   return points;
 }
@@ -464,7 +467,10 @@ function updateMap() {
 
   //set segments
   for (var i = 0, length = points.length; i < length; i++) {
-    if (i + 1 < length) segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y));else segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
+    var prevPoint = i > 0 ? points[i - 1] : points.slice(-1)[0],
+      nextPoint = i < length - 1 ? points[i + 1] : points[0];
+    segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+    points[i].neighbours = [prevPoint, nextPoint];
   }
   this._points = points;
   this._segments = segments;
@@ -483,10 +489,10 @@ function updateMap() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "_updateChildMap": function() { return /* binding */ _updateChildMap; },
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   _updateChildMap: function() { return /* binding */ _updateChildMap; },
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -522,17 +528,11 @@ function getPoints() {
       //create temporary ray
       var vector = new Phaser.Geom.Line(0, 0, ray.origin.x - offset.x, ray.origin.y - offset.y);
       Phaser.Geom.Line.SetToAngle(vector, 0, 0, Phaser.Geom.Line.Angle(vector) - this.object.rotation, Phaser.Geom.Line.Length(vector));
-      var tempRay = ray._raycaster.createRay({
-        origin: {
-          x: vector.getPointB().x,
-          y: vector.getPointB().y
-        }
-      });
 
       //calculate tangent rays
-      var rayA = new Phaser.Geom.Line();
-      var rayB = new Phaser.Geom.Line();
-      var c;
+      var rayA = new Phaser.Geom.Line(),
+        rayB = new Phaser.Geom.Line(),
+        c;
       var _iterator = _createForOfIteratorHelper(this._circles),
         _step;
       try {
@@ -710,23 +710,33 @@ function _updateChildMap(child, points, segments, rotation, offset) {
   try {
     for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
       var point = _step4.value;
+      var childPoint = void 0;
+
       //calculate positions after container's rotation
       if (rotation !== 0) {
         var _vector2 = new Phaser.Geom.Line(this.object.x, this.object.y, point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y);
         Phaser.Geom.Line.SetToAngle(_vector2, this.object.x, this.object.y, Phaser.Geom.Line.Angle(_vector2) + rotation, Phaser.Geom.Line.Length(_vector2));
-        points.push(_vector2.getPointB());
+        childPoint = _vector2.getPointB();
       }
       //if rotation === 0
-      else points.push(new Phaser.Geom.Point(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y));
-      childPoints.push(points[points.length - 1]);
+      else childPoint = new Phaser.Geom.Point(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y);
+      childPoint.neighbours = [];
+      if (childPoints.lenght > 0) {
+        var previousPoint = childPoints.splice(-1)[0];
+        previousPoint.neighbours.push(childPoint);
+        childPoint.neighbours.push(previousPoint);
+      }
+      childPoints.push(childPoint);
+      points.push(childPoint);
     }
-
-    //add child segments
   } catch (err) {
     _iterator4.e(err);
   } finally {
     _iterator4.f();
   }
+  childPoints.splice(-1)[0].neighbours.push(childPoints[0]);
+
+  //add child segments
   var _iterator5 = _createForOfIteratorHelper(map.getSegments()),
     _step5;
   try {
@@ -797,7 +807,7 @@ function _updateChildMap(child, points, segments, rotation, offset) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Map": function() { return /* binding */ Map; }
+/* harmony export */   Map: function() { return /* binding */ Map; }
 /* harmony export */ });
 /**
  * @classdesc
@@ -807,7 +817,7 @@ __webpack_require__.r(__webpack_exports__);
  * @namespace Raycaster.Map
  * @class Raycaster.Map
  * @constructor
- * @since 6.0.0
+ * @since 0.6.0
  *
  * @param {object} options - Map specific configuration settings.
  * @param {Raycaster} [raycaster] - Parent raycaster object.
@@ -982,9 +992,9 @@ Map.prototype.constructor = Map;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 /*Map methods for lines*/
 /**
@@ -1071,6 +1081,10 @@ function updateMap() {
     //set segment
     segments.push(new Phaser.Geom.Line(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y, pointB.x + offset.x * this.object.scaleX, pointB.y * this.object.scaleY + offset.y));
   }
+
+  //assign neighbours
+  points[0].neighbours = [points[1]];
+  points[1].neighbours = [points[0]];
   this._points = points;
   this._segments = segments;
   return this;
@@ -1088,10 +1102,10 @@ function updateMap() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getBoundingBox": function() { return /* binding */ getBoundingBox; },
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getBoundingBox: function() { return /* binding */ getBoundingBox; },
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -1130,8 +1144,7 @@ function getPoints() {
     Phaser.Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
 
     //adding tangent points
-    points.push(rayA.getPointB());
-    points.push(rayB.getPointB());
+    points.push(rayA.getPointB(), rayB.getPointB());
     return points;
   }
   return this._points;
@@ -1193,9 +1206,14 @@ function updateMap() {
       if (bodyItem.parts.length === 1 || this.forceConvex) {
         var vertices = bodyItem.parts[0].vertices;
         points.push(new Phaser.Geom.Point(vertices[0].x, vertices[0].y));
+        points[0].neighbours = [];
         for (var i = 1, length = vertices.length; i < length; i++) {
-          var pointA = new Phaser.Geom.Point(vertices[i - 1].x, vertices[i - 1].y);
-          var pointB = new Phaser.Geom.Point(vertices[i].x, vertices[i].y);
+          //let pointA = new Phaser.Geom.Point(vertices[i - 1].x, vertices[i - 1].y);
+          var pointA = points.slice(-1)[0],
+            pointB = new Phaser.Geom.Point(vertices[i].x, vertices[i].y);
+          if (!pointA.neighbours) pointA.neighbours = [];
+          pointA.neighbours.push(pointB);
+          pointB.neighbours = [pointA];
           points.push(pointB);
 
           //add segment
@@ -1206,6 +1224,7 @@ function updateMap() {
         //closing segment
         var segment = new Phaser.Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
         segments.push(segment);
+        points[0].neighbours.push(points.slice(-1)[0]);
       }
 
       //if concave body
@@ -1215,9 +1234,13 @@ function updateMap() {
           var pointA = new Phaser.Geom.Point(vertices[0].x, vertices[0].y);
           if (points.find(function (point) {
             return point.x == pointA.x && point.y == pointA.y;
-          }) === undefined) points.push(pointA);
+          }) === undefined) {
+            pointA.neighbours = [];
+            points.push(pointA);
+          }
           var _loop2 = function _loop2() {
             var pointB = new Phaser.Geom.Point(vertices[j].x, vertices[j].y);
+            pointB.neighbours = [];
             //check if segment was already added
             var segmentIndex = segments.findIndex(function (segment) {
               return segment.x1 == pointA.x && segment.y1 == pointA.y && segment.x2 == pointB.x && segment.y2 == pointB.y || segment.x1 == pointB.x && segment.y1 == pointB.y && segment.x2 == pointA.x && segment.y2 == pointA.y;
@@ -1229,7 +1252,11 @@ function updateMap() {
             }
             if (points.find(function (point) {
               return point.x == pointB.x && point.y == pointB.y;
-            }) === undefined) points.push(pointB);
+            }) === undefined) {
+              pointA.neighbours.push(pointB);
+              pointB.neighbours.push(pointA);
+              points.push(pointB);
+            }
 
             //add segment
             var segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
@@ -1246,7 +1273,9 @@ function updateMap() {
           var segmentIndex = segments.findIndex(function (segment) {
             return segment.x1 == closingSegment.x1 && segment.y1 == closingSegment.y1 && segment.x2 == closingSegment.x2 && segment.y2 == closingSegment.y2 || segment.x1 == closingSegment.x2 && segment.y1 == closingSegment.y2 && segment.x2 == closingSegment.x1 && segment.y2 == closingSegment.y1;
           });
-          if (segmentIndex === undefined) segments.push(closingSegment);
+          if (segmentIndex === undefined) {
+            segments.push(closingSegment);
+          }
         };
         for (var _i = 1, _length = bodyItem.parts.length; _i < _length; _i++) {
           _loop();
@@ -1295,9 +1324,9 @@ function getBoundingBox() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -1394,15 +1423,22 @@ function updateMap() {
       _iterator2.f();
     }
   }
+  for (var i = 0, length = points.length; i < length; i++) {
+    var prevPoint = i > 0 ? points[i - 1] : points.slice(-1)[0],
+      nextPoint = i < length - 1 ? points[i + 1] : points[0];
+    segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+    points[i].neighbours = [prevPoint, nextPoint];
+  }
 
   //set segments
-  for (var i = 0, length = points.length; i < length; i++) {
-    if (i + 1 < length) segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y));
+  for (var _i = 0, _length = points.length; _i < _length; _i++) {
+    if (_i + 1 < _length) segments.push(new Phaser.Geom.Line(points[_i].x, points[_i].y, points[_i + 1].x, points[_i + 1].y));
   }
-  //if polygon is closed
-  if (this.object.closePath) {
-    var last = points.length - 1;
-    segments.push(new Phaser.Geom.Line(points[last].x, points[last].y, points[0].x, points[0].y));
+  //if polygon is not closed
+  if (!this.object.closePath) {
+    segments.pop();
+    points[0].neighbours.shift();
+    points[points.lenght - 1].neighbours.pop();
   }
   this._points = points;
   this._segments = segments;
@@ -1421,9 +1457,9 @@ function updateMap() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 /*Map methods for rectangles*/
 /**
@@ -1484,7 +1520,10 @@ function updateMap() {
 
   //set segments
   for (var i = 0, length = points.length; i < length; i++) {
-    if (i + 1 < length) segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y));else segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
+    var prevPoint = i > 0 ? points[i - 1] : points.slice(-1)[0],
+      nextPoint = i < length - 1 ? points[i + 1] : points[0];
+    segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+    points[i].neighbours = [prevPoint, nextPoint];
   }
   this._points = points;
   this._segments = segments;
@@ -1503,10 +1542,10 @@ function updateMap() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getPoints": function() { return /* binding */ getPoints; },
-/* harmony export */   "getSegments": function() { return /* binding */ getSegments; },
-/* harmony export */   "setCollisionTiles": function() { return /* binding */ setCollisionTiles; },
-/* harmony export */   "updateMap": function() { return /* binding */ updateMap; }
+/* harmony export */   getPoints: function() { return /* binding */ getPoints; },
+/* harmony export */   getSegments: function() { return /* binding */ getSegments; },
+/* harmony export */   setCollisionTiles: function() { return /* binding */ setCollisionTiles; },
+/* harmony export */   updateMap: function() { return /* binding */ updateMap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -1610,207 +1649,159 @@ function getSegments() {
 * @return {Raycaster.Map} {@link Raycaster.Map Raycaster.Map} instance
 */
 function updateMap() {
-  var _this = this;
   if (!this.active) return this;
-  var points = [];
-  var segments = [];
+  var points = [],
+    segments = [],
+    columns = Array(this.object.layer.data[0].length + 1);
+  for (var _i = 0, iLength = columns.length; _i < iLength; _i++) {
+    columns[_i] = [];
+  }
 
   //calculate offset based on object position and origin point
-  var offset = new Phaser.Geom.Point();
-  offset.x = this.object.x;
-  offset.y = this.object.y;
-  var horizontal = false;
-  var horizontals = [];
-  var verticals = [];
+  var offset = new Phaser.Geom.Point(this.object.x, this.object.y);
+  var row = this.object.layer.data[0],
+    tileWidth = this.object.layer.tileWidth * this.object.scaleX,
+    tileHeight = this.object.layer.tileHeight * this.object.scaleY,
+    startPoint,
+    endPoint;
 
-  //iterate rows
-  for (var i = 0, iLength = this.object.layer.data.length; i < iLength; i++) {
-    var row = this.object.layer.data[i];
-
-    //iterate row's tiles
-    for (var j = 0, jLength = row.length; j < jLength; j++) {
-      var tile = row[j];
-
-      //check if tile and its top and left neighbours have different are from different sets (rays blocking and non-bloking)
-      var upperEdge = i > 0 && this.collisionTiles.includes(this.object.layer.data[i - 1][j].index) != this.collisionTiles.includes(tile.index) || i == 0 && this.collisionTiles.includes(tile.index) ? true : false;
-      var leftEdge = j > 0 && this.collisionTiles.includes(this.object.layer.data[i][j - 1].index) != this.collisionTiles.includes(tile.index) || j == 0 && this.collisionTiles.includes(tile.index) ? true : false;
-
-      //get current tile's column last vertical line
-      var _vertical = false;
-      if (verticals.length <= j) verticals[j] = [];else if (verticals[j].length > 0) _vertical = verticals[j][verticals[j].length - 1];
-
-      //check if tile has edge from left
-      if (leftEdge) {
-        if (_vertical && _vertical.y + _vertical.height == i) _vertical.height++;else {
-          verticals[j].push({
-            x: tile.x,
-            y: tile.y,
-            height: 1
-          });
-        }
+  //set top horizontal lines
+  if (this.collisionTiles.includes(row[0].index)) {
+    startPoint = new Phaser.Geom.Point(offset.x, offset.y);
+    endPoint = new Phaser.Geom.Point(tileWidth + offset.x, offset.y);
+    columns[0].push(startPoint);
+  }
+  for (var _i2 = 1, _iLength = row.length; _i2 < _iLength; _i2++) {
+    var tile = row[_i2];
+    if (!this.collisionTiles.includes(tile.index)) {
+      if (startPoint) {
+        startPoint.neighbours = [endPoint];
+        endPoint.neighbours = [startPoint];
+        points.push(startPoint, endPoint);
+        segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+        columns[_i2].push(endPoint);
+        startPoint = false;
+        endPoint = false;
       }
-
-      //check if tile has edge from top
-      if (upperEdge) {
-        if (horizontal) horizontal.width++;else horizontal = {
-          x: tile.x,
-          y: tile.y,
-          width: 1
-        };
-        continue;
-      }
-      if (horizontal) {
-        var x = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
-        var _y = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
-        var segment = new Phaser.Geom.Line(x, _y, x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y);
-        segments.push(segment);
-        horizontals.push(segment);
-        points.push(new Phaser.Geom.Point(x, _y));
-        points.push(new Phaser.Geom.Point(x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y));
-        horizontal = false;
-      }
+      continue;
     }
-
-    //at the end of row add segment if exist
-    if (horizontal) {
-      var _x = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
-      var _y2 = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
-      var _segment = new Phaser.Geom.Line(_x, _y2, _x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y2);
-      segments.push(_segment);
-      horizontals.push(_segment);
-      points.push(new Phaser.Geom.Point(_x, _y2));
-      points.push(new Phaser.Geom.Point(_x + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y2));
-      horizontal = false;
+    var x = _i2 * tileWidth + offset.x,
+      _y = offset.y;
+    if (!startPoint) {
+      startPoint = new Phaser.Geom.Point(x, _y);
+      columns[_i2].push(startPoint);
+    }
+    if (!endPoint) {
+      endPoint = new Phaser.Geom.Point(x + tileWidth, _y);
+    } else {
+      endPoint.x = x + tileWidth;
     }
   }
-
-  //add bottom horizontal segments
-  var _iterator4 = _createForOfIteratorHelper(this.object.layer.data[this.object.layer.data.length - 1]),
-    _step4;
-  try {
-    for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-      var _tile = _step4.value;
-      if (this.collisionTiles.includes(_tile.index)) {
-        if (horizontal) horizontal.width++;else horizontal = {
-          x: _tile.x,
-          y: _tile.y + 1,
-          width: 1
-        };
-        continue;
-      }
-      if (horizontal) {
-        var _x3 = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
-        var _y4 = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
-        var _segment3 = new Phaser.Geom.Line(_x3, _y4, _x3 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y4);
-        segments.push(_segment3);
-        horizontals.push(_segment3);
-        points.push(new Phaser.Geom.Point(_x3, _y4));
-        points.push(new Phaser.Geom.Point(_x3 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y4));
-        horizontal = false;
-      }
+  if (startPoint) {
+    startPoint.neighbours = [endPoint];
+    endPoint.neighbours = [startPoint];
+    points.push(startPoint, endPoint);
+    segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+    columns[row.length].push(endPoint);
+  }
+  startPoint = false;
+  endPoint = false;
+  for (var _i3 = 1, _iLength2 = this.object.layer.data.length - 1; _i3 < _iLength2; _i3++) {
+    row = this.object.layer.data[_i3];
+    var higherRow = this.object.layer.data[_i3 - 1];
+    if (this.collisionTiles.includes(row[0].index) != this.collisionTiles.includes(higherRow[0].index)) {
+      startPoint = new Phaser.Geom.Point(offset.x, _i3 * tileHeight + offset.y);
+      endPoint = new Phaser.Geom.Point(tileWidth + offset.x, _i3 * tileHeight + offset.y);
+      columns[0].push(startPoint);
     }
-
-    //add segment if exist
-  } catch (err) {
-    _iterator4.e(err);
-  } finally {
-    _iterator4.f();
-  }
-  if (horizontal) {
-    var _x2 = horizontal.x * this.object.layer.tileWidth * this.object.scaleX + offset.x;
-    var _y3 = horizontal.y * this.object.layer.tileHeight * this.object.scaleY + offset.y;
-    var _segment2 = new Phaser.Geom.Line(_x2, _y3, _x2 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y3);
-    segments.push(_segment2);
-    horizontals.push(_segment2);
-    points.push(new Phaser.Geom.Point(_x2, _y3));
-    points.push(new Phaser.Geom.Point(_x2 + this.object.layer.tileWidth * this.object.scaleX * horizontal.width, _y3));
-    horizontal = false;
-  }
-
-  //add right vertical segments
-  var vertical = false;
-  var verticalsLastColumn = [];
-  var _iterator5 = _createForOfIteratorHelper(this.object.layer.data),
-    _step5;
-  try {
-    for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-      var _row = _step5.value;
-      var _tile2 = _row[_row.length - 1];
-
-      //if tile blocks ray
-      if (this.collisionTiles.includes(_tile2.index)) {
-        if (vertical) {
-          vertical.height++;
-        } else {
-          vertical = {
-            x: _tile2.x + 1,
-            y: _tile2.y,
-            height: 1
-          };
+    for (var j = 1, jLength = row.length; j < jLength; j++) {
+      var _tile = row[j],
+        isCollisionTile = this.collisionTiles.includes(_tile.index),
+        isCollisionHigherTile = this.collisionTiles.includes(higherRow[j].index);
+      if (isCollisionTile == isCollisionHigherTile) {
+        if (startPoint) {
+          startPoint.neighbours = [endPoint];
+          endPoint.neighbours = [startPoint];
+          points.push(startPoint, endPoint);
+          segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+          columns[j].push(endPoint);
+          startPoint = false;
+          endPoint = false;
         }
         continue;
       }
-      if (vertical) {
-        verticalsLastColumn.push(vertical);
-        vertical = false;
+      var _x = j * tileWidth + offset.x,
+        _y2 = _i3 * tileHeight + offset.y;
+      if (!startPoint) {
+        startPoint = new Phaser.Geom.Point(_x, _y2);
+        columns[j].push(startPoint);
+      }
+      if (!endPoint) {
+        endPoint = new Phaser.Geom.Point(_x + tileWidth, _y2);
+      } else {
+        endPoint.x = _x + tileWidth;
       }
     }
-  } catch (err) {
-    _iterator5.e(err);
-  } finally {
-    _iterator5.f();
+    if (startPoint) {
+      startPoint.neighbours = [endPoint];
+      endPoint.neighbours = [startPoint];
+      points.push(startPoint, endPoint);
+      segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+      columns[row.length].push(endPoint);
+    }
+    startPoint = false;
+    endPoint = false;
   }
-  verticals.push(verticalsLastColumn);
 
-  //add vertical segments
-  for (var _i = 0, _verticals = verticals; _i < _verticals.length; _i++) {
-    var column = _verticals[_i];
-    if (!column) continue;
-    var _iterator6 = _createForOfIteratorHelper(column),
-      _step6;
-    try {
-      var _loop = function _loop() {
-        var vertical = _step6.value;
-        var x = vertical.x * _this.object.layer.tileWidth * _this.object.scaleX + offset.x;
-        var y1 = vertical.y * _this.object.layer.tileHeight * _this.object.scaleY + offset.y;
-        var y2 = y1 + _this.object.layer.tileHeight * _this.object.scaleY * vertical.height;
-        var segment = new Phaser.Geom.Line(x, y1, x, y2);
-        segments.push(segment);
-
-        //add points if they're not already there
-        if (!points.filter(function (point) {
-          return point.x == x && point.y == y1;
-        })) points.push(new Phaser.Geom.Point(x, y));
-        if (!points.filter(function (point) {
-          return point.x == x && point.y == y2;
-        })) points.push(new Phaser.Geom.Point(x, y));
-
-        //get intersections between horizontal segments and vertical
-        var _iterator7 = _createForOfIteratorHelper(horizontals),
-          _step7;
-        try {
-          for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
-            var horizontalSegment = _step7.value;
-            if (segment.x1 == horizontalSegment.x1 || segment.x1 == horizontalSegment.x2 || segment.x2 == horizontalSegment.x1 || segment.x2 == horizontalSegment.x2) continue;
-            if (segment.y1 == horizontalSegment.y1 || segment.y1 == horizontalSegment.y2 || segment.y2 == horizontalSegment.y1 || segment.y2 == horizontalSegment.y2) continue;
-            var point = new Phaser.Geom.Point();
-            if (Phaser.Geom.Intersects.LineToLine(segment, horizontalSegment, point)) {
-              points.push(point);
-            }
-          }
-        } catch (err) {
-          _iterator7.e(err);
-        } finally {
-          _iterator7.f();
-        }
-      };
-      for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-        _loop();
+  //set bottom horizontal lines
+  row = this.object.layer.data.slice(-1)[0];
+  var y = this.object.layer.data.length * tileHeight + offset.y;
+  if (this.collisionTiles.includes(row[0].index)) {
+    startPoint = new Phaser.Geom.Point(offset.x, y);
+    endPoint = new Phaser.Geom.Point(tileWidth + offset.x, y);
+    columns[0].push(startPoint);
+  }
+  for (var _i4 = 1, _iLength3 = row.length; _i4 < _iLength3; _i4++) {
+    var _tile2 = row[_i4];
+    if (!this.collisionTiles.includes(_tile2.index)) {
+      if (startPoint) {
+        startPoint.neighbours = [endPoint];
+        endPoint.neighbours = [startPoint];
+        points.push(startPoint, endPoint);
+        segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+        columns[_i4].push(endPoint);
+        startPoint = false;
+        endPoint = false;
       }
-    } catch (err) {
-      _iterator6.e(err);
-    } finally {
-      _iterator6.f();
+      continue;
+    }
+    var _x2 = _i4 * tileWidth + offset.x;
+    if (!startPoint) {
+      startPoint = new Phaser.Geom.Point(_x2, y);
+      columns[_i4].push(startPoint);
+    }
+    if (!endPoint) {
+      endPoint = new Phaser.Geom.Point(_x2 + tileWidth, y);
+    } else {
+      endPoint.x = _x2 + tileWidth;
+    }
+  }
+  if (startPoint) {
+    startPoint.neighbours = [endPoint];
+    endPoint.neighbours = [startPoint];
+    points.push(startPoint, endPoint);
+    segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+    columns[i].push(endPoint);
+  }
+
+  //set vertical lines
+  for (var _i5 = 0, _iLength4 = columns.length; _i5 < _iLength4; _i5++) {
+    var column = columns[_i5];
+    for (var _j = 0, _jLength = column.length - 1; _j < _jLength; _j++) {
+      segments.push(new Phaser.Geom.Line(column[_j].x, column[_j].y, column[_j + 1].x, column[_j + 1].y));
+      column[_j].neighbours.push(column[_j + 1]);
+      column[_j + 1].neighbours.push(column[_j]);
+      _j++;
     }
   }
   this._points = points;
@@ -1848,7 +1839,7 @@ function setCollisionTiles() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setSegmentCount": function() { return /* binding */ setSegmentCount; }
+/* harmony export */   setSegmentCount: function() { return /* binding */ setSegmentCount; }
 /* harmony export */ });
 /**
  * Set segment count for cirle's map.
@@ -1881,8 +1872,8 @@ function setSegmentCount(count) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setAngle": function() { return /* binding */ setAngle; },
-/* harmony export */   "setAngleDeg": function() { return /* binding */ setAngleDeg; }
+/* harmony export */   setAngle: function() { return /* binding */ setAngle; },
+/* harmony export */   setAngleDeg: function() { return /* binding */ setAngleDeg; }
 /* harmony export */ });
 /**
  * Set ray's angle (direction) in radians.
@@ -1933,7 +1924,7 @@ function setAngleDeg() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "cast": function() { return /* binding */ cast; }
+/* harmony export */   cast: function() { return /* binding */ cast; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2013,7 +2004,9 @@ function cast() {
     for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var object = _step2.value;
       var map = void 0,
-        boundingBox = void 0;
+        boundingBox = void 0,
+        boundingBoxIntersections = [],
+        canTestMap = false;
       if (object.type === 'body' || object.type === 'composite') map = object.raycasterMap;else map = object.data.get('raycasterMap');
       stats.testedMappedObjects++;
 
@@ -2026,7 +2019,17 @@ function cast() {
       }
 
       //check if object is intersected by ray
-      if (Phaser.Geom.Intersects.GetLineToRectangle(this._ray, boundingBox).length === 0) continue;
+      if (Phaser.Geom.Intersects.GetLineToRectangle(this._ray, boundingBox, boundingBoxIntersections).length === 0) continue;
+
+      //check if bounding box is closer than closest intersection
+      for (var _i = 0, _boundingBoxIntersect = boundingBoxIntersections; _i < _boundingBoxIntersect.length; _i++) {
+        var boundingBoxIntersection = _boundingBoxIntersect[_i];
+        if (Phaser.Math.Distance.Between(this.origin.x, this.origin.y, boundingBoxIntersection.x, boundingBoxIntersection.y) < closestDistance) {
+          canTestMap = true;
+          break;
+        }
+      }
+      if (!canTestMap) continue;
       stats.hitMappedObjects++;
       stats.segments += map.getSegments(this).length;
 
@@ -2243,7 +2246,7 @@ function cast() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "castCircle": function() { return /* binding */ castCircle; }
+/* harmony export */   castCircle: function() { return /* binding */ castCircle; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2356,10 +2359,12 @@ function castCircle() {
               var segmentB = _step4.value;
               var intersection = [];
               if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
-              rayTargets.push({
+              var target = {
                 point: new Phaser.Geom.Point(intersection.x, intersection.y),
                 angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y)
-              });
+              };
+              target.point.intersection = false;
+              rayTargets.push(target);
             }
           } catch (err) {
             _iterator4.e(err);
@@ -2389,29 +2394,57 @@ function castCircle() {
 
   //cast rays
   for (var _i = 0, _rayTargets = rayTargets; _i < _rayTargets.length; _i++) {
-    var target = _rayTargets[_i];
+    var _target = _rayTargets[_i];
     //if current target is the same as previous one skip loop
-    if (target.angle === previousTarget.angle) {
+    if (_target.angle === previousTarget.angle) {
       continue;
     }
-    previousTarget = target;
-    this.setAngle(target.angle);
+    previousTarget = _target;
+    this.setAngle(_target.angle);
     var _intersection = this.cast({
       objects: testedObjects,
-      target: target.point,
+      target: _target.point,
       internal: true
     });
     if (_intersection) {
-      //if intersection hits target point cast two additional rays
+      //if intersection hits target point check if ray "glanced" mapped object.
       var castSides = false;
       if (this.round) {
-        var roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
+        var roundedTarget = new Phaser.Geom.Point(Math.round(_target.point.x), Math.round(_target.point.y));
         castSides = Phaser.Geom.Point.Equals(roundedTarget, _intersection);
       } else {
-        castSides = Phaser.Geom.Point.Equals(target.point, _intersection);
+        castSides = Phaser.Geom.Point.Equals(_target.point, _intersection);
       }
+      if (!castSides) {
+        //castSides = false;
+      } else if (!_target.point.neighbours || _target.point.neighbours.length < 2) {
+        //castSides = true;
+      }
+      //check if ray and at least one line between target point and it's neighbours are parallel
+      else if (Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, _target.point.neighbours[0])) < 0.0001 || Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, _target.point.neighbours[1])) < 0.0001) {
+        //castSides = true;
+      }
+      //check if ray crossed more than 1 points of triangle created by tatget point and it's neighbours
+      else {
+        var triangleIntersections = [];
+        if (!_target.point.neighboursTriangle) {
+          _target.point.neighboursTriangle = new Phaser.Geom.Triangle(_target.point.x, _target.point.y, _target.point.neighbours[0].x, _target.point.neighbours[0].y, _target.point.neighbours[1].x, _target.point.neighbours[1].y);
+        }
+        Phaser.Geom.Intersects.GetTriangleToLine(_target.point.neighboursTriangle, this._ray, triangleIntersections);
+
+        //if point of intersection of ray and tirangle are close to target point, assume ray "glanced" triangle.
+        for (var _i2 = 0, _triangleIntersection = triangleIntersections; _i2 < _triangleIntersection.length; _i2++) {
+          var triangleIntersection = _triangleIntersection[_i2];
+          if (Math.abs(_target.point.x - triangleIntersection.x) > 0.0001 && Math.abs(_target.point.y - triangleIntersection.y) > 0.0001) {
+            castSides = false;
+            break;
+          }
+        }
+      }
+
+      //if ray "glanced" mapped object cast two additional rays
       if (castSides) {
-        this.setAngle(target.angle - 0.0001);
+        this.setAngle(_target.angle - 0.0001);
         var intersectionA = this.cast({
           objects: testedObjects,
           internal: true
@@ -2420,7 +2453,7 @@ function castCircle() {
           intersections.push(intersectionA);
         }
         intersections.push(_intersection);
-        this.setAngle(target.angle + 0.0001);
+        this.setAngle(_target.angle + 0.0001);
         var intersectionB = this.cast({
           objects: testedObjects,
           internal: true
@@ -2452,7 +2485,7 @@ function castCircle() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "castCone": function() { return /* binding */ castCone; }
+/* harmony export */   castCone: function() { return /* binding */ castCone; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2650,7 +2683,7 @@ function castCone() {
       internal: true
     });
     if (_intersection) {
-      //if intersection hits target point cast two additional rays
+      //if intersection hits target point check if ray "glanced" mapped object.
       var castSides = false;
       if (this.round) {
         var roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
@@ -2658,6 +2691,34 @@ function castCone() {
       } else {
         castSides = Phaser.Geom.Point.Equals(target.point, _intersection);
       }
+      if (!castSides) {
+        //castSides = false;
+      } else if (!target.point.neighbours || target.point.neighbours.length < 2) {
+        //castSides = true;
+      }
+      //check if ray and at least one line between target point and it's neighbours are parallel
+      else if (Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, target.point.neighbours[0])) < 0.0001 || Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, target.point.neighbours[1])) < 0.0001) {
+        //castSides = true;
+      }
+      //check if ray crossed more than 1 points of triangle created by tatget point and it's neighbours
+      else {
+        var triangleIntersections = [];
+        if (!target.point.neighboursTriangle) {
+          target.point.neighboursTriangle = new Phaser.Geom.Triangle(target.point.x, target.point.y, target.point.neighbours[0].x, target.point.neighbours[0].y, target.point.neighbours[1].x, target.point.neighbours[1].y);
+        }
+        Phaser.Geom.Intersects.GetTriangleToLine(target.point.neighboursTriangle, this._ray, triangleIntersections);
+
+        //if point of intersection of ray and tirangle are close to arget point, assume ray "glanced" triangle.
+        for (var _i2 = 0, _triangleIntersection = triangleIntersections; _i2 < _triangleIntersection.length; _i2++) {
+          var triangleIntersection = _triangleIntersection[_i2];
+          if (Math.abs(target.point.x - triangleIntersection.x) > 0.0001 && Math.abs(target.point.y - triangleIntersection.y) > 0.0001) {
+            castSides = false;
+            break;
+          }
+        }
+      }
+
+      //if ray "glanced" mapped object cast two additional rays
       if (castSides) {
         this.setAngle(target.angle - 0.0001);
         var intersectionA = this.cast({
@@ -2700,8 +2761,8 @@ function castCone() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setCone": function() { return /* binding */ setCone; },
-/* harmony export */   "setConeDeg": function() { return /* binding */ setConeDeg; }
+/* harmony export */   setCone: function() { return /* binding */ setCone; },
+/* harmony export */   setConeDeg: function() { return /* binding */ setConeDeg; }
 /* harmony export */ });
 /**
  * Set ray's cone angle (width) in radians.
@@ -2750,7 +2811,7 @@ function setConeDeg() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "config": function() { return /* binding */ config; }
+/* harmony export */   config: function() { return /* binding */ config; }
 /* harmony export */ });
 /**
  * Configure ray.
@@ -2841,7 +2902,7 @@ function config(options) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "drawDebug": function() { return /* binding */ drawDebug; }
+/* harmony export */   drawDebug: function() { return /* binding */ drawDebug; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2852,7 +2913,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
  * @method Raycaster.Ray#drawDebug
  * @memberof Raycaster
  * @private
- * @since 0.10
+ * @since 0.10.0
  * 
  * @param {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
  * 
@@ -2914,7 +2975,7 @@ function drawDebug(intersections) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "destroy": function() { return /* binding */ destroy; }
+/* harmony export */   destroy: function() { return /* binding */ destroy; }
 /* harmony export */ });
 /**
  * Destroy object
@@ -2942,7 +3003,7 @@ function destroy() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "enablePhysics": function() { return /* binding */ enablePhysics; }
+/* harmony export */   enablePhysics: function() { return /* binding */ enablePhysics; }
 /* harmony export */ });
 /**
  * Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. Physics body can be added only once.
@@ -3011,13 +3072,13 @@ function enablePhysics() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setCollidesWith": function() { return /* binding */ setCollidesWith; },
-/* harmony export */   "setCollisionCategory": function() { return /* binding */ setCollisionCategory; },
-/* harmony export */   "setCollisionGroup": function() { return /* binding */ setCollisionGroup; },
-/* harmony export */   "setOnCollide": function() { return /* binding */ setOnCollide; },
-/* harmony export */   "setOnCollideActive": function() { return /* binding */ setOnCollideActive; },
-/* harmony export */   "setOnCollideEnd": function() { return /* binding */ setOnCollideEnd; },
-/* harmony export */   "setOnCollideWith": function() { return /* binding */ setOnCollideWith; }
+/* harmony export */   setCollidesWith: function() { return /* binding */ setCollidesWith; },
+/* harmony export */   setCollisionCategory: function() { return /* binding */ setCollisionCategory; },
+/* harmony export */   setCollisionGroup: function() { return /* binding */ setCollisionGroup; },
+/* harmony export */   setOnCollide: function() { return /* binding */ setOnCollide; },
+/* harmony export */   setOnCollideActive: function() { return /* binding */ setOnCollideActive; },
+/* harmony export */   setOnCollideEnd: function() { return /* binding */ setOnCollideEnd; },
+/* harmony export */   setOnCollideWith: function() { return /* binding */ setOnCollideWith; }
 /* harmony export */ });
 /*Matter physics methods for ray body*/
 /**
@@ -3233,7 +3294,7 @@ function setOnCollideWith(body, callback) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setOrigin": function() { return /* binding */ setOrigin; }
+/* harmony export */   setOrigin: function() { return /* binding */ setOrigin; }
 /* harmony export */ });
 /**
  * Set ray's source position.
@@ -3273,10 +3334,10 @@ function setOrigin(x, y) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "overlap": function() { return /* binding */ overlap; },
-/* harmony export */   "processOverlap": function() { return /* binding */ processOverlap; },
-/* harmony export */   "testArcadeOverlap": function() { return /* binding */ testArcadeOverlap; },
-/* harmony export */   "testMatterOverlap": function() { return /* binding */ testMatterOverlap; }
+/* harmony export */   overlap: function() { return /* binding */ overlap; },
+/* harmony export */   processOverlap: function() { return /* binding */ processOverlap; },
+/* harmony export */   testArcadeOverlap: function() { return /* binding */ testArcadeOverlap; },
+/* harmony export */   testMatterOverlap: function() { return /* binding */ testMatterOverlap; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -3557,10 +3618,10 @@ function testMatterOverlap(object) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "boundsInRange": function() { return /* binding */ boundsInRange; },
-/* harmony export */   "setCollisionRange": function() { return /* binding */ setCollisionRange; },
-/* harmony export */   "setDetectionRange": function() { return /* binding */ setDetectionRange; },
-/* harmony export */   "setRayRange": function() { return /* binding */ setRayRange; }
+/* harmony export */   boundsInRange: function() { return /* binding */ boundsInRange; },
+/* harmony export */   setCollisionRange: function() { return /* binding */ setCollisionRange; },
+/* harmony export */   setDetectionRange: function() { return /* binding */ setDetectionRange; },
+/* harmony export */   setRayRange: function() { return /* binding */ setRayRange; }
 /* harmony export */ });
 /**
  * Set ray's range.
@@ -3687,7 +3748,7 @@ function boundsInRange(object) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Ray": function() { return /* binding */ Ray; }
+/* harmony export */   Ray: function() { return /* binding */ Ray; }
 /* harmony export */ });
 /**
  * @classdesc
@@ -3697,7 +3758,7 @@ __webpack_require__.r(__webpack_exports__);
  * @namespace Raycaster.Ray
  * @class Raycaster.Ray
  * @constructor
- * @since 6.0.0
+ * @since 0.6.0
  *
  * @param {object} [options] - Ray's congfiguration options. May include:
  * @param {Phaser.Geom.Point|Point} [options.origin = {x:0, y:0}] - Ray's position.
@@ -3941,7 +4002,7 @@ Ray.prototype = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "setRay": function() { return /* binding */ setRay; }
+/* harmony export */   setRay: function() { return /* binding */ setRay; }
 /* harmony export */ });
 /**
  * Set ray's position, direction (angle) and range.
@@ -3979,7 +4040,7 @@ function setRay(x, y, angle) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "slice": function() { return /* binding */ slice; }
+/* harmony export */   slice: function() { return /* binding */ slice; }
 /* harmony export */ });
 /**
  * Slice ray's field of view represented by polygon or array of points into array of triangles.
@@ -4021,7 +4082,7 @@ function slice() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "getStats": function() { return /* binding */ getStats; }
+/* harmony export */   getStats: function() { return /* binding */ getStats; }
 /* harmony export */ });
 /**
  * Get ray statistics for last casting. Stats include
@@ -4052,7 +4113,7 @@ function getStats() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Raycaster": function() { return /* binding */ Raycaster; }
+/* harmony export */   Raycaster: function() { return /* binding */ Raycaster; }
 /* harmony export */ });
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -4072,7 +4133,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  * @namespace Raycaster
  * @class Raycaster
  * @constructor
- * @since 6.0.0
+ * @since 0.6.0
  *
  * @param {object} [options] - Raycaster's configuration options. May include:
  * @param {Phaser.Scene} [options.scene] - Scene in which Raycaster will be used.
@@ -4091,7 +4152,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.10.6';
+  this.version = '0.10.7';
   /**
   * Raycaster's scene
   *
@@ -4409,11 +4470,19 @@ Raycaster.prototype = {
         var object = _step2.value;
         //remove object from mapped objects list
         var index = this.mappedObjects.indexOf(object);
-        if (index >= 0) this.mappedObjects.splice(index, 1);
+        if (index === -1) {
+          continue;
+        }
+        this.mappedObjects.splice(index, 1);
+
         //remove object from dynamic mapped objects list
         index = this.dynamicMappedObjects.indexOf(object);
         if (index >= 0) this.dynamicMappedObjects.splice(index, 1);
-        if (object.type === 'body' || object.type === 'composite') object.raycasterMap.destroy();else object.data.get('raycasterMap').destroy();
+        if (object.type === 'body' || object.type === 'composite') {
+          object.raycasterMap.destroy();
+        } else {
+          object.data.get('raycasterMap').destroy();
+        }
 
         //update stats            
         switch (object.type) {

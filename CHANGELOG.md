@@ -1,5 +1,22 @@
 # Change Log
 
+## Version 0.10.7 - 2023.08.06
+
+### Updates
+
+* `Map.update` method now add array of neighbours to points in `Map.points`.
+* Optimisation of `Map.update` method for tilemaps.
+* `Ray.castCircle` and `Ray.castCone` methods now checks if ray is "glancing" mapped objects.
+* `Ray.cast` method now won't test mapped object if current closest intersection is closer to ray than it's bounding box.
+
+### Bug fixes
+
+* `Raycaster.removeMappedObjects` method isn't checking if passed objects are mapped.
+* `Map.destroy` method doesn't work properly for Arcade and Matter bodies (fixed by @dreasgrech). 
+* Fixed docs typos
+
+---
+
 ## Version 0.10.6 - 2023.01.30
 
 ### Updates

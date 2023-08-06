@@ -34,8 +34,7 @@ export function getPoints(ray = false) {
         Phaser.Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
 
         //adding tangent points
-        points.push(rayA.getPointB());
-        points.push(rayB.getPointB());
+        points.push(rayA.getPointB(), rayB.getPointB());
 
         return points;
     }
@@ -104,10 +103,17 @@ export function updateMap() {
             let vertices = bodyItem.parts[0].vertices;
 
             points.push(new Phaser.Geom.Point(vertices[0].x, vertices[0].y));
+            points[0].neighbours = [];
 
             for(let i = 1, length = vertices.length; i < length; i++) {
-                let pointA = new Phaser.Geom.Point(vertices[i - 1].x, vertices[i - 1].y);
-                let pointB = new Phaser.Geom.Point(vertices[i].x, vertices[i].y);
+                //let pointA = new Phaser.Geom.Point(vertices[i - 1].x, vertices[i - 1].y);
+                let pointA = points.slice(-1)[0],
+                    pointB = new Phaser.Geom.Point(vertices[i].x, vertices[i].y);
+                    
+                if(!pointA.neighbours)
+                    pointA.neighbours = [];
+                pointA.neighbours.push(pointB);
+                pointB.neighbours = [pointA];
 
                 points.push(pointB);
 
@@ -119,6 +125,8 @@ export function updateMap() {
             //closing segment
             let segment = new Phaser.Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
             segments.push(segment);
+
+            points[0].neighbours.push(points.slice(-1)[0]);
         }
 
         //if concave body
@@ -127,11 +135,14 @@ export function updateMap() {
                 let vertices = bodyItem.parts[i].vertices;
                 let pointA = new Phaser.Geom.Point(vertices[0].x, vertices[0].y);
 
-                if(points.find(point => point.x == pointA.x && point.y == pointA.y) === undefined)
+                if(points.find(point => point.x == pointA.x && point.y == pointA.y) === undefined) {
+                    pointA.neighbours = [];
                     points.push(pointA);
+                }
 
                 for(let j = 1, length = vertices.length; j < length; j++) {
                     let pointB = new Phaser.Geom.Point(vertices[j].x, vertices[j].y);
+                    pointB.neighbours = [];
                     //check if segment was already added
                     let segmentIndex = segments.findIndex(segment => (segment.x1 == pointA.x && segment.y1 == pointA.y && segment.x2 == pointB.x && segment.y2 == pointB.y) || (segment.x1 == pointB.x && segment.y1 == pointB.y && segment.x2 == pointA.x && segment.y2 == pointA.y));
                     
@@ -141,8 +152,11 @@ export function updateMap() {
                         continue;
                     }
                     
-                    if(points.find(point => point.x == pointB.x && point.y == pointB.y) === undefined)
+                    if(points.find(point => point.x == pointB.x && point.y == pointB.y) === undefined) {
+                        pointA.neighbours.push(pointB);
+                        pointB.neighbours.push(pointA);
                         points.push(pointB);
+                    }
 
                     //add segment
                     let segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
@@ -155,8 +169,9 @@ export function updateMap() {
                 let closingSegment = new Phaser.Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
 
                 let segmentIndex = segments.findIndex(segment => (segment.x1 == closingSegment.x1 && segment.y1 == closingSegment.y1 && segment.x2 == closingSegment.x2 && segment.y2 == closingSegment.y2) || (segment.x1 == closingSegment.x2 && segment.y1 == closingSegment.y2 && segment.x2 == closingSegment.x1 && segment.y2 == closingSegment.y1));
-                if(segmentIndex === undefined)
+                if(segmentIndex === undefined) {
                     segments.push(closingSegment);
+                }
             }
         }
     }
