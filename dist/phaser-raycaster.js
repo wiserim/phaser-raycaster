@@ -1653,8 +1653,8 @@ function updateMap() {
   var points = [],
     segments = [],
     columns = Array(this.object.layer.data[0].length + 1);
-  for (var _i = 0, iLength = columns.length; _i < iLength; _i++) {
-    columns[_i] = [];
+  for (var i = 0, iLength = columns.length; i < iLength; i++) {
+    columns[i] = [];
   }
 
   //calculate offset based on object position and origin point
@@ -1671,25 +1671,25 @@ function updateMap() {
     endPoint = new Phaser.Geom.Point(tileWidth + offset.x, offset.y);
     columns[0].push(startPoint);
   }
-  for (var _i2 = 1, _iLength = row.length; _i2 < _iLength; _i2++) {
-    var tile = row[_i2];
+  for (var _i = 1, _iLength = row.length; _i < _iLength; _i++) {
+    var tile = row[_i];
     if (!this.collisionTiles.includes(tile.index)) {
       if (startPoint) {
         startPoint.neighbours = [endPoint];
         endPoint.neighbours = [startPoint];
         points.push(startPoint, endPoint);
         segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
-        columns[_i2].push(endPoint);
+        columns[_i].push(endPoint);
         startPoint = false;
         endPoint = false;
       }
       continue;
     }
-    var x = _i2 * tileWidth + offset.x,
+    var x = _i * tileWidth + offset.x,
       _y = offset.y;
     if (!startPoint) {
       startPoint = new Phaser.Geom.Point(x, _y);
-      columns[_i2].push(startPoint);
+      columns[_i].push(startPoint);
     }
     if (!endPoint) {
       endPoint = new Phaser.Geom.Point(x + tileWidth, _y);
@@ -1706,12 +1706,12 @@ function updateMap() {
   }
   startPoint = false;
   endPoint = false;
-  for (var _i3 = 1, _iLength2 = this.object.layer.data.length - 1; _i3 < _iLength2; _i3++) {
-    row = this.object.layer.data[_i3];
-    var higherRow = this.object.layer.data[_i3 - 1];
+  for (var _i2 = 1, _iLength2 = this.object.layer.data.length - 1; _i2 < _iLength2; _i2++) {
+    row = this.object.layer.data[_i2];
+    var higherRow = this.object.layer.data[_i2 - 1];
     if (this.collisionTiles.includes(row[0].index) != this.collisionTiles.includes(higherRow[0].index)) {
-      startPoint = new Phaser.Geom.Point(offset.x, _i3 * tileHeight + offset.y);
-      endPoint = new Phaser.Geom.Point(tileWidth + offset.x, _i3 * tileHeight + offset.y);
+      startPoint = new Phaser.Geom.Point(offset.x, _i2 * tileHeight + offset.y);
+      endPoint = new Phaser.Geom.Point(tileWidth + offset.x, _i2 * tileHeight + offset.y);
       columns[0].push(startPoint);
     }
     for (var j = 1, jLength = row.length; j < jLength; j++) {
@@ -1731,7 +1731,7 @@ function updateMap() {
         continue;
       }
       var _x = j * tileWidth + offset.x,
-        _y2 = _i3 * tileHeight + offset.y;
+        _y2 = _i2 * tileHeight + offset.y;
       if (!startPoint) {
         startPoint = new Phaser.Geom.Point(_x, _y2);
         columns[j].push(startPoint);
@@ -1761,24 +1761,24 @@ function updateMap() {
     endPoint = new Phaser.Geom.Point(tileWidth + offset.x, y);
     columns[0].push(startPoint);
   }
-  for (var _i4 = 1, _iLength3 = row.length; _i4 < _iLength3; _i4++) {
-    var _tile2 = row[_i4];
+  for (var _i3 = 1, _iLength3 = row.length; _i3 < _iLength3; _i3++) {
+    var _tile2 = row[_i3];
     if (!this.collisionTiles.includes(_tile2.index)) {
       if (startPoint) {
         startPoint.neighbours = [endPoint];
         endPoint.neighbours = [startPoint];
         points.push(startPoint, endPoint);
         segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
-        columns[_i4].push(endPoint);
+        columns[_i3].push(endPoint);
         startPoint = false;
         endPoint = false;
       }
       continue;
     }
-    var _x2 = _i4 * tileWidth + offset.x;
+    var _x2 = _i3 * tileWidth + offset.x;
     if (!startPoint) {
       startPoint = new Phaser.Geom.Point(_x2, y);
-      columns[_i4].push(startPoint);
+      columns[_i3].push(startPoint);
     }
     if (!endPoint) {
       endPoint = new Phaser.Geom.Point(_x2 + tileWidth, y);
@@ -1791,12 +1791,12 @@ function updateMap() {
     endPoint.neighbours = [startPoint];
     points.push(startPoint, endPoint);
     segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
-    columns[i].push(endPoint);
+    columns[row.length].push(endPoint);
   }
 
   //set vertical lines
-  for (var _i5 = 0, _iLength4 = columns.length; _i5 < _iLength4; _i5++) {
-    var column = columns[_i5];
+  for (var _i4 = 0, _iLength4 = columns.length; _i4 < _iLength4; _i4++) {
+    var column = columns[_i4];
     for (var _j = 0, _jLength = column.length - 1; _j < _jLength; _j++) {
       segments.push(new Phaser.Geom.Line(column[_j].x, column[_j].y, column[_j + 1].x, column[_j + 1].y));
       column[_j].neighbours.push(column[_j + 1]);

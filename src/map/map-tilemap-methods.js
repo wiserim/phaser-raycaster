@@ -272,7 +272,7 @@ export function updateMap() {
         points.push(startPoint, endPoint);
         segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
 
-        columns[i].push(endPoint);
+        columns[row.length].push(endPoint);
     }
 
     //set vertical lines
