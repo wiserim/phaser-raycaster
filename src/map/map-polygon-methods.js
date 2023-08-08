@@ -95,7 +95,7 @@ export function updateMap() {
     if(!this.object.closePath) {
        segments.pop();
        points[0].neighbours.shift();
-       points[points.lenght - 1].neighbours.pop();
+       points[points.length - 1].neighbours.pop();
     }
 
     this._points = points;

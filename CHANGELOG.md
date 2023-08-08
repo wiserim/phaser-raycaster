@@ -1,4 +1,11 @@
 # Change Log
+## Version 0.10.8 - 2023.08.08
+
+### Bug fixes
+
+* Typo in `Map.update` method for polygons.
+* Typo in `Map.update` method for containers.
+* Fixed code changes caused by faulty linter.
 
 ## Version 0.10.7 - 2023.08.06
 
