@@ -1208,7 +1208,6 @@ function updateMap() {
         points.push(new Phaser.Geom.Point(vertices[0].x, vertices[0].y));
         points[0].neighbours = [];
         for (var i = 1, length = vertices.length; i < length; i++) {
-          //let pointA = new Phaser.Geom.Point(vertices[i - 1].x, vertices[i - 1].y);
           var pointA = points.slice(-1)[0],
             pointB = new Phaser.Geom.Point(vertices[i].x, vertices[i].y);
           if (!pointA.neighbours) pointA.neighbours = [];
@@ -1228,57 +1227,44 @@ function updateMap() {
       }
 
       //if concave body
-      else if (bodyItem.parts.length > 1) {
-        var _loop = function _loop() {
-          var vertices = bodyItem.parts[_i].vertices;
-          var pointA = new Phaser.Geom.Point(vertices[0].x, vertices[0].y);
-          if (points.find(function (point) {
-            return point.x == pointA.x && point.y == pointA.y;
-          }) === undefined) {
-            pointA.neighbours = [];
-            points.push(pointA);
-          }
-          var _loop2 = function _loop2() {
-            var pointB = new Phaser.Geom.Point(vertices[j].x, vertices[j].y);
-            pointB.neighbours = [];
-            //check if segment was already added
-            var segmentIndex = segments.findIndex(function (segment) {
-              return segment.x1 == pointA.x && segment.y1 == pointA.y && segment.x2 == pointB.x && segment.y2 == pointB.y || segment.x1 == pointB.x && segment.y1 == pointB.y && segment.x2 == pointA.x && segment.y2 == pointA.y;
-            });
-            if (segmentIndex !== -1) {
-              segments.splice(segmentIndex, 1);
-              pointA = pointB;
-              return "continue";
+      else {
+        var parts = [],
+          indexedPoints = [];
+        for (var _i = 1, iLength = bodyItem.parts.length; _i < iLength; _i++) {
+          var _vertices = bodyItem.parts[_i].vertices,
+            part = [];
+          for (var j = 0, jLength = _vertices.length; j < jLength; j++) {
+            var point = new Phaser.Geom.Point(_vertices[j].x, _vertices[j].y);
+            if (part.length) {
+              var prevPoint = part.slice(-1)[0];
+              point.neighbours = [prevPoint];
+              prevPoint.neighbours.push(point);
+            } else {
+              point.neighbours = [];
             }
-            if (points.find(function (point) {
-              return point.x == pointB.x && point.y == pointB.y;
-            }) === undefined) {
-              pointA.neighbours.push(pointB);
-              pointB.neighbours.push(pointA);
-              points.push(pointB);
+            var index = _vertices[j].x + '/' + _vertices[j].y;
+            if (indexedPoints[index] === undefined) {
+              points.push(point);
+              indexedPoints[index] = point;
+            } else {
+              indexedPoints[index].neighbours.push(point);
+              point.neighbours.push(indexedPoints[index]);
             }
-
-            //add segment
-            var segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
-            segments.push(segment);
-            pointA = pointB;
-          };
-          for (var j = 1, _length2 = vertices.length; j < _length2; j++) {
-            var _ret = _loop2();
-            if (_ret === "continue") continue;
+            part.push(point);
+            if (_vertices[j].isInternal) {
+              parts.push(part);
+              part = [];
+            }
           }
-
-          //closing segment
-          var closingSegment = new Phaser.Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
-          var segmentIndex = segments.findIndex(function (segment) {
-            return segment.x1 == closingSegment.x1 && segment.y1 == closingSegment.y1 && segment.x2 == closingSegment.x2 && segment.y2 == closingSegment.y2 || segment.x1 == closingSegment.x2 && segment.y1 == closingSegment.y2 && segment.x2 == closingSegment.x1 && segment.y2 == closingSegment.y1;
-          });
-          if (segmentIndex === undefined) {
-            segments.push(closingSegment);
+          parts.push(part);
+        }
+        for (var _i2 = 0, _parts = parts; _i2 < _parts.length; _i2++) {
+          var _part = _parts[_i2];
+          var _i3 = 0,
+            _iLength = void 0;
+          for (_i3 = 0, _iLength = _part.length - 1; _i3 < _iLength; _i3++) {
+            segments.push(new Phaser.Geom.Line(_part[_i3].x, _part[_i3].y, _part[_i3 + 1].x, _part[_i3 + 1].y));
           }
-        };
-        for (var _i = 1, _length = bodyItem.parts.length; _i < _length; _i++) {
-          _loop();
         }
       }
     }
@@ -2022,11 +2008,23 @@ function cast() {
       if (Phaser.Geom.Intersects.GetLineToRectangle(this._ray, boundingBox, boundingBoxIntersections).length === 0) continue;
 
       //check if bounding box is closer than closest intersection
-      for (var _i = 0, _boundingBoxIntersect = boundingBoxIntersections; _i < _boundingBoxIntersect.length; _i++) {
-        var boundingBoxIntersection = _boundingBoxIntersect[_i];
-        if (Phaser.Math.Distance.Between(this.origin.x, this.origin.y, boundingBoxIntersection.x, boundingBoxIntersection.y) < closestDistance) {
-          canTestMap = true;
-          break;
+      if (Phaser.Geom.Rectangle.ContainsPoint(boundingBox, this.origin)) {
+        canTestMap = true;
+      } else {
+        var _iterator3 = _createForOfIteratorHelper(boundingBoxIntersections),
+          _step3;
+        try {
+          for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+            var boundingBoxIntersection = _step3.value;
+            if (Phaser.Math.Distance.Between(this.origin.x, this.origin.y, boundingBoxIntersection.x, boundingBoxIntersection.y) < closestDistance) {
+              canTestMap = true;
+              break;
+            }
+          }
+        } catch (err) {
+          _iterator3.e(err);
+        } finally {
+          _iterator3.f();
         }
       }
       if (!canTestMap) continue;
@@ -2034,11 +2032,11 @@ function cast() {
       stats.segments += map.getSegments(this).length;
 
       //check intersections
-      var _iterator3 = _createForOfIteratorHelper(map.getSegments(this)),
-        _step3;
+      var _iterator4 = _createForOfIteratorHelper(map.getSegments(this)),
+        _step4;
       try {
-        for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
-          var segment = _step3.value;
+        for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+          var segment = _step4.value;
           var _intersection3 = [];
 
           //if target point is segmemt point
@@ -2062,9 +2060,9 @@ function cast() {
 
         //check if map is circular
       } catch (err) {
-        _iterator3.e(err);
+        _iterator4.e(err);
       } finally {
-        _iterator3.f();
+        _iterator4.f();
       }
       if (map.circle) {
         //if circular map has generated points (besides tangent points to ray)
@@ -2076,11 +2074,11 @@ function cast() {
         if (options.target) {
           var points = map.getPoints(this);
           var isTangent = false;
-          var _iterator4 = _createForOfIteratorHelper(points),
-            _step4;
+          var _iterator5 = _createForOfIteratorHelper(points),
+            _step5;
           try {
-            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-              var point = _step4.value;
+            for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
+              var point = _step5.value;
               if (Phaser.Geom.Point.Equals(options.target, point)) {
                 //get closest intersection
                 var _distance2 = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
@@ -2094,9 +2092,9 @@ function cast() {
               }
             }
           } catch (err) {
-            _iterator4.e(err);
+            _iterator5.e(err);
           } finally {
-            _iterator4.f();
+            _iterator5.f();
           }
           if (isTangent) continue;
         }
@@ -2118,11 +2116,11 @@ function cast() {
         //create transformed circle
         var circle = new Phaser.Geom.Circle(offset.x, offset.y, map.object.radius * map.object.scaleX);
         if (Phaser.Geom.Intersects.GetLineToCircle(this._ray, circle, circleIntersections)) {
-          var _iterator5 = _createForOfIteratorHelper(circleIntersections),
-            _step5;
+          var _iterator6 = _createForOfIteratorHelper(circleIntersections),
+            _step6;
           try {
-            for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
-              var _intersection = _step5.value;
+            for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
+              var _intersection = _step6.value;
               //get closest intersection
               var _distance3 = Phaser.Math.Distance.Between(this._ray.x1, this._ray.y1, _intersection.x, _intersection.y);
               if (_distance3 < closestDistance) {
@@ -2132,28 +2130,28 @@ function cast() {
               }
             }
           } catch (err) {
-            _iterator5.e(err);
+            _iterator6.e(err);
           } finally {
-            _iterator5.f();
+            _iterator6.f();
           }
         }
       }
 
       //check container map's circles
       if (map.type == 'Container' && map._circles.length > 0) {
-        var _iterator6 = _createForOfIteratorHelper(map._circles),
-          _step6;
+        var _iterator7 = _createForOfIteratorHelper(map._circles),
+          _step7;
         try {
-          for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
-            var _circle = _step6.value;
+          for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
+            var _circle = _step7.value;
             //check if target point is a circle tangent point to ray
             if (options.target) {
               var _isTangent = false;
-              var _iterator7 = _createForOfIteratorHelper(_circle.points),
-                _step7;
+              var _iterator8 = _createForOfIteratorHelper(_circle.points),
+                _step8;
               try {
-                for (_iterator7.s(); !(_step7 = _iterator7.n()).done;) {
-                  var _point = _step7.value;
+                for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
+                  var _point = _step8.value;
                   if (Phaser.Geom.Point.Equals(options.target, _point)) {
                     //get closest intersection
                     var _distance4 = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, _point.x, _point.y);
@@ -2167,19 +2165,19 @@ function cast() {
                   }
                 }
               } catch (err) {
-                _iterator7.e(err);
+                _iterator8.e(err);
               } finally {
-                _iterator7.f();
+                _iterator8.f();
               }
               if (_isTangent) continue;
             }
             var _circleIntersections = [];
             if (Phaser.Geom.Intersects.GetLineToCircle(this._ray, _circle, _circleIntersections)) {
-              var _iterator8 = _createForOfIteratorHelper(_circleIntersections),
-                _step8;
+              var _iterator9 = _createForOfIteratorHelper(_circleIntersections),
+                _step9;
               try {
-                for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
-                  var _intersection2 = _step8.value;
+                for (_iterator9.s(); !(_step9 = _iterator9.n()).done;) {
+                  var _intersection2 = _step9.value;
                   //get closest intersection
                   var _distance5 = Phaser.Math.Distance.Between(this._ray.x1, this._ray.y1, _intersection2.x, _intersection2.y);
                   if (_distance5 < closestDistance) {
@@ -2189,16 +2187,16 @@ function cast() {
                   }
                 }
               } catch (err) {
-                _iterator8.e(err);
+                _iterator9.e(err);
               } finally {
-                _iterator8.f();
+                _iterator9.f();
               }
             }
           }
         } catch (err) {
-          _iterator6.e(err);
+          _iterator7.e(err);
         } finally {
-          _iterator6.f();
+          _iterator7.f();
         }
       }
     }

@@ -87,10 +87,15 @@ export function cast(options = {}) {
             continue;
 
         //check if bounding box is closer than closest intersection
-        for(let boundingBoxIntersection of boundingBoxIntersections) {
-            if(Phaser.Math.Distance.Between(this.origin.x, this.origin.y, boundingBoxIntersection.x, boundingBoxIntersection.y) < closestDistance) {
-                canTestMap = true;
-                break;
+        if(Phaser.Geom.Rectangle.ContainsPoint(boundingBox, this.origin)) {
+            canTestMap = true;
+        }
+        else {
+            for(let boundingBoxIntersection of boundingBoxIntersections) {
+                if(Phaser.Math.Distance.Between(this.origin.x, this.origin.y, boundingBoxIntersection.x, boundingBoxIntersection.y) < closestDistance) {
+                    canTestMap = true;
+                    break;
+                }
             }
         }
 
