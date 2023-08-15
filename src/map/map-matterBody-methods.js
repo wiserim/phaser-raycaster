@@ -106,7 +106,6 @@ export function updateMap() {
             points[0].neighbours = [];
 
             for(let i = 1, length = vertices.length; i < length; i++) {
-                //let pointA = new Phaser.Geom.Point(vertices[i - 1].x, vertices[i - 1].y);
                 let pointA = points.slice(-1)[0],
                     pointB = new Phaser.Geom.Point(vertices[i].x, vertices[i].y);
                     
@@ -130,47 +129,51 @@ export function updateMap() {
         }
 
         //if concave body
-        else if(bodyItem.parts.length > 1) {
-            for(let i = 1, length = bodyItem.parts.length; i < length; i++) {
-                let vertices = bodyItem.parts[i].vertices;
-                let pointA = new Phaser.Geom.Point(vertices[0].x, vertices[0].y);
+        else {
+            let parts = [],
+                indexedPoints = [];
 
-                if(points.find(point => point.x == pointA.x && point.y == pointA.y) === undefined) {
-                    pointA.neighbours = [];
-                    points.push(pointA);
-                }
-
-                for(let j = 1, length = vertices.length; j < length; j++) {
-                    let pointB = new Phaser.Geom.Point(vertices[j].x, vertices[j].y);
-                    pointB.neighbours = [];
-                    //check if segment was already added
-                    let segmentIndex = segments.findIndex(segment => (segment.x1 == pointA.x && segment.y1 == pointA.y && segment.x2 == pointB.x && segment.y2 == pointB.y) || (segment.x1 == pointB.x && segment.y1 == pointB.y && segment.x2 == pointA.x && segment.y2 == pointA.y));
-                    
-                    if(segmentIndex !== -1) {
-                        segments.splice(segmentIndex, 1);
-                        pointA = pointB;
-                        continue;
-                    }
-                    
-                    if(points.find(point => point.x == pointB.x && point.y == pointB.y) === undefined) {
-                        pointA.neighbours.push(pointB);
-                        pointB.neighbours.push(pointA);
-                        points.push(pointB);
-                    }
-
-                    //add segment
-                    let segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
-                    segments.push(segment);
-                    
-                    pointA = pointB;
-                }
+            for(let i = 1, iLength = bodyItem.parts.length; i < iLength; i++) {
+                let vertices = bodyItem.parts[i].vertices,
+                    part = [];
                 
-                //closing segment
-                let closingSegment = new Phaser.Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
+                for(let j = 0, jLength = vertices.length; j < jLength; j++) {
+                    let point = new Phaser.Geom.Point(vertices[j].x, vertices[j].y);
 
-                let segmentIndex = segments.findIndex(segment => (segment.x1 == closingSegment.x1 && segment.y1 == closingSegment.y1 && segment.x2 == closingSegment.x2 && segment.y2 == closingSegment.y2) || (segment.x1 == closingSegment.x2 && segment.y1 == closingSegment.y2 && segment.x2 == closingSegment.x1 && segment.y2 == closingSegment.y1));
-                if(segmentIndex === undefined) {
-                    segments.push(closingSegment);
+                    if(part.length) {
+                        let prevPoint = part.slice(-1)[0];
+                        point.neighbours = [prevPoint];
+                        prevPoint.neighbours.push(point);
+                    }
+                    else {
+                        point.neighbours = [];
+                    }
+
+                    let index = vertices[j].x + '/' + vertices[j].y;
+                    if(indexedPoints[index] === undefined) {
+                        points.push(point);
+                        indexedPoints[index] = point;
+                    }
+                    else {
+                        indexedPoints[index].neighbours.push(point);
+                        point.neighbours.push(indexedPoints[index]);
+                    }
+
+                    part.push(point);
+
+                    if(vertices[j].isInternal) {
+                        parts.push(part);
+                        part = [];
+                    }
+                }
+                parts.push(part);
+            }
+
+            for(let part of parts) {
+                let i = 0,
+                iLength;
+                for(i = 0, iLength = part.length - 1; i < iLength; i++) {
+                    segments.push(new Phaser.Geom.Line(part[i].x, part[i].y, part[i+1].x, part[i+1].y));
                 }
             }
         }

@@ -1,18 +1,29 @@
 # Change Log
+## Version 0.10.9 - 2023.08.15
+
+### Updates
+* Rework of `Map.updateMap` method for matter objects.
+* `Map.updateMap` method for matter objects now ignores internal segments in concave bodies.
+
+### Bug fixes
+
+* `Ray.cast` method won't test mapped object when ray is inside of mapped object and hit another mapped object within / overlap the first one.
+* `Map.updateMap` method for matter objects don't map properly non enclosed concave bodies.
+
 ## Version 0.10.8 - 2023.08.08
 
 ### Bug fixes
 
-* Typo in `Map.update` method for polygons.
-* Typo in `Map.update` method for containers.
+* Typo in `Map.updateMap` method for polygons.
+* Typo in `Map.updateMap` method for containers.
 * Fixed code changes caused by faulty linter.
 
 ## Version 0.10.7 - 2023.08.06
 
 ### Updates
 
-* `Map.update` method now add array of neighbours to points in `Map.points`.
-* Optimisation of `Map.update` method for tilemaps.
+* `Map.updateMap` method now add array of neighbours to points in `Map.points`.
+* Optimisation of `Map.updateMap` method for tilemaps.
 * `Ray.castCircle` and `Ray.castCone` methods now checks if ray is "glancing" mapped objects.
 * `Ray.cast` method now won't test mapped object if current closest intersection is closer to ray than it's bounding box.
 
