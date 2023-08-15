@@ -4150,7 +4150,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.10.8';
+  this.version = '0.10.9';
   /**
   * Raycaster's scene
   *

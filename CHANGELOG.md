@@ -1,7 +1,8 @@
 # Change Log
-## Version 0.10.9 - 2023.08.
+## Version 0.10.9 - 2023.08.15
 
 ### Updates
+* Rework of `Map.updateMap` method for matter objects.
 * `Map.updateMap` method for matter objects now ignores internal segments in concave bodies.
 
 ### Bug fixes
