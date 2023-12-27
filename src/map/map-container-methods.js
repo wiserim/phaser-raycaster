@@ -213,6 +213,7 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
         else
             childPoint = new Phaser.Geom.Point(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y);
 
+        //add neighbour points
         childPoint.neighbours = [];
         if(childPoints.length > 0) {
             let previousPoint = childPoints.slice(-1)[0];
@@ -224,7 +225,10 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
         points.push(childPoint);
     }
 
-    childPoints.slice(-1)[0].neighbours.push(childPoints[0]);
+    //add neighbour point to last child point
+    if(childPoints.length > 0) {
+        childPoints.slice(-1)[0].neighbours.push(childPoints[0]);
+    }
 
     //add child segments
     for(let segment of map.getSegments()) {

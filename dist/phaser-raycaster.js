@@ -720,6 +720,8 @@ function _updateChildMap(child, points, segments, rotation, offset) {
       }
       //if rotation === 0
       else childPoint = new Phaser.Geom.Point(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y);
+
+      //add neighbour points
       childPoint.neighbours = [];
       if (childPoints.length > 0) {
         var previousPoint = childPoints.slice(-1)[0];
@@ -729,12 +731,16 @@ function _updateChildMap(child, points, segments, rotation, offset) {
       childPoints.push(childPoint);
       points.push(childPoint);
     }
+
+    //add neighbour point to last child point
   } catch (err) {
     _iterator4.e(err);
   } finally {
     _iterator4.f();
   }
-  childPoints.slice(-1)[0].neighbours.push(childPoints[0]);
+  if (childPoints.length > 0) {
+    childPoints.slice(-1)[0].neighbours.push(childPoints[0]);
+  }
 
   //add child segments
   var _iterator5 = _createForOfIteratorHelper(map.getSegments()),
@@ -4150,7 +4156,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.10.9';
+  this.version = '0.10.10';
   /**
   * Raycaster's scene
   *
