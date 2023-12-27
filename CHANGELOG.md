@@ -1,4 +1,16 @@
 # Change Log
+## Version 0.10.10 - 2023.12.27
+
+### Updates
+
+* `npm run build-typings` command now add module declaration to types.d.ts file automatically.
+
+### Bug fixes
+
+* `Map.updateMap` method for containers doesn't check if child object's points array is empty while assigning neighbour points to last point.
+
+---
+
 ## Version 0.10.9 - 2023.08.15
 
 ### Updates
