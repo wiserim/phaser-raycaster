@@ -594,6 +594,7 @@ declare class Raycaster {
     destroy(): void;
 }
 
+
 declare module 'phaser-raycaster' {
     export = PhaserRaycaster;
 }
