@@ -156,7 +156,7 @@ export function updateMap() {
     startPoint = false;
     endPoint = false;
 
-    for(let i = 1, iLength = this.object.layer.data.length - 1; i < iLength; i++) {
+    for(let i = 1, iLength = this.object.layer.data.length - 1; i <= iLength; i++) {
         row = this.object.layer.data[i];
         let higherRow = this.object.layer.data[i - 1];
 
