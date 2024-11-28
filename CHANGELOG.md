@@ -1,4 +1,16 @@
 # Change Log
+## Version 0.10.11 - 2024.11.28
+
+## Updates
+
+* Updated dev dependencies.
+
+## Bug fixes
+
+* `Map.updateMap` methlemod for tiaps doesn't map bottom row (fixed by [@theblacknight Kevin Bergin](https://github.com/theblacknight)).
+
+---
+
 ## Version 0.10.10 - 2023.12.27
 
 ### Updates
@@ -42,7 +54,7 @@
 ### Bug fixes
 
 * `Raycaster.removeMappedObjects` method isn't checking if passed objects are mapped.
-* `Map.destroy` method doesn't work properly for Arcade and Matter bodies (fixed by @dreasgrech). 
+* `Map.destroy` method doesn't work properly for Arcade and Matter bodies (fixed by [@dreasgrech Andreas Grech](https://github.com/dreasgrech)).
 * Fixed docs typos
 
 ---
