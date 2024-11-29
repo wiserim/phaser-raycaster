@@ -7,7 +7,7 @@
 
 ## Bug fixes
 
-* `Map.updateMap` methlemod for tiaps doesn't map bottom row (fixed by [@theblacknight Kevin Bergin](https://github.com/theblacknight)).
+* `Map.updateMap` method for tilemaps doesn't map bottom row (fixed by [@theblacknight Kevin Bergin](https://github.com/theblacknight)).
 
 ---
 
