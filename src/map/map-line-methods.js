@@ -10,7 +10,7 @@
 *
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 export function getPoints(ray = false) {
     if(!this.active)
@@ -54,7 +54,7 @@ export function updateMap() {
     let segments = [];
     
     //calculate offset based on object position and origin point
-    let offset = new Phaser.Geom.Point();
+    let offset = new Phaser.Math.Vector2();
     offset.x = this.object.x - this.object.displayWidth * this.object.originX;
     offset.y = this.object.y - this.object.displayHeight * this.object.originY;
     let pointA = this.object.geom.getPointA();
@@ -72,16 +72,16 @@ export function updateMap() {
         pointB = vectorB.getPointB();
 
         //set points
-        points.push(new Phaser.Geom.Point(pointA.x, pointA.y));
-        points.push(new Phaser.Geom.Point(pointB.x, pointB.y));
+        points.push(new Phaser.Math.Vector2(pointA.x, pointA.y));
+        points.push(new Phaser.Math.Vector2(pointB.x, pointB.y));
         //set segment
         segments.push(new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y));
     }
     //if rotation === 0
     else {
         //set points
-        points.push(new Phaser.Geom.Point(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y));
-        points.push(new Phaser.Geom.Point(pointB.x * this.object.scaleX + offset.x, pointB.y * this.object.scaleY + offset.y));
+        points.push(new Phaser.Math.Vector2(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y));
+        points.push(new Phaser.Math.Vector2(pointB.x * this.object.scaleX + offset.x, pointB.y * this.object.scaleY + offset.y));
         //set segment
         segments.push(new Phaser.Geom.Line(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y, pointB.x + offset.x * this.object.scaleX, pointB.y * this.object.scaleY + offset.y));
     }

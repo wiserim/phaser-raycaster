@@ -1,11 +1,25 @@
 # Change Log
+## Version 0.11.00 - WIP
+
+### Updates
+
+* Updated dev dependencies.
+* Replaced `Phaser.Geom.Point` class with `Phaser.Math.Vector2`.
+* Replaced `Phaser.Geom.Point.Equals` static method with `Phaser.Math.Vector2.equals()` function in `Ray.cast`, `Ray.castCircle` and `Ray.castCone` methhods.
+
+### Bug fixes
+
+* `Map.updateMap` method for tilemaps doesn't map corner points when tiles are in "checkerbox" pattern. 
+
+---
+
 ## Version 0.10.11 - 2024.11.28
 
-## Updates
+### Updates
 
 * Updated dev dependencies.
 
-## Bug fixes
+### Bug fixes
 
 * `Map.updateMap` method for tilemaps doesn't map bottom row (fixed by [@theblacknight Kevin Bergin](https://github.com/theblacknight)).
 

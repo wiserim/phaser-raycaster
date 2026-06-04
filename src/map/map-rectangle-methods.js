@@ -10,7 +10,7 @@
 *
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 export function getPoints(ray = false) {
     if(!this.active)

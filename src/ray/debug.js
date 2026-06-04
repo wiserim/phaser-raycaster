@@ -6,7 +6,7 @@
  * @private
  * @since 0.10.0
  * 
- * @param {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
+ * @param {Phaser.Math.Vector2[]} Array of points of ray's closest intersections with tested objects.
  * 
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */

@@ -10,7 +10,7 @@
 *
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 export function getPoints(ray = false) {
     if(!this.active)
@@ -102,12 +102,12 @@ export function updateMap() {
         if(bodyItem.parts.length === 1 || this.forceConvex) {
             let vertices = bodyItem.parts[0].vertices;
 
-            points.push(new Phaser.Geom.Point(vertices[0].x, vertices[0].y));
+            points.push(new Phaser.Math.Vector2(vertices[0].x, vertices[0].y));
             points[0].neighbours = [];
 
             for(let i = 1, length = vertices.length; i < length; i++) {
                 let pointA = points.slice(-1)[0],
-                    pointB = new Phaser.Geom.Point(vertices[i].x, vertices[i].y);
+                    pointB = new Phaser.Math.Vector2(vertices[i].x, vertices[i].y);
                     
                 if(!pointA.neighbours)
                     pointA.neighbours = [];
@@ -138,7 +138,7 @@ export function updateMap() {
                     part = [];
                 
                 for(let j = 0, jLength = vertices.length; j < jLength; j++) {
-                    let point = new Phaser.Geom.Point(vertices[j].x, vertices[j].y);
+                    let point = new Phaser.Math.Vector2(vertices[j].x, vertices[j].y);
 
                     if(part.length) {
                         let prevPoint = part.slice(-1)[0];

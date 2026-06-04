@@ -94,7 +94,7 @@ export function Map(options, raycaster) {
     *
     * @param {Raycaster.Ray} [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
     *
-    * @return {Phaser.Geom.Point[]} Array of mapped object's vertices.
+    * @return {Phaser.Math.Vector2[]} Array of mapped object's vertices.
     */
     this.getPoints;
     /**

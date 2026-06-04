@@ -335,14 +335,14 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 *
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
   if (!this.active) return [];
   if (this._points.length > 0) return this._points;
   var points = [];
-  var offset = new Phaser.Geom.Point();
+  var offset = new Phaser.Math.Vector2();
   offset.x = this.object.x - this.object.displayWidth * (this.object.originX - 0.5);
   offset.y = this.object.y - this.object.displayHeight * (this.object.originY - 0.5);
 
@@ -417,7 +417,7 @@ function updateMap() {
   }
 
   //calculate offset based on object position and origin point
-  var offset = new Phaser.Geom.Point();
+  var offset = new Phaser.Math.Vector2();
   offset.x = this.object.x - this.object.displayWidth * this.object.originX + this.object.radius * this.object.scaleX;
   offset.y = this.object.y - this.object.displayHeight * this.object.originY + this.object.radius * this.object.scaleY;
 
@@ -508,7 +508,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 * @param {boolean} [isChild] - Flag definig if it is child container.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
@@ -516,7 +516,7 @@ function getPoints() {
   if (!this.active) return [];
   var points = this._points;
   //calculate offset based on container position and origin point
-  var offset = new Phaser.Geom.Point();
+  var offset = new Phaser.Math.Vector2();
   offset.x = this.object.x - this.object.displayWidth * this.object.originX;
   offset.y = this.object.y - this.object.displayHeight * this.object.originY;
 
@@ -599,7 +599,7 @@ function updateMap() {
   this._circles = [];
 
   //calculate offset based on container position and origin point
-  var offset = new Phaser.Geom.Point();
+  var offset = new Phaser.Math.Vector2();
   offset.x = this.object.x - this.object.displayWidth * this.object.originX;
   offset.y = this.object.y - this.object.displayHeight * this.object.originY;
   var rotation = container.rotation;
@@ -643,7 +643,7 @@ function updateMap() {
                   points.push(vector.getPointB());
                 }
                 //if rotation === 0
-                else points.push(new Phaser.Geom.Point(intersection.x * container.scaleX + offset.x, intersection.y * container.scaleX + offset.y));
+                else points.push(new Phaser.Math.Vector2(intersection.x * container.scaleX + offset.x, intersection.y * container.scaleX + offset.y));
               }
             } catch (err) {
               _iterator3.e(err);
@@ -675,10 +675,10 @@ function updateMap() {
 * @since 0.10.3
 *
 * @param {object} [child] - Container's child object.
-* @param {Phaser.Geom.Point[]} [points] - Container's mapped points.
+* @param {Phaser.Math.Vector2[]} [points] - Container's mapped points.
 * @param {Phaser.Geom.Line[]} [segments] - Container's mapped segments.
 * @param {number} [rotation] - Container's rotation.
-* @param {Phaser.Geom.Point} [offset] - Container's offset.
+* @param {Phaser.Math.Vector2} [offset] - Container's offset.
 */
 function _updateChildMap(child, points, segments, rotation, offset) {
   if (!child.data) child.setDataEnabled();
@@ -717,7 +717,7 @@ function _updateChildMap(child, points, segments, rotation, offset) {
         childPoint = _vector2.getPointB();
       }
       //if rotation === 0
-      else childPoint = new Phaser.Geom.Point(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y);
+      else childPoint = new Phaser.Math.Vector2(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y);
 
       //add neighbour points
       childPoint.neighbours = [];
@@ -767,7 +767,7 @@ function _updateChildMap(child, points, segments, rotation, offset) {
     _iterator5.f();
   }
   if (map.type == 'Arc' && this.segmentCount == 0) {
-    var circleOffset = new Phaser.Geom.Point();
+    var circleOffset = new Phaser.Math.Vector2();
     circleOffset.x = (map.object.x - map.object.displayWidth * (map.object.originX - 0.5)) * this.object.scaleX + offset.x;
     circleOffset.y = (map.object.y - map.object.displayHeight * (map.object.originY - 0.5)) * this.object.scaleY + offset.y;
     if (rotation !== 0) {
@@ -782,7 +782,7 @@ function _updateChildMap(child, points, segments, rotation, offset) {
     try {
       for (_iterator6.s(); !(_step6 = _iterator6.n()).done;) {
         var childMapCircle = _step6.value;
-        var _circleOffset = new Phaser.Geom.Point();
+        var _circleOffset = new Phaser.Math.Vector2();
         _circleOffset.x = childMapCircle.x * this.object.scaleX + offset.x;
         _circleOffset.y = childMapCircle.y * this.object.scaleY + offset.y;
         if (rotation !== 0) {
@@ -909,7 +909,7 @@ function Map(options, raycaster) {
   *
   * @param {Raycaster.Ray} [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
   *
-  * @return {Phaser.Geom.Point[]} Array of mapped object's vertices.
+  * @return {Phaser.Math.Vector2[]} Array of mapped object's vertices.
   */
   this.getPoints;
   /**
@@ -1012,7 +1012,7 @@ __webpack_require__.r(__webpack_exports__);
 *
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
@@ -1055,7 +1055,7 @@ function updateMap() {
   var segments = [];
 
   //calculate offset based on object position and origin point
-  var offset = new Phaser.Geom.Point();
+  var offset = new Phaser.Math.Vector2();
   offset.x = this.object.x - this.object.displayWidth * this.object.originX;
   offset.y = this.object.y - this.object.displayHeight * this.object.originY;
   var pointA = this.object.geom.getPointA();
@@ -1072,16 +1072,16 @@ function updateMap() {
     pointB = vectorB.getPointB();
 
     //set points
-    points.push(new Phaser.Geom.Point(pointA.x, pointA.y));
-    points.push(new Phaser.Geom.Point(pointB.x, pointB.y));
+    points.push(new Phaser.Math.Vector2(pointA.x, pointA.y));
+    points.push(new Phaser.Math.Vector2(pointB.x, pointB.y));
     //set segment
     segments.push(new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y));
   }
   //if rotation === 0
   else {
     //set points
-    points.push(new Phaser.Geom.Point(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y));
-    points.push(new Phaser.Geom.Point(pointB.x * this.object.scaleX + offset.x, pointB.y * this.object.scaleY + offset.y));
+    points.push(new Phaser.Math.Vector2(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y));
+    points.push(new Phaser.Math.Vector2(pointB.x * this.object.scaleX + offset.x, pointB.y * this.object.scaleY + offset.y));
     //set segment
     segments.push(new Phaser.Geom.Line(pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y, pointB.x + offset.x * this.object.scaleX, pointB.y * this.object.scaleY + offset.y));
   }
@@ -1126,7 +1126,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 *
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
@@ -1209,11 +1209,11 @@ function updateMap() {
       //if convex body
       if (bodyItem.parts.length === 1 || this.forceConvex) {
         var vertices = bodyItem.parts[0].vertices;
-        points.push(new Phaser.Geom.Point(vertices[0].x, vertices[0].y));
+        points.push(new Phaser.Math.Vector2(vertices[0].x, vertices[0].y));
         points[0].neighbours = [];
         for (var i = 1, length = vertices.length; i < length; i++) {
           var pointA = points.slice(-1)[0],
-            pointB = new Phaser.Geom.Point(vertices[i].x, vertices[i].y);
+            pointB = new Phaser.Math.Vector2(vertices[i].x, vertices[i].y);
           if (!pointA.neighbours) pointA.neighbours = [];
           pointA.neighbours.push(pointB);
           pointB.neighbours = [pointA];
@@ -1238,7 +1238,7 @@ function updateMap() {
           var _vertices = bodyItem.parts[_i].vertices,
             part = [];
           for (var j = 0, jLength = _vertices.length; j < jLength; j++) {
-            var point = new Phaser.Geom.Point(_vertices[j].x, _vertices[j].y);
+            var point = new Phaser.Math.Vector2(_vertices[j].x, _vertices[j].y);
             if (part.length) {
               var prevPoint = part.slice(-1)[0];
               point.neighbours = [prevPoint];
@@ -1333,7 +1333,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 *
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
@@ -1376,7 +1376,7 @@ function updateMap() {
   var segments = [];
 
   //calculate offset based on object position and origin point
-  var offset = new Phaser.Geom.Point();
+  var offset = new Phaser.Math.Vector2();
   offset.x = this.object.x - this.object.displayWidth * this.object.originX;
   offset.y = this.object.y - this.object.displayHeight * this.object.originY;
   //set points
@@ -1405,7 +1405,7 @@ function updateMap() {
     try {
       for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
         var _point = _step2.value;
-        points.push(new Phaser.Geom.Point(_point.x * this.object.scaleX + offset.x, _point.y * this.object.scaleY + offset.y));
+        points.push(new Phaser.Math.Vector2(_point.x * this.object.scaleX + offset.x, _point.y * this.object.scaleY + offset.y));
       }
     } catch (err) {
       _iterator2.e(err);
@@ -1463,7 +1463,7 @@ __webpack_require__.r(__webpack_exports__);
 *
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
@@ -1552,7 +1552,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 *
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 function getPoints() {
   var ray = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
@@ -1579,8 +1579,8 @@ function getPoints() {
   try {
     for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
       var segment = _step2.value;
-      if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x1, segment.y1) > ray.detectionRange) points.push(new Phaser.Geom.Point(segment.x1, segment.y1));
-      if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x2, segment.y2) > ray.detectionRange) points.push(new Phaser.Geom.Point(segment.x2, segment.y2));
+      if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x1, segment.y1) > ray.detectionRange) points.push(new Phaser.Math.Vector2(segment.x1, segment.y1));
+      if (Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x2, segment.y2) > ray.detectionRange) points.push(new Phaser.Math.Vector2(segment.x2, segment.y2));
     }
   } catch (err) {
     _iterator2.e(err);
@@ -1648,7 +1648,7 @@ function updateMap() {
   }
 
   //calculate offset based on object position and origin point
-  var offset = new Phaser.Geom.Point(this.object.x, this.object.y);
+  var offset = new Phaser.Math.Vector2(this.object.x, this.object.y);
   var row = this.object.layer.data[0],
     tileWidth = this.object.layer.tileWidth * this.object.scaleX,
     tileHeight = this.object.layer.tileHeight * this.object.scaleY,
@@ -1657,8 +1657,8 @@ function updateMap() {
 
   //set top horizontal lines
   if (this.collisionTiles.includes(row[0].index)) {
-    startPoint = new Phaser.Geom.Point(offset.x, offset.y);
-    endPoint = new Phaser.Geom.Point(tileWidth + offset.x, offset.y);
+    startPoint = new Phaser.Math.Vector2(offset.x, offset.y);
+    endPoint = new Phaser.Math.Vector2(tileWidth + offset.x, offset.y);
     columns[0].push(startPoint);
   }
   for (var _i = 1, _iLength = row.length; _i < _iLength; _i++) {
@@ -1678,11 +1678,11 @@ function updateMap() {
     var x = _i * tileWidth + offset.x,
       _y = offset.y;
     if (!startPoint) {
-      startPoint = new Phaser.Geom.Point(x, _y);
+      startPoint = new Phaser.Math.Vector2(x, _y);
       columns[_i].push(startPoint);
     }
     if (!endPoint) {
-      endPoint = new Phaser.Geom.Point(x + tileWidth, _y);
+      endPoint = new Phaser.Math.Vector2(x + tileWidth, _y);
     } else {
       endPoint.x = x + tileWidth;
     }
@@ -1696,12 +1696,13 @@ function updateMap() {
   }
   startPoint = false;
   endPoint = false;
+  var lastPoint = false;
   for (var _i2 = 1, _iLength2 = this.object.layer.data.length; _i2 < _iLength2; _i2++) {
     row = this.object.layer.data[_i2];
     var higherRow = this.object.layer.data[_i2 - 1];
     if (this.collisionTiles.includes(row[0].index) != this.collisionTiles.includes(higherRow[0].index)) {
-      startPoint = new Phaser.Geom.Point(offset.x, _i2 * tileHeight + offset.y);
-      endPoint = new Phaser.Geom.Point(tileWidth + offset.x, _i2 * tileHeight + offset.y);
+      startPoint = new Phaser.Math.Vector2(offset.x, _i2 * tileHeight + offset.y);
+      endPoint = new Phaser.Math.Vector2(tileWidth + offset.x, _i2 * tileHeight + offset.y);
       columns[0].push(startPoint);
     }
     for (var j = 1, jLength = row.length; j < jLength; j++) {
@@ -1710,9 +1711,12 @@ function updateMap() {
         isCollisionHigherTile = this.collisionTiles.includes(higherRow[j].index);
       if (isCollisionTile == isCollisionHigherTile) {
         if (startPoint) {
-          startPoint.neighbours = [endPoint];
-          endPoint.neighbours = [startPoint];
-          points.push(startPoint, endPoint);
+          if (!startPoint.neighbours) {
+            startPoint.neighbours = [endPoint];
+            points.push(startPoint);
+          }
+          endPoint.neighbours = [lastPoint ? lastPoint : startPoint];
+          points.push(endPoint);
           segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
           columns[j].push(endPoint);
           startPoint = false;
@@ -1722,33 +1726,45 @@ function updateMap() {
       }
       var _x = j * tileWidth + offset.x,
         _y2 = _i2 * tileHeight + offset.y;
+
+      // check for checkerbox pattern
+      if (startPoint && this.collisionTiles.includes(higherRow[j - 1].index) != isCollisionHigherTile) {
+        var midPoint = new Phaser.Math.Vector2(_x, _y2);
+        midPoint.neighbours = [lastPoint ? lastPoint : startPoint];
+        lastPoint = midPoint;
+        if (!startPoint.neighbours) startPoint.neighbours = [lastPoint];
+        points.push(midPoint);
+      }
       if (!startPoint) {
-        startPoint = new Phaser.Geom.Point(_x, _y2);
+        startPoint = new Phaser.Math.Vector2(_x, _y2);
         columns[j].push(startPoint);
+        lastPoint = false;
       }
       if (!endPoint) {
-        endPoint = new Phaser.Geom.Point(_x + tileWidth, _y2);
+        endPoint = new Phaser.Math.Vector2(_x + tileWidth, _y2);
       } else {
         endPoint.x = _x + tileWidth;
       }
     }
     if (startPoint) {
-      startPoint.neighbours = [endPoint];
-      endPoint.neighbours = [startPoint];
+      if (!startPoint.neighbours) startPoint.neighbours = [lastPoint ? lastPoint : endPoint];
+      endPoint.neighbours = [lastPoint ? lastPoint : startPoint];
+      if (lastPoint) lastPoint.neighbours.push(endPoint);
       points.push(startPoint, endPoint);
       segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
       columns[row.length].push(endPoint);
     }
     startPoint = false;
     endPoint = false;
+    lastPoint = false;
   }
 
   //set bottom horizontal lines
   row = this.object.layer.data.slice(-1)[0];
   var y = this.object.layer.data.length * tileHeight + offset.y;
   if (this.collisionTiles.includes(row[0].index)) {
-    startPoint = new Phaser.Geom.Point(offset.x, y);
-    endPoint = new Phaser.Geom.Point(tileWidth + offset.x, y);
+    startPoint = new Phaser.Math.Vector2(offset.x, y);
+    endPoint = new Phaser.Math.Vector2(tileWidth + offset.x, y);
     columns[0].push(startPoint);
   }
   for (var _i3 = 1, _iLength3 = row.length; _i3 < _iLength3; _i3++) {
@@ -1767,11 +1783,11 @@ function updateMap() {
     }
     var _x2 = _i3 * tileWidth + offset.x;
     if (!startPoint) {
-      startPoint = new Phaser.Geom.Point(_x2, y);
+      startPoint = new Phaser.Math.Vector2(_x2, y);
       columns[_i3].push(startPoint);
     }
     if (!endPoint) {
-      endPoint = new Phaser.Geom.Point(_x2 + tileWidth, y);
+      endPoint = new Phaser.Math.Vector2(_x2 + tileWidth, y);
     } else {
       endPoint.x = _x2 + tileWidth;
     }
@@ -1929,10 +1945,10 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
  *
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = {Raycaster#mappedObjects}] - Array of game objects to test. If not provided test all mapped game objects.
- * @param {Phaser.Geom.Point|Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
+ * @param {Phaser.Math.Vector2|Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
  * @param {boolean} [options.internal = false] - Flag determining if method is used by other casting method.
  *
- * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found. Additionally contains reference to hit mapped object and segment if available.
+ * @return {(Phaser.Math.Vector2|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found. Additionally contains reference to hit mapped object and segment if available.
  */
 function cast() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -2045,7 +2061,7 @@ function cast() {
 
           //if target point is segmemt point
           if (options.target) {
-            if (Phaser.Geom.Point.Equals(options.target, segment.getPointA()) || Phaser.Geom.Point.Equals(options.target, segment.getPointB())) {
+            if (options.target.equals(segment.getPointA()) || options.target.equals(segment.getPointB())) {
               _intersection3 = options.target;
             } else if (!Phaser.Geom.Intersects.LineToLine(this._ray, segment, _intersection3)) continue;
           }
@@ -2083,7 +2099,7 @@ function cast() {
           try {
             for (_iterator5.s(); !(_step5 = _iterator5.n()).done;) {
               var point = _step5.value;
-              if (Phaser.Geom.Point.Equals(options.target, point)) {
+              if (point.equals(options.target)) {
                 //get closest intersection
                 var _distance2 = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
                 if (_distance2 < closestDistance) {
@@ -2103,7 +2119,7 @@ function cast() {
           if (isTangent) continue;
         }
         var circleIntersections = [];
-        var offset = new Phaser.Geom.Point();
+        var offset = new Phaser.Math.Vector2();
         offset.x = map.object.x - map.object.displayWidth * (map.object.originX - 0.5);
         offset.y = map.object.y - map.object.displayHeight * (map.object.originY - 0.5);
 
@@ -2156,7 +2172,7 @@ function cast() {
               try {
                 for (_iterator8.s(); !(_step8 = _iterator8.n()).done;) {
                   var _point = _step8.value;
-                  if (Phaser.Geom.Point.Equals(options.target, _point)) {
+                  if (_point.equals(options.target)) {
                     //get closest intersection
                     var _distance4 = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, _point.x, _point.y);
                     if (_distance4 < closestDistance) {
@@ -2225,7 +2241,7 @@ function cast() {
     if (this.ignoreNotIntersectedRays) return false;
     result = this._ray.getPointB();
   } else {
-    result = new Phaser.Geom.Point(closestIntersection.x, closestIntersection.y);
+    result = new Phaser.Math.Vector2(closestIntersection.x, closestIntersection.y);
     result.segment = closestSegment;
     result.object = closestObject;
   }
@@ -2264,7 +2280,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and it's segment if available.
+ * @return {Phaser.Math.Vector2[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and it's segment if available.
  */
 function castCircle() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -2362,7 +2378,7 @@ function castCircle() {
               var intersection = [];
               if (!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
               var target = {
-                point: new Phaser.Geom.Point(intersection.x, intersection.y),
+                point: new Phaser.Math.Vector2(intersection.x, intersection.y),
                 angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y)
               };
               target.point.intersection = false;
@@ -2412,10 +2428,10 @@ function castCircle() {
       //if intersection hits target point check if ray "glanced" mapped object.
       var castSides = false;
       if (this.round) {
-        var roundedTarget = new Phaser.Geom.Point(Math.round(_target.point.x), Math.round(_target.point.y));
-        castSides = Phaser.Geom.Point.Equals(roundedTarget, _intersection);
+        var roundedTarget = new Phaser.Math.Vector2(Math.round(_target.point.x), Math.round(_target.point.y));
+        castSides = roundedTarget.equals(_intersection);
       } else {
-        castSides = Phaser.Geom.Point.Equals(_target.point, _intersection);
+        castSides = _target.point.equals(_intersection);
       }
       if (!castSides) {
         //castSides = false;
@@ -2503,7 +2519,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and it's segment if available.
+ * @return {Phaser.Math.Vector2[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and it's segment if available.
  */
 function castCone() {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -2638,7 +2654,7 @@ function castCone() {
               var _angleOffsetDeg = Phaser.Math.Angle.ShortestBetween(Phaser.Math.RadToDeg(_angle), Phaser.Math.RadToDeg(originalAngle));
               if (Math.abs(_angleOffsetDeg) < Phaser.Math.RadToDeg(cone / 2)) {
                 rayTargets.push({
-                  point: new Phaser.Geom.Point(intersection.x, intersection.y),
+                  point: new Phaser.Math.Vector2(intersection.x, intersection.y),
                   angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y),
                   angleOffsetDeg: -_angleOffsetDeg
                 });
@@ -2688,10 +2704,10 @@ function castCone() {
       //if intersection hits target point check if ray "glanced" mapped object.
       var castSides = false;
       if (this.round) {
-        var roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
-        castSides = Phaser.Geom.Point.Equals(roundedTarget, _intersection);
+        var roundedTarget = new Phaser.Math.Vector2(Math.round(target.point.x), Math.round(target.point.y));
+        castSides = roundedTarget.equals(_intersection);
       } else {
-        castSides = Phaser.Geom.Point.Equals(target.point, _intersection);
+        castSides = target.point.equals(_intersection);
       }
       if (!castSides) {
         //castSides = false;
@@ -2824,7 +2840,7 @@ __webpack_require__.r(__webpack_exports__);
  * @since 0.6.0
  *
  * @param {object} [options] - Ray's congfiguration options. May include:
- * @param {Phaser.Geom.Point|Point} [options.origin = {x:0, y:0}] - Ray's position.
+ * @param {Phaser.Math.Vector2|Point} [options.origin = {x:0, y:0}] - Ray's position.
  * @param {number} [options.angle = 0] - Ray's angle in radians.
  * @param {number} [options.angleDeg = 0] - Ray's angle in degrees.
  * @param {number} [options.cone = 0] - Ray's cone angle in radians.
@@ -2917,7 +2933,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
  * @private
  * @since 0.10.0
  * 
- * @param {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects.
+ * @param {Phaser.Math.Vector2[]} Array of points of ray's closest intersections with tested objects.
  * 
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
@@ -3763,7 +3779,7 @@ __webpack_require__.r(__webpack_exports__);
  * @since 0.6.0
  *
  * @param {object} [options] - Ray's congfiguration options. May include:
- * @param {Phaser.Geom.Point|Point} [options.origin = {x:0, y:0}] - Ray's position.
+ * @param {Phaser.Math.Vector2|Point} [options.origin = {x:0, y:0}] - Ray's position.
  * @param {number} [options.angle = 0] - Ray's angle in radians.
  * @param {number} [options.angleDeg = 0] - Ray's angle in degrees.
  * @param {number} [options.cone = 0] - Ray's cone angle in radians.
@@ -3791,10 +3807,10 @@ function Ray(options, raycaster) {
   * Ray's source position.
   *
   * @name Raycaster.Ray#origin
-  * @type {Phaser.Geom.Point}
+  * @type {Phaser.Math.Vector2}
   * @since 0.6.0
   */
-  this.origin = new Phaser.Geom.Point();
+  this.origin = new Phaser.Math.Vector2();
   /**
   * Ray's representation used to calculating intersections.
   *
@@ -4355,7 +4371,7 @@ Raycaster.prototype = {
       segments: []
     };
     //set points
-    var points = [new Phaser.Geom.Point(this.boundingBox.rectangle.left, this.boundingBox.rectangle.top), new Phaser.Geom.Point(this.boundingBox.rectangle.right, this.boundingBox.rectangle.top), new Phaser.Geom.Point(this.boundingBox.rectangle.right, this.boundingBox.rectangle.bottom), new Phaser.Geom.Point(this.boundingBox.rectangle.left, this.boundingBox.rectangle.bottom)];
+    var points = [new Phaser.Math.Vector2(this.boundingBox.rectangle.left, this.boundingBox.rectangle.top), new Phaser.Math.Vector2(this.boundingBox.rectangle.right, this.boundingBox.rectangle.top), new Phaser.Math.Vector2(this.boundingBox.rectangle.right, this.boundingBox.rectangle.bottom), new Phaser.Math.Vector2(this.boundingBox.rectangle.left, this.boundingBox.rectangle.bottom)];
     this.boundingBox.points = points;
 
     //set segments
@@ -4643,7 +4659,7 @@ Raycaster.prototype = {
   * @since 0.6.0
   *
   * @param {object} [options] - Ray's congfiguration options. May include:
-  * @param {Phaser.Geom.Point|Point} [options.origin = {x:0, y:0}] - Ray's position.
+  * @param {Phaser.Math.Vector2|Point} [options.origin = {x:0, y:0}] - Ray's position.
   * @param {number} [options.angle = 0] - Ray's angle in radians.
   * @param {number} [options.angleDeg = 0] - Ray's angle in degrees.
   * @param {number} [options.cone = 0] - Ray's cone angle in radians.
@@ -4791,6 +4807,12 @@ Raycaster.prototype.Ray = (__webpack_require__(/*! ./ray/ray-core.js */ "./src/r
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module

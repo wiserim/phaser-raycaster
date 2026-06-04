@@ -9,7 +9,7 @@
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = Raycaster.mappedObjects] - Array of game objects to test. If not provided test all mapped game objects.
  *
- * @return {Phaser.Geom.Point[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and it's segment if available.
+ * @return {Phaser.Math.Vector2[]} Array of points of ray's closest intersections with tested objects. Additionally each point contains reference to hit mapped object and it's segment if available.
  */
 export function castCircle(options = {}) {
     let originalAngle = this.angle;
@@ -96,7 +96,7 @@ export function castCircle(options = {}) {
                         continue;
                     
                     let target = {
-                        point: new Phaser.Geom.Point(intersection.x, intersection.y),
+                        point: new Phaser.Math.Vector2(intersection.x, intersection.y),
                         angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y)
                     };
                     target.point.intersection = false;
@@ -143,11 +143,11 @@ export function castCircle(options = {}) {
             //if intersection hits target point check if ray "glanced" mapped object.
             let castSides = false;
             if(this.round) {
-                let roundedTarget = new Phaser.Geom.Point(Math.round(target.point.x), Math.round(target.point.y));
-                castSides = Phaser.Geom.Point.Equals(roundedTarget, intersection)
+                let roundedTarget = new Phaser.Math.Vector2(Math.round(target.point.x), Math.round(target.point.y));
+                castSides = roundedTarget.equals(intersection)
             }
             else {
-                castSides = Phaser.Geom.Point.Equals(target.point, intersection);
+                castSides = target.point.equals(intersection);
             }
 
             if(!castSides) {

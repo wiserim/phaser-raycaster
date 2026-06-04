@@ -250,10 +250,10 @@ Raycaster.prototype = {
         }
         //set points
         let points = [
-            new Phaser.Geom.Point(this.boundingBox.rectangle.left, this.boundingBox.rectangle.top),
-            new Phaser.Geom.Point(this.boundingBox.rectangle.right, this.boundingBox.rectangle.top),
-            new Phaser.Geom.Point(this.boundingBox.rectangle.right, this.boundingBox.rectangle.bottom),
-            new Phaser.Geom.Point(this.boundingBox.rectangle.left, this.boundingBox.rectangle.bottom)
+            new Phaser.Math.Vector2(this.boundingBox.rectangle.left, this.boundingBox.rectangle.top),
+            new Phaser.Math.Vector2(this.boundingBox.rectangle.right, this.boundingBox.rectangle.top),
+            new Phaser.Math.Vector2(this.boundingBox.rectangle.right, this.boundingBox.rectangle.bottom),
+            new Phaser.Math.Vector2(this.boundingBox.rectangle.left, this.boundingBox.rectangle.bottom)
         ];
 
         this.boundingBox.points = points;
@@ -548,7 +548,7 @@ Raycaster.prototype = {
     * @since 0.6.0
     *
     * @param {object} [options] - Ray's congfiguration options. May include:
-    * @param {Phaser.Geom.Point|Point} [options.origin = {x:0, y:0}] - Ray's position.
+    * @param {Phaser.Math.Vector2|Point} [options.origin = {x:0, y:0}] - Ray's position.
     * @param {number} [options.angle = 0] - Ray's angle in radians.
     * @param {number} [options.angleDeg = 0] - Ray's angle in degrees.
     * @param {number} [options.cone = 0] - Ray's cone angle in radians.
