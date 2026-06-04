@@ -11,7 +11,7 @@
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 * @param {boolean} [isChild] - Flag definig if it is child container.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 export function getPoints(ray = false, isChild = false) {
     if(!this.active)
@@ -19,7 +19,7 @@ export function getPoints(ray = false, isChild = false) {
 
     let points = this._points;
     //calculate offset based on container position and origin point
-    let offset = new Phaser.Geom.Point();
+    let offset = new Phaser.Math.Vector2();
     offset.x = this.object.x - this.object.displayWidth * this.object.originX;
     offset.y = this.object.y - this.object.displayHeight * this.object.originY;
 
@@ -98,7 +98,7 @@ export function updateMap() {
     this._circles = [];
 
     //calculate offset based on container position and origin point
-    let offset = new Phaser.Geom.Point();
+    let offset = new Phaser.Math.Vector2();
     offset.x = this.object.x - this.object.displayWidth * this.object.originX;
     offset.y = this.object.y - this.object.displayHeight * this.object.originY;
 
@@ -143,7 +143,7 @@ export function updateMap() {
                         }
                         //if rotation === 0
                         else
-                            points.push(new Phaser.Geom.Point(intersection.x * container.scaleX + offset.x, intersection.y * container.scaleX + offset.y));
+                            points.push(new Phaser.Math.Vector2(intersection.x * container.scaleX + offset.x, intersection.y * container.scaleX + offset.y));
                     }
                 }
             }
@@ -166,10 +166,10 @@ export function updateMap() {
 * @since 0.10.3
 *
 * @param {object} [child] - Container's child object.
-* @param {Phaser.Geom.Point[]} [points] - Container's mapped points.
+* @param {Phaser.Math.Vector2[]} [points] - Container's mapped points.
 * @param {Phaser.Geom.Line[]} [segments] - Container's mapped segments.
 * @param {number} [rotation] - Container's rotation.
-* @param {Phaser.Geom.Point} [offset] - Container's offset.
+* @param {Phaser.Math.Vector2} [offset] - Container's offset.
 */
 export function _updateChildMap(child, points, segments, rotation, offset) {
     if(!child.data)
@@ -211,7 +211,7 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
         }
         //if rotation === 0
         else
-            childPoint = new Phaser.Geom.Point(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y);
+            childPoint = new Phaser.Math.Vector2(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y);
 
         //add neighbour points
         childPoint.neighbours = [];
@@ -250,7 +250,7 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
 
     //if child's map is a circle and this.segmentsCount == 0, store transformed circles in this._circles array.
     if(map.type == 'Arc' && this.segmentCount == 0) {
-        let circleOffset = new Phaser.Geom.Point();
+        let circleOffset = new Phaser.Math.Vector2();
         circleOffset.x = (map.object.x - map.object.displayWidth * (map.object.originX - 0.5)) * this.object.scaleX + offset.x;
         circleOffset.y = (map.object.y - map.object.displayHeight * (map.object.originY - 0.5))  * this.object.scaleY + offset.y;
 
@@ -264,7 +264,7 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
     }
     else if(map.type === 'Container') {
         for(let childMapCircle of map._circles) {
-            let circleOffset = new Phaser.Geom.Point();
+            let circleOffset = new Phaser.Math.Vector2();
                 circleOffset.x = childMapCircle.x * this.object.scaleX + offset.x;
                 circleOffset.y = childMapCircle.y * this.object.scaleY + offset.y;
 

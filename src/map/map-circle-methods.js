@@ -11,7 +11,7 @@
 *
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 export function getPoints(ray = false) {
     if(!this.active)
@@ -21,7 +21,7 @@ export function getPoints(ray = false) {
         return this._points;
     
     let points = [];
-    let offset = new Phaser.Geom.Point();
+    let offset = new Phaser.Math.Vector2();
     offset.x = this.object.x - this.object.displayWidth * (this.object.originX - 0.5);
     offset.y = this.object.y - this.object.displayHeight * (this.object.originY - 0.5);
 
@@ -102,7 +102,7 @@ export function updateMap() {
     }
     
     //calculate offset based on object position and origin point
-    let offset = new Phaser.Geom.Point();
+    let offset = new Phaser.Math.Vector2();
     offset.x = this.object.x - this.object.displayWidth * this.object.originX + this.object.radius * this.object.scaleX;
     offset.y = this.object.y - this.object.displayHeight * this.object.originY + this.object.radius * this.object.scaleY;
 

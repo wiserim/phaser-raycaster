@@ -9,7 +9,7 @@
  * @since 0.6.0
  *
  * @param {object} [options] - Ray's congfiguration options. May include:
- * @param {Phaser.Geom.Point|Point} [options.origin = {x:0, y:0}] - Ray's position.
+ * @param {Phaser.Math.Vector2|Point} [options.origin = {x:0, y:0}] - Ray's position.
  * @param {number} [options.angle = 0] - Ray's angle in radians.
  * @param {number} [options.angleDeg = 0] - Ray's angle in degrees.
  * @param {number} [options.cone = 0] - Ray's cone angle in radians.
@@ -37,10 +37,10 @@ export function Ray(options, raycaster) {
     * Ray's source position.
     *
     * @name Raycaster.Ray#origin
-    * @type {Phaser.Geom.Point}
+    * @type {Phaser.Math.Vector2}
     * @since 0.6.0
     */
-    this.origin = new Phaser.Geom.Point();
+    this.origin = new Phaser.Math.Vector2();
     /**
     * Ray's representation used to calculating intersections.
     *

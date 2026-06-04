@@ -10,7 +10,7 @@
 *
 * @param {Raycaster.Ray} [ray] - {Raycaster.Ray} object used in some some types of maps.
 *
-* @return {Phaser.Geom.Point[]} - Array of mapped object's vertices.
+* @return {Phaser.Math.Vector2[]} - Array of mapped object's vertices.
 */
 export function getPoints(ray = false) {
     if(!this.active)
@@ -29,10 +29,10 @@ export function getPoints(ray = false) {
 
     for(let segment of segments) {
         if(Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x1, segment.y1) > ray.detectionRange)
-            points.push(new Phaser.Geom.Point(segment.x1, segment.y1));
+            points.push(new Phaser.Math.Vector2(segment.x1, segment.y1));
         
         if(Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x2, segment.y2) > ray.detectionRange)
-            points.push(new Phaser.Geom.Point(segment.x2, segment.y2));
+            points.push(new Phaser.Math.Vector2(segment.x2, segment.y2));
     }
 
     return points;
@@ -92,7 +92,7 @@ export function updateMap() {
 
     
     //calculate offset based on object position and origin point
-    let offset = new Phaser.Geom.Point(this.object.x, this.object.y);
+    let offset = new Phaser.Math.Vector2(this.object.x, this.object.y);
 
     let row = this.object.layer.data[0],
         tileWidth = this.object.layer.tileWidth * this.object.scaleX,
@@ -102,8 +102,8 @@ export function updateMap() {
 
     //set top horizontal lines
     if(this.collisionTiles.includes(row[0].index)) {
-        startPoint = new Phaser.Geom.Point(offset.x, offset.y);
-        endPoint = new Phaser.Geom.Point(tileWidth + offset.x, offset.y);
+        startPoint = new Phaser.Math.Vector2(offset.x, offset.y);
+        endPoint = new Phaser.Math.Vector2(tileWidth + offset.x, offset.y);
 
         columns[0].push(startPoint);
     }
@@ -131,12 +131,12 @@ export function updateMap() {
             y = offset.y;
 
         if(!startPoint) {
-            startPoint = new Phaser.Geom.Point(x, y);
+            startPoint = new Phaser.Math.Vector2(x, y);
             columns[i].push(startPoint);
         }
 
         if(!endPoint) {
-            endPoint = new Phaser.Geom.Point(x + tileWidth, y);
+            endPoint = new Phaser.Math.Vector2(x + tileWidth, y);
         }
         else {
             endPoint.x = x + tileWidth;
@@ -155,14 +155,15 @@ export function updateMap() {
 
     startPoint = false;
     endPoint = false;
+    let lastPoint = false;
 
     for(let i = 1, iLength = this.object.layer.data.length; i < iLength; i++) {
         row = this.object.layer.data[i];
         let higherRow = this.object.layer.data[i - 1];
 
         if(this.collisionTiles.includes(row[0].index) != this.collisionTiles.includes(higherRow[0].index)) {
-            startPoint = new Phaser.Geom.Point(offset.x,  i * tileHeight + offset.y);
-            endPoint = new Phaser.Geom.Point(tileWidth + offset.x, i * tileHeight + offset.y);
+            startPoint = new Phaser.Math.Vector2(offset.x,  i * tileHeight + offset.y);
+            endPoint = new Phaser.Math.Vector2(tileWidth + offset.x, i * tileHeight + offset.y);
 
             columns[0].push(startPoint);
         }
@@ -174,10 +175,15 @@ export function updateMap() {
             
             if(isCollisionTile == isCollisionHigherTile) {
                 if(startPoint) {
-                    startPoint.neighbours = [endPoint];
-                    endPoint.neighbours = [startPoint];
 
-                    points.push(startPoint, endPoint);
+                    if(!startPoint.neighbours) {
+                        startPoint.neighbours = [endPoint];
+                        points.push(startPoint);
+                    }
+
+                    endPoint.neighbours = [lastPoint ? lastPoint : startPoint];
+                    points.push(endPoint);
+                    
                     segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
 
                     columns[j].push(endPoint);
@@ -190,15 +196,31 @@ export function updateMap() {
     
             let x = j * tileWidth + offset.x,
                 y = i * tileHeight + offset.y;
+
+            // check for checkerbox pattern
+            if(
+                startPoint
+                && this.collisionTiles.includes(higherRow[j - 1].index) != isCollisionHigherTile
+            ) {
+                let midPoint = new Phaser.Math.Vector2(x, y);
+                midPoint.neighbours = [lastPoint ? lastPoint : startPoint];
+                lastPoint = midPoint;
+
+                if(!startPoint.neighbours)
+                    startPoint.neighbours = [lastPoint];
+
+                points.push(midPoint);
+            }
     
             if(!startPoint) {
-                startPoint = new Phaser.Geom.Point(x, y);
+                startPoint = new Phaser.Math.Vector2(x, y);
 
                 columns[j].push(startPoint);
+                lastPoint = false;
             }
     
             if(!endPoint) {
-                endPoint = new Phaser.Geom.Point(x + tileWidth, y);
+                endPoint = new Phaser.Math.Vector2(x + tileWidth, y);
             }
             else {
                 endPoint.x = x + tileWidth;
@@ -206,8 +228,12 @@ export function updateMap() {
         }
     
         if(startPoint) {
-            startPoint.neighbours = [endPoint];
-            endPoint.neighbours = [startPoint];
+            if(!startPoint.neighbours)
+                startPoint.neighbours = [lastPoint ? lastPoint : endPoint];
+            endPoint.neighbours = [lastPoint ? lastPoint : startPoint];
+
+            if(lastPoint)
+                lastPoint.neighbours.push(endPoint);
 
             points.push(startPoint, endPoint);
             segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
@@ -217,6 +243,7 @@ export function updateMap() {
 
         startPoint = false;
         endPoint = false;
+        lastPoint = false;
     }
 
     //set bottom horizontal lines
@@ -224,8 +251,8 @@ export function updateMap() {
     let y = this.object.layer.data.length * tileHeight + offset.y;
 
     if(this.collisionTiles.includes(row[0].index)) {
-        startPoint = new Phaser.Geom.Point(offset.x, y);
-        endPoint = new Phaser.Geom.Point(tileWidth + offset.x, y);
+        startPoint = new Phaser.Math.Vector2(offset.x, y);
+        endPoint = new Phaser.Math.Vector2(tileWidth + offset.x, y);
 
         columns[0].push(startPoint);
     }
@@ -252,13 +279,13 @@ export function updateMap() {
         let x = i * tileWidth + offset.x;
 
         if(!startPoint) {
-            startPoint = new Phaser.Geom.Point(x, y);
+            startPoint = new Phaser.Math.Vector2(x, y);
 
             columns[i].push(startPoint);
         }
 
         if(!endPoint) {
-            endPoint = new Phaser.Geom.Point(x + tileWidth, y);
+            endPoint = new Phaser.Math.Vector2(x + tileWidth, y);
         }
         else {
             endPoint.x = x + tileWidth;

@@ -8,10 +8,10 @@
  *
  * @param {object} [options] - options that may include:
  * @param {object[]} [options.objects = {Raycaster#mappedObjects}] - Array of game objects to test. If not provided test all mapped game objects.
- * @param {Phaser.Geom.Point|Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
+ * @param {Phaser.Math.Vector2|Point} [options.target] - Ray's target point. Used in other casting methods to determine if ray was targeting mapped objects point.
  * @param {boolean} [options.internal = false] - Flag determining if method is used by other casting method.
  *
- * @return {(Phaser.Geom.Point|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found. Additionally contains reference to hit mapped object and segment if available.
+ * @return {(Phaser.Math.Vector2|boolean)} Ray's closest intersection with tested objects. Returns false if no intersection has been found. Additionally contains reference to hit mapped object and segment if available.
  */
 export function cast(options = {}) {
     let closestIntersection;
@@ -112,8 +112,8 @@ export function cast(options = {}) {
             //if target point is segmemt point
             if(options.target) {
                 if(
-                    Phaser.Geom.Point.Equals(options.target, segment.getPointA())
-                    || Phaser.Geom.Point.Equals(options.target, segment.getPointB())
+                    options.target.equals(segment.getPointA())
+                    || options.target.equals(segment.getPointB())
                 ) {
                     intersection = options.target;
                 }
@@ -146,7 +146,7 @@ export function cast(options = {}) {
                 let points = map.getPoints(this);
                 let isTangent = false;
                 for(let point of points) {
-                    if(Phaser.Geom.Point.Equals(options.target, point)) {
+                    if(point.equals(options.target)) {
                         //get closest intersection
                         let distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
 
@@ -165,7 +165,7 @@ export function cast(options = {}) {
             }
 
             let circleIntersections = [];
-            let offset = new Phaser.Geom.Point();
+            let offset = new Phaser.Math.Vector2();
             offset.x = map.object.x - map.object.displayWidth * (map.object.originX - 0.5);
             offset.y = map.object.y - map.object.displayHeight * (map.object.originY - 0.5);
 
@@ -205,7 +205,7 @@ export function cast(options = {}) {
                     let isTangent = false;
 
                     for(let point of circle.points) {
-                        if(Phaser.Geom.Point.Equals(options.target, point)) {
+                        if(point.equals(options.target)) {
                             //get closest intersection
                             let distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
 
@@ -261,7 +261,7 @@ export function cast(options = {}) {
         result = this._ray.getPointB();
     }
     else {
-        result = new Phaser.Geom.Point(closestIntersection.x, closestIntersection.y);
+        result = new Phaser.Math.Vector2(closestIntersection.x, closestIntersection.y);
         result.segment = closestSegment;
         result.object = closestObject;
     }
