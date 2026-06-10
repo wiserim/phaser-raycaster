@@ -1,3 +1,5 @@
+import { Geom, Math as PhaserMathv } from 'phaser';
+
 /**
  * Set ray's range.
  *
@@ -10,9 +12,9 @@
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
-export function setRayRange(rayRange = Phaser.Math.MAX_SAFE_INTEGER) {
+export function setRayRange(rayRange = PhaserMath.MAX_SAFE_INTEGER) {
     this.rayRange = rayRange;
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
+    Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     return this;
 }
 
@@ -49,13 +51,13 @@ export function setDetectionRange(detectionRange = 0) {
  *
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
-export function setCollisionRange(collisionRange = Phaser.Math.MAX_SAFE_INTEGER) {
-    let oldRangeMax = this.collisionRange == Phaser.Math.MAX_SAFE_INTEGER;
+export function setCollisionRange(collisionRange = PhaserMath.MAX_SAFE_INTEGER) {
+    let oldRangeMax = this.collisionRange == PhaserMath.MAX_SAFE_INTEGER;
     this.collisionRange = collisionRange;
     this.collisionCircle.setRadius(this.collisionRange);
 
     if(this.bodyType === 'matter') {
-        if(this.collisionRange == Phaser.Math.MAX_SAFE_INTEGER) {
+        if(this.collisionRange == PhaserMath.MAX_SAFE_INTEGER) {
             let bounds = this._raycaster.boundingBox;
 
             this._raycaster.scene.matter.body.set(this.body, {
@@ -119,7 +121,7 @@ export function boundsInRange(object, bounds = false) {
             objectBounds = object.data.get('raycasterMap').getBoundingBox();
     }
 
-    if(Phaser.Geom.Intersects.CircleToRectangle(this.detectionRangeCircle, objectBounds))
+    if(Geom.Intersects.CircleToRectangle(this.detectionRangeCircle, objectBounds))
         return true;
 
     return false;

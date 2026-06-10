@@ -1,3 +1,5 @@
+import { Geom } from 'phaser';
+
 /**
  * Slice ray's field of view represented by polygon or array of points into array of triangles.
  *
@@ -25,11 +27,11 @@ export function slice(intersections = this.intersections, closed = true) {
 
     let slices = [];
     for(let i = 0, iLength = intersections.length - 1; i < iLength; i++) {
-        slices.push(new Phaser.Geom.Triangle(this.origin.x, this.origin.y, intersections[i].x, intersections[i].y, intersections[i+1].x, intersections[i+1].y));
+        slices.push(new Geom.Triangle(this.origin.x, this.origin.y, intersections[i].x, intersections[i].y, intersections[i+1].x, intersections[i+1].y));
     }
 
     if(closed)
-        slices.push(new Phaser.Geom.Triangle(this.origin.x, this.origin.y, intersections[0].x, intersections[0].y, intersections[intersections.length-1].x, intersections[intersections.length-1].y));
+        slices.push(new Geom.Triangle(this.origin.x, this.origin.y, intersections[0].x, intersections[0].y, intersections[intersections.length-1].x, intersections[intersections.length-1].y));
 
     return slices;
 }

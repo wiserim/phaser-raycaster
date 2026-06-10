@@ -1,3 +1,5 @@
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
  * Configure ray.
  *
@@ -30,11 +32,11 @@ export function config(options) {
 
     //angle
     if(options.angle !== undefined)
-        this.angle = Phaser.Math.Angle.Normalize(options.angle);
+        this.angle = PhaserMath.Angle.Normalize(options.angle);
 
     //angle deg
     if(options.angleDeg !== undefined)
-        this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(options.angleDeg));
+        this.angle = PhaserMath.Angle.Normalize(PhaserMath.DegToRad(options.angleDeg));
 
     //cone angle
     if(options.cone !== undefined)
@@ -42,7 +44,7 @@ export function config(options) {
 
     //cone angle deg
     if(options.coneDeg !== undefined)
-        this.cone = Phaser.Math.DegToRad(options.coneDeg);
+        this.cone = PhaserMath.DegToRad(options.coneDeg);
 
     //ray range (0 = max)
     if(options.rayRange !== undefined)
@@ -72,7 +74,7 @@ export function config(options) {
     if(options.enablePhysics !== undefined && options.enablePhysics)
         this.enablePhysics(options.enablePhysics);
     
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
+    Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
 
     if(this._raycaster.debugOptions.enabled && this._raycaster.scene !== undefined) {

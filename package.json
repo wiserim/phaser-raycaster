@@ -3,6 +3,7 @@
   "version": "0.10.11",
   "description": "Raycasting plugin for Phaser 3.",
   "main": "dist/phaser-raycaster.min.js",
+  "exports": "src/main-esm.js",
   "types": "types/types.d.ts",
   "scripts": {
     "dev": "webpack --mode development --config config/webpack.config.dev.js --watch",
@@ -17,6 +18,7 @@
   "keywords": [
     "phaser",
     "phaser3",
+    "phaser4",
     "phaser-plugin",
     "plugin",
     "raycast"
@@ -34,6 +36,7 @@
     "babel-loader": "^10.1.1",
     "ink-docstrap": "^1.3.2",
     "jsdoc": "^3.6.11",
+    "phaser": "^4.1.0",
     "tsd-jsdoc": "^2.5.0",
     "webpack": "^5.106.2",
     "webpack-cli": "^5.1.4"

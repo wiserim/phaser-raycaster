@@ -1,4 +1,7 @@
 /*Map methods for tilemaps*/
+
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
 * Get array of mapped tilemap's vertices used as rays targets.
 *
@@ -15,12 +18,12 @@
 export function getPoints(ray = false) {
     if(!this.active)
         return [];
-    if(!ray || ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER))
+    if(!ray || ray && (ray.detectionRange == 0 || ray.detectionRange >= PhaserMath.MAX_SAFE_INTEGER))
         return this._points;
 
     let points = [];
     for(let point of this._points) {
-        if(Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, point.x, point.y) <= ray.detectionRange)
+        if(PhaserMath.Distance.Between(ray.origin.x, ray.origin.y, point.x, point.y) <= ray.detectionRange)
             points.push(point);
     }
 
@@ -28,11 +31,11 @@ export function getPoints(ray = false) {
     let segments = this.getSegments(ray);
 
     for(let segment of segments) {
-        if(Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x1, segment.y1) > ray.detectionRange)
-            points.push(new Phaser.Math.Vector2(segment.x1, segment.y1));
+        if(PhaserMath.Distance.Between(ray.origin.x, ray.origin.y, segment.x1, segment.y1) > ray.detectionRange)
+            points.push(new PhaserMath.Vector2(segment.x1, segment.y1));
         
-        if(Phaser.Math.Distance.Between(ray.origin.x, ray.origin.y, segment.x2, segment.y2) > ray.detectionRange)
-            points.push(new Phaser.Math.Vector2(segment.x2, segment.y2));
+        if(PhaserMath.Distance.Between(ray.origin.x, ray.origin.y, segment.x2, segment.y2) > ray.detectionRange)
+            points.push(new PhaserMath.Vector2(segment.x2, segment.y2));
     }
 
     return points;
@@ -54,12 +57,12 @@ export function getPoints(ray = false) {
 export function getSegments(ray = false) {
     if(!this.active)
         return [];
-    if(!ray || (ray && (ray.detectionRange == 0 || ray.detectionRange >= Phaser.Math.MAX_SAFE_INTEGER)))
+    if(!ray || (ray && (ray.detectionRange == 0 || ray.detectionRange >= PhaserMath.MAX_SAFE_INTEGER)))
         return this._segments;
 
     let segments = [];
     for(let segment of this._segments) {
-        if(Phaser.Geom.Intersects.LineToCircle(segment, ray.detectionRangeCircle)) {
+        if(Geom.Intersects.LineToCircle(segment, ray.detectionRangeCircle)) {
             segments.push(segment);
         }
     }
@@ -92,7 +95,7 @@ export function updateMap() {
 
     
     //calculate offset based on object position and origin point
-    let offset = new Phaser.Math.Vector2(this.object.x, this.object.y);
+    let offset = new PhaserMath.Vector2(this.object.x, this.object.y);
 
     let row = this.object.layer.data[0],
         tileWidth = this.object.layer.tileWidth * this.object.scaleX,
@@ -102,8 +105,8 @@ export function updateMap() {
 
     //set top horizontal lines
     if(this.collisionTiles.includes(row[0].index)) {
-        startPoint = new Phaser.Math.Vector2(offset.x, offset.y);
-        endPoint = new Phaser.Math.Vector2(tileWidth + offset.x, offset.y);
+        startPoint = new PhaserMath.Vector2(offset.x, offset.y);
+        endPoint = new PhaserMath.Vector2(tileWidth + offset.x, offset.y);
 
         columns[0].push(startPoint);
     }
@@ -117,7 +120,7 @@ export function updateMap() {
                 endPoint.neighbours = [startPoint];
 
                 points.push(startPoint, endPoint);
-                segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+                segments.push(new Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
 
                 columns[i].push(endPoint);
 
@@ -131,12 +134,12 @@ export function updateMap() {
             y = offset.y;
 
         if(!startPoint) {
-            startPoint = new Phaser.Math.Vector2(x, y);
+            startPoint = new PhaserMath.Vector2(x, y);
             columns[i].push(startPoint);
         }
 
         if(!endPoint) {
-            endPoint = new Phaser.Math.Vector2(x + tileWidth, y);
+            endPoint = new PhaserMath.Vector2(x + tileWidth, y);
         }
         else {
             endPoint.x = x + tileWidth;
@@ -148,7 +151,7 @@ export function updateMap() {
         endPoint.neighbours = [startPoint];
 
         points.push(startPoint, endPoint);
-        segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+        segments.push(new Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
 
         columns[row.length].push(endPoint);
     }
@@ -162,8 +165,8 @@ export function updateMap() {
         let higherRow = this.object.layer.data[i - 1];
 
         if(this.collisionTiles.includes(row[0].index) != this.collisionTiles.includes(higherRow[0].index)) {
-            startPoint = new Phaser.Math.Vector2(offset.x,  i * tileHeight + offset.y);
-            endPoint = new Phaser.Math.Vector2(tileWidth + offset.x, i * tileHeight + offset.y);
+            startPoint = new PhaserMath.Vector2(offset.x,  i * tileHeight + offset.y);
+            endPoint = new PhaserMath.Vector2(tileWidth + offset.x, i * tileHeight + offset.y);
 
             columns[0].push(startPoint);
         }
@@ -184,7 +187,7 @@ export function updateMap() {
                     endPoint.neighbours = [lastPoint ? lastPoint : startPoint];
                     points.push(endPoint);
                     
-                    segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+                    segments.push(new Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
 
                     columns[j].push(endPoint);
 
@@ -202,7 +205,7 @@ export function updateMap() {
                 startPoint
                 && this.collisionTiles.includes(higherRow[j - 1].index) != isCollisionHigherTile
             ) {
-                let midPoint = new Phaser.Math.Vector2(x, y);
+                let midPoint = new PhaserMath.Vector2(x, y);
                 midPoint.neighbours = [lastPoint ? lastPoint : startPoint];
                 lastPoint = midPoint;
 
@@ -213,14 +216,14 @@ export function updateMap() {
             }
     
             if(!startPoint) {
-                startPoint = new Phaser.Math.Vector2(x, y);
+                startPoint = new PhaserMath.Vector2(x, y);
 
                 columns[j].push(startPoint);
                 lastPoint = false;
             }
     
             if(!endPoint) {
-                endPoint = new Phaser.Math.Vector2(x + tileWidth, y);
+                endPoint = new PhaserMath.Vector2(x + tileWidth, y);
             }
             else {
                 endPoint.x = x + tileWidth;
@@ -236,7 +239,7 @@ export function updateMap() {
                 lastPoint.neighbours.push(endPoint);
 
             points.push(startPoint, endPoint);
-            segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+            segments.push(new Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
 
             columns[row.length].push(endPoint);
         }
@@ -251,8 +254,8 @@ export function updateMap() {
     let y = this.object.layer.data.length * tileHeight + offset.y;
 
     if(this.collisionTiles.includes(row[0].index)) {
-        startPoint = new Phaser.Math.Vector2(offset.x, y);
-        endPoint = new Phaser.Math.Vector2(tileWidth + offset.x, y);
+        startPoint = new PhaserMath.Vector2(offset.x, y);
+        endPoint = new PhaserMath.Vector2(tileWidth + offset.x, y);
 
         columns[0].push(startPoint);
     }
@@ -266,7 +269,7 @@ export function updateMap() {
                 endPoint.neighbours = [startPoint];
 
                 points.push(startPoint, endPoint);
-                segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+                segments.push(new Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
 
                 columns[i].push(endPoint);
 
@@ -279,13 +282,13 @@ export function updateMap() {
         let x = i * tileWidth + offset.x;
 
         if(!startPoint) {
-            startPoint = new Phaser.Math.Vector2(x, y);
+            startPoint = new PhaserMath.Vector2(x, y);
 
             columns[i].push(startPoint);
         }
 
         if(!endPoint) {
-            endPoint = new Phaser.Math.Vector2(x + tileWidth, y);
+            endPoint = new PhaserMath.Vector2(x + tileWidth, y);
         }
         else {
             endPoint.x = x + tileWidth;
@@ -297,7 +300,7 @@ export function updateMap() {
         endPoint.neighbours = [startPoint];
 
         points.push(startPoint, endPoint);
-        segments.push(new Phaser.Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
+        segments.push(new Geom.Line(startPoint.x, startPoint.y, endPoint.x, endPoint.y));
 
         columns[row.length].push(endPoint);
     }
@@ -307,7 +310,7 @@ export function updateMap() {
         const column = columns[i];
 
         for(let j = 0, jLength = column.length - 1; j < jLength; j++) {
-            segments.push(new Phaser.Geom.Line(column[j].x, column[j].y, column[j+1].x, column[j+1].y));
+            segments.push(new Geom.Line(column[j].x, column[j].y, column[j+1].x, column[j+1].y));
             column[j].neighbours.push(column[j+1]);
             column[j+1].neighbours.push(column[j]);
             j++;

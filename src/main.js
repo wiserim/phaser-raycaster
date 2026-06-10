@@ -4,6 +4,9 @@
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 
+import { Plugins } from 'phaser';
+const ScenePlugin = Plugins.ScenePlugin;
+
 /**
  * Point object
  * @typedef {Object} Point
@@ -25,8 +28,7 @@
  * @param {Phaser.Scene} scene
  * @param {Phaser.Plugins.PluginManager} pluginManager
  */
-
-class PhaserRaycaster extends Phaser.Plugins.ScenePlugin {
+export default class PhaserRaycaster extends ScenePlugin {
     constructor(scene, pluginManager) {
         super(scene, pluginManager);
 
@@ -55,6 +57,3 @@ class PhaserRaycaster extends Phaser.Plugins.ScenePlugin {
         return new this._Raycaster(options);
     }
 }
-
-//Make sure you export the plugin for webpack to expose
-module.exports = PhaserRaycaster;

@@ -1,4 +1,7 @@
 /*Map methods for rectangles*/
+
+import { Geom } from 'phaser';
+
 /**
 * Get array of mapped rectangle's vertices used as rays targets.
 *
@@ -66,7 +69,7 @@ export function updateMap() {
         let prevPoint = i > 0 ? points[i - 1] : points.slice(-1)[0],
             nextPoint = i < length - 1 ? points[i + 1] : points[0];
 
-        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+        segments.push(new Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
         
         points[i].neighbours = [
             prevPoint,

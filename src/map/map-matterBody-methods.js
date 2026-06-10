@@ -1,4 +1,7 @@
 /*Map methods for matter body*/
+
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
 * Get array of mapped matter body's vertices used as rays targets.
 *
@@ -21,17 +24,17 @@ export function getPoints(ray = false) {
     //calculate tangent rays
     if(ray && !this.forceVerticesMapping && body.circleRadius > 0) {
         let points = [];
-        let rayA = new Phaser.Geom.Line();
-        let rayB = new Phaser.Geom.Line();
-        let c = new Phaser.Geom.Line(ray.origin.x, ray.origin.y, body.position.x, body.position.y);
+        let rayA = new Geom.Line();
+        let rayB = new Geom.Line();
+        let c = new Geom.Line(ray.origin.x, ray.origin.y, body.position.x, body.position.y);
 
-        let rayLength = Math.sqrt(Math.pow(Phaser.Geom.Line.Length(c), 2) - Math.pow(body.circleRadius * body.scale.x, 2));
+        let rayLength = Math.sqrt(Math.pow(Geom.Line.Length(c), 2) - Math.pow(body.circleRadius * body.scale.x, 2));
 
         //ray angle
-        let angle = Phaser.Geom.Line.Angle(c);
-        let dAngle = Math.asin((body.circleRadius * body.scale.x) / Phaser.Geom.Line.Length(c));
-        Phaser.Geom.Line.SetToAngle(rayA, ray.origin.x, ray.origin.y, angle - dAngle, rayLength);
-        Phaser.Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
+        let angle = Geom.Line.Angle(c);
+        let dAngle = Math.asin((body.circleRadius * body.scale.x) / Geom.Line.Length(c));
+        Geom.Line.SetToAngle(rayA, ray.origin.x, ray.origin.y, angle - dAngle, rayLength);
+        Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
 
         //adding tangent points
         points.push(rayA.getPointB(), rayB.getPointB());
@@ -102,12 +105,12 @@ export function updateMap() {
         if(bodyItem.parts.length === 1 || this.forceConvex) {
             let vertices = bodyItem.parts[0].vertices;
 
-            points.push(new Phaser.Math.Vector2(vertices[0].x, vertices[0].y));
+            points.push(new PhaserMath.Vector2(vertices[0].x, vertices[0].y));
             points[0].neighbours = [];
 
             for(let i = 1, length = vertices.length; i < length; i++) {
                 let pointA = points.slice(-1)[0],
-                    pointB = new Phaser.Math.Vector2(vertices[i].x, vertices[i].y);
+                    pointB = new PhaserMath.Vector2(vertices[i].x, vertices[i].y);
                     
                 if(!pointA.neighbours)
                     pointA.neighbours = [];
@@ -117,12 +120,12 @@ export function updateMap() {
                 points.push(pointB);
 
                 //add segment
-                let segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
+                let segment = new Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
                 segments.push(segment);
             }
 
             //closing segment
-            let segment = new Phaser.Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
+            let segment = new Geom.Line(vertices[vertices.length - 1].x, vertices[vertices.length - 1].y, vertices[0].x, vertices[0].y);
             segments.push(segment);
 
             points[0].neighbours.push(points.slice(-1)[0]);
@@ -138,7 +141,7 @@ export function updateMap() {
                     part = [];
                 
                 for(let j = 0, jLength = vertices.length; j < jLength; j++) {
-                    let point = new Phaser.Math.Vector2(vertices[j].x, vertices[j].y);
+                    let point = new PhaserMath.Vector2(vertices[j].x, vertices[j].y);
 
                     if(part.length) {
                         let prevPoint = part.slice(-1)[0];
@@ -173,7 +176,7 @@ export function updateMap() {
                 let i = 0,
                 iLength;
                 for(i = 0, iLength = part.length - 1; i < iLength; i++) {
-                    segments.push(new Phaser.Geom.Line(part[i].x, part[i].y, part[i+1].x, part[i+1].y));
+                    segments.push(new Geom.Line(part[i].x, part[i].y, part[i+1].x, part[i+1].y));
                 }
             }
         }
@@ -204,6 +207,6 @@ export function updateMap() {
 export function getBoundingBox() {
     let bounds = this.object.type === 'body' || this.object.type === 'composite' ? this.object.bounds : this.object.body.bounds;
 
-    return new Phaser.Geom.Rectangle(bounds.min.x, bounds.min.y, bounds.max.x - bounds.min.x, bounds.max.y - bounds.min.y);
+    return new Geom.Rectangle(bounds.min.x, bounds.min.y, bounds.max.x - bounds.min.x, bounds.max.y - bounds.min.y);
 }
 

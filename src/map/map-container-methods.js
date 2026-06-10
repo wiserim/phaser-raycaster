@@ -1,4 +1,7 @@
 /*Map methods for containers*/
+
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
 * Get array of mapped container's and its children vertices used as rays targets.
 *
@@ -19,7 +22,7 @@ export function getPoints(ray = false, isChild = false) {
 
     let points = this._points;
     //calculate offset based on container position and origin point
-    let offset = new Phaser.Math.Vector2();
+    let offset = new PhaserMath.Vector2();
     offset.x = this.object.x - this.object.displayWidth * this.object.originX;
     offset.y = this.object.y - this.object.displayHeight * this.object.originY;
 
@@ -27,25 +30,25 @@ export function getPoints(ray = false, isChild = false) {
     if(this.segmentCount == 0 && !isChild) {
         if(ray) {
             //create temporary ray
-            let vector = new Phaser.Geom.Line(0, 0, ray.origin.x - offset.x, ray.origin.y - offset.y);
-            Phaser.Geom.Line.SetToAngle(vector, 0, 0, Phaser.Geom.Line.Angle(vector) - this.object.rotation, Phaser.Geom.Line.Length(vector));
+            let vector = new Geom.Line(0, 0, ray.origin.x - offset.x, ray.origin.y - offset.y);
+            Geom.Line.SetToAngle(vector, 0, 0, Geom.Line.Angle(vector) - this.object.rotation, Geom.Line.Length(vector));
 
             //calculate tangent rays
-            let rayA = new Phaser.Geom.Line(),
-                rayB = new Phaser.Geom.Line(),
+            let rayA = new Geom.Line(),
+                rayB = new Geom.Line(),
                 c;
 
             for(let circle of this._circles) {
                 circle.points = [];
-                c = new Phaser.Geom.Line(ray.origin.x, ray.origin.y, circle.x, circle.y);
+                c = new Geom.Line(ray.origin.x, ray.origin.y, circle.x, circle.y);
 
-                let rayLength = Math.sqrt(Math.pow(Phaser.Geom.Line.Length(c), 2) - Math.pow(circle.radius, 2));
+                let rayLength = Math.sqrt(Math.pow(Geom.Line.Length(c), 2) - Math.pow(circle.radius, 2));
 
                 //ray angle
-                let angle = Phaser.Geom.Line.Angle(c);
-                let dAngle = Math.asin((circle.radius) / Phaser.Geom.Line.Length(c));
-                Phaser.Geom.Line.SetToAngle(rayA, ray.origin.x, ray.origin.y, angle - dAngle, rayLength);
-                Phaser.Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
+                let angle = Geom.Line.Angle(c);
+                let dAngle = Math.asin((circle.radius) / Geom.Line.Length(c));
+                Geom.Line.SetToAngle(rayA, ray.origin.x, ray.origin.y, angle - dAngle, rayLength);
+                Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
 
                 //adding tangent points
                 circle.points.push(rayA.getPointB());
@@ -98,7 +101,7 @@ export function updateMap() {
     this._circles = [];
 
     //calculate offset based on container position and origin point
-    let offset = new Phaser.Math.Vector2();
+    let offset = new PhaserMath.Vector2();
     offset.x = this.object.x - this.object.displayWidth * this.object.originX;
     offset.y = this.object.y - this.object.displayHeight * this.object.originY;
 
@@ -125,25 +128,25 @@ export function updateMap() {
                 let childB = container.list[j];
                 let mapB = childB.data.get('raycasterMap');
                 //check if bounding boxes overlap
-                if(!mapB || !Phaser.Geom.Intersects.RectangleToRectangle(childA.getBounds(), childB.getBounds()))
+                if(!mapB || !Geom.Intersects.RectangleToRectangle(childA.getBounds(), childB.getBounds()))
                     continue;
 
                 //find objects intersections
                 for(let segmentA of mapA.getSegments()) {
                     for(let segmentB of mapB.getSegments()) {
                         let intersection = [];
-                        if(!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection))
+                        if(!Geom.Intersects.LineToLine(segmentA, segmentB, intersection))
                             continue;
                         
                         //calculate positions after container's rotation
                         if(rotation !== 0) {
-                            let vector = new Phaser.Geom.Line(container.x, container.y, intersection.x * container.scaleX + offset.x, intersection.y * container.scaleY + offset.y);
-                            Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
+                            let vector = new Geom.Line(container.x, container.y, intersection.x * container.scaleX + offset.x, intersection.y * container.scaleY + offset.y);
+                            Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Geom.Line.Angle(vector) + rotation, Geom.Line.Length(vector));
                             points.push(vector.getPointB());
                         }
                         //if rotation === 0
                         else
-                            points.push(new Phaser.Math.Vector2(intersection.x * container.scaleX + offset.x, intersection.y * container.scaleX + offset.y));
+                            points.push(new PhaserMath.Vector2(intersection.x * container.scaleX + offset.x, intersection.y * container.scaleX + offset.y));
                     }
                 }
             }
@@ -205,13 +208,13 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
 
         //calculate positions after container's rotation
         if(rotation !== 0) {
-            let vector = new Phaser.Geom.Line(this.object.x, this.object.y, point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y);
-            Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
+            let vector = new Geom.Line(this.object.x, this.object.y, point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y);
+            Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Geom.Line.Angle(vector) + rotation, Geom.Line.Length(vector));
             childPoint = vector.getPointB();
         }
         //if rotation === 0
         else
-            childPoint = new Phaser.Math.Vector2(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y);
+            childPoint = new PhaserMath.Vector2(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleX + offset.y);
 
         //add neighbour points
         childPoint.neighbours = [];
@@ -236,45 +239,45 @@ export function _updateChildMap(child, points, segments, rotation, offset) {
         if(rotation !== 0) {
             let pointA = segment.getPointA();
             let pointB = segment.getPointB();
-            let vectorA = new Phaser.Geom.Line(this.object.x, this.object.y, pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y);
-            let vectorB = new Phaser.Geom.Line(this.object.x, this.object.y, pointB.x * this.object.scaleX + offset.x, pointB.y * this.object.scaleY + offset.y);
-            Phaser.Geom.Line.SetToAngle(vectorA, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vectorA) + rotation, Phaser.Geom.Line.Length(vectorA));
-            Phaser.Geom.Line.SetToAngle(vectorB, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vectorB) + rotation, Phaser.Geom.Line.Length(vectorB));
+            let vectorA = new Geom.Line(this.object.x, this.object.y, pointA.x * this.object.scaleX + offset.x, pointA.y * this.object.scaleY + offset.y);
+            let vectorB = new Geom.Line(this.object.x, this.object.y, pointB.x * this.object.scaleX + offset.x, pointB.y * this.object.scaleY + offset.y);
+            Geom.Line.SetToAngle(vectorA, this.object.x, this.object.y, Geom.Line.Angle(vectorA) + rotation, Geom.Line.Length(vectorA));
+            Geom.Line.SetToAngle(vectorB, this.object.x, this.object.y, Geom.Line.Angle(vectorB) + rotation, Geom.Line.Length(vectorB));
 
-            segments.push(new Phaser.Geom.Line(vectorA.getPointB().x, vectorA.getPointB().y, vectorB.getPointB().x, vectorB.getPointB().y));
+            segments.push(new Geom.Line(vectorA.getPointB().x, vectorA.getPointB().y, vectorB.getPointB().x, vectorB.getPointB().y));
         }
         //if rotation === 0
         else
-            segments.push(new Phaser.Geom.Line(segment.getPointA().x * this.object.scaleX + offset.x, segment.getPointA().y * this.object.scaleY + offset.y, segment.getPointB().x * this.object.scaleX + offset.x, segment.getPointB().y * this.object.scaleY + offset.y));
+            segments.push(new Geom.Line(segment.getPointA().x * this.object.scaleX + offset.x, segment.getPointA().y * this.object.scaleY + offset.y, segment.getPointB().x * this.object.scaleX + offset.x, segment.getPointB().y * this.object.scaleY + offset.y));
     }
 
     //if child's map is a circle and this.segmentsCount == 0, store transformed circles in this._circles array.
     if(map.type == 'Arc' && this.segmentCount == 0) {
-        let circleOffset = new Phaser.Math.Vector2();
+        let circleOffset = new Math.Vector2();
         circleOffset.x = (map.object.x - map.object.displayWidth * (map.object.originX - 0.5)) * this.object.scaleX + offset.x;
         circleOffset.y = (map.object.y - map.object.displayHeight * (map.object.originY - 0.5))  * this.object.scaleY + offset.y;
 
         if(rotation !== 0) {
-            let vector = new Phaser.Geom.Line(this.object.x, this.object.y, circleOffset.x, circleOffset.y)
-            Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
+            let vector = new Geom.Line(this.object.x, this.object.y, circleOffset.x, circleOffset.y)
+            Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Geom.Line.Angle(vector) + rotation, Geom.Line.Length(vector));
             circleOffset = vector.getPointB();
         }
 
-        this._circles.push(new Phaser.Geom.Circle(circleOffset.x, circleOffset.y, map.object.radius * map.object.scaleX * this.object.scaleX));
+        this._circles.push(new Geom.Circle(circleOffset.x, circleOffset.y, map.object.radius * map.object.scaleX * this.object.scaleX));
     }
     else if(map.type === 'Container') {
         for(let childMapCircle of map._circles) {
-            let circleOffset = new Phaser.Math.Vector2();
+            let circleOffset = new PhaserMath.Vector2();
                 circleOffset.x = childMapCircle.x * this.object.scaleX + offset.x;
                 circleOffset.y = childMapCircle.y * this.object.scaleY + offset.y;
 
             if(rotation !== 0) {
-                let vector = new Phaser.Geom.Line(this.object.x, this.object.y, circleOffset.x, circleOffset.y)
-                Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
+                let vector = new Geom.Line(this.object.x, this.object.y, circleOffset.x, circleOffset.y)
+                Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Geom.Line.Angle(vector) + rotation, Geom.Line.Length(vector));
                 circleOffset = vector.getPointB();
             }
 
-            this._circles.push(new Phaser.Geom.Circle(circleOffset.x, circleOffset.y, childMapCircle.radius * this.object.scaleX));
+            this._circles.push(new Geom.Circle(circleOffset.x, circleOffset.y, childMapCircle.radius * this.object.scaleX));
         }
     }
 }

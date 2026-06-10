@@ -1,3 +1,5 @@
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
  * Cast ray in a cone to find closest intersections with tested mapped objects.
  *
@@ -36,7 +38,7 @@ export function castCone(options = {}) {
     if(options.cone !== undefined)
         cone = options.cone;
     if(options.coneDeg !== undefined)
-        cone = Phaser.Math.DegToRad(options.coneDeg);
+        cone = PhaserMath.DegToRad(options.coneDeg);
 
     //set cone min and max angle
     minAngle = this.angle - cone / 2;
@@ -47,14 +49,14 @@ export function castCone(options = {}) {
     rayTargets.push({
         point: this._ray.getPointB(),
         angle: minAngle,
-        angleOffsetDeg: Phaser.Math.RadToDeg(-cone / 2)
+        angleOffsetDeg: PhaserMath.RadToDeg(-cone / 2)
     });
 
     this.setAngle(maxAngle);
     rayTargets.push({
         point: this._ray.getPointB(),
         angle: maxAngle,
-        angleOffsetDeg: Phaser.Math.RadToDeg(cone / 2)
+        angleOffsetDeg: PhaserMath.RadToDeg(cone / 2)
     });
 
     //if no objects to cast ray were passed, use raycasters mapped objects
@@ -69,10 +71,10 @@ export function castCone(options = {}) {
     if(this._raycaster && this._raycaster.boundingBox) {
         for(let point of this._raycaster.boundingBox.points) {
 
-            let angle = Phaser.Math.Angle.Between(this.origin.x, this.origin.y, point.x, point.y);
-            let angleOffsetDeg = Phaser.Math.Angle.ShortestBetween(Phaser.Math.RadToDeg(angle), Phaser.Math.RadToDeg(originalAngle));
+            let angle = PhaserMath.Angle.Between(this.origin.x, this.origin.y, point.x, point.y);
+            let angleOffsetDeg = PhaserMath.Angle.ShortestBetween(PhaserMath.RadToDeg(angle), PhaserMath.RadToDeg(originalAngle));
 
-            if(Math.abs(angleOffsetDeg) < Phaser.Math.RadToDeg(cone / 2)) {
+            if(Math.abs(angleOffsetDeg) < PhaserMath.RadToDeg(cone / 2)) {
                 rayTargets.push({
                     point: point,
                     angle: angle,
@@ -106,13 +108,13 @@ export function castCone(options = {}) {
         //get points and angles
         for(let point of map.getPoints(this)) {
 
-            let angle = Phaser.Math.Angle.Between(this.origin.x, this.origin.y, point.x, point.y);
-            let angleOffsetDeg = Phaser.Math.Angle.ShortestBetween(Phaser.Math.RadToDeg(angle), Phaser.Math.RadToDeg(originalAngle));
+            let angle = PhaserMath.Angle.Between(this.origin.x, this.origin.y, point.x, point.y);
+            let angleOffsetDeg = PhaserMath.Angle.ShortestBetween(PhaserMath.RadToDeg(angle), PhaserMath.RadToDeg(originalAngle));
 
-            if(Math.abs(angleOffsetDeg) < Phaser.Math.RadToDeg(cone / 2)) {
+            if(Math.abs(angleOffsetDeg) < PhaserMath.RadToDeg(cone / 2)) {
                 rayTargets.push({
                     point: point,
-                    angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, point.x, point.y),
+                    angle: PhaserMath.Angle.Between(this.origin.x, this.origin.y, point.x, point.y),
                     angleOffsetDeg: -angleOffsetDeg
                 });
             }
@@ -127,22 +129,22 @@ export function castCone(options = {}) {
             else
                 mapB = objectB.data.get('raycasterMap');
             //check if bounding boxes overlap
-            if(!Phaser.Geom.Intersects.RectangleToRectangle(map.getBoundingBox(), mapB.getBoundingBox()))
+            if(!Geom.Intersects.RectangleToRectangle(map.getBoundingBox(), mapB.getBoundingBox()))
                 continue;
             
             //find objects intersections
             for(let segmentA of map.getSegments(this)) {
                 for(let segmentB of mapB.getSegments(this)) {
                     let intersection = [];
-                    if(!Phaser.Geom.Intersects.LineToLine(segmentA, segmentB, intersection))
+                    if(!Geom.Intersects.LineToLine(segmentA, segmentB, intersection))
                         continue;
-                    let angle = Phaser.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y);
-                    let angleOffsetDeg = Phaser.Math.Angle.ShortestBetween(Phaser.Math.RadToDeg(angle), Phaser.Math.RadToDeg(originalAngle));
+                    let angle = PhaserMath.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y);
+                    let angleOffsetDeg = Math.Angle.ShortestBetween(PhaserMath.RadToDeg(angle), PhaserMath.RadToDeg(originalAngle));
 
-                    if(Math.abs(angleOffsetDeg) < Phaser.Math.RadToDeg(cone / 2)) {
+                    if(Math.abs(angleOffsetDeg) < PhaserMath.RadToDeg(cone / 2)) {
                         rayTargets.push({
-                            point: new Phaser.Math.Vector2(intersection.x, intersection.y),
-                            angle: Phaser.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y),
+                            point: new PhaserMath.Vector2(intersection.x, intersection.y),
+                            angle: PhaserMath.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y),
                             angleOffsetDeg: -angleOffsetDeg
                         });
                     }
@@ -155,7 +157,7 @@ export function castCone(options = {}) {
     rayTargets.sort(function(a, b){
         //if rays towards points have the same angles promote closer one
         if(a.angle == b.angle) {
-            if(Phaser.Math.Distance.Between(this.origin.x, this.origin.y, a.point.x, a.point.y) > Phaser.Math.Distance.Between(this.origin.x, this.origin.y, b.point.x, b.point.y))
+            if(PhaserMath.Distance.Between(this.origin.x, this.origin.y, a.point.x, a.point.y) > PhaserMath.Distance.Between(this.origin.x, this.origin.y, b.point.x, b.point.y))
                 return 1;
             else
                 return -1;
@@ -188,7 +190,7 @@ export function castCone(options = {}) {
             //if intersection hits target point check if ray "glanced" mapped object.
             let castSides = false;
             if(this.round) {
-                let roundedTarget = new Phaser.Math.Vector2(Math.round(target.point.x), Math.round(target.point.y));
+                let roundedTarget = new PhaserMath.Vector2(Math.round(target.point.x), Math.round(target.point.y));
                 castSides = roundedTarget.equals(intersection)
             }
             else {
@@ -202,18 +204,18 @@ export function castCone(options = {}) {
                 //castSides = true;
             }
             //check if ray and at least one line between target point and it's neighbours are parallel
-            else if(Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, target.point.neighbours[0])) < 0.0001
-                || Phaser.Math.Angle.Normalize(this.angle - Phaser.Math.Angle.BetweenPoints(this.origin, target.point.neighbours[1])) < 0.0001) {
+            else if(PhaserMath.Angle.Normalize(this.angle - PhaserMath.Angle.BetweenPoints(this.origin, target.point.neighbours[0])) < 0.0001
+                || PhaserMath.Angle.Normalize(this.angle - PhaserMath.Angle.BetweenPoints(this.origin, target.point.neighbours[1])) < 0.0001) {
                 //castSides = true;
             }
             //check if ray crossed more than 1 points of triangle created by tatget point and it's neighbours
             else {
                 let triangleIntersections = [];
                 if(!target.point.neighboursTriangle) {
-                    target.point.neighboursTriangle = new Phaser.Geom.Triangle(target.point.x, target.point.y, target.point.neighbours[0].x, target.point.neighbours[0].y, target.point.neighbours[1].x, target.point.neighbours[1].y);
+                    target.point.neighboursTriangle = new Geom.Triangle(target.point.x, target.point.y, target.point.neighbours[0].x, target.point.neighbours[0].y, target.point.neighbours[1].x, target.point.neighbours[1].y);
                 }
 
-                Phaser.Geom.Intersects.GetTriangleToLine(target.point.neighboursTriangle, this._ray, triangleIntersections);
+                Geom.Intersects.GetTriangleToLine(target.point.neighboursTriangle, this._ray, triangleIntersections);
                 
                 //if point of intersection of ray and tirangle are close to arget point, assume ray "glanced" triangle.
                 for(let triangleIntersection of triangleIntersections) {
