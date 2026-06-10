@@ -4,6 +4,8 @@
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
  * @classdesc
  *
@@ -31,7 +33,7 @@ export function Raycaster(options) {
     * @readonly
     * @since 0.6.0
     */
-    this.version = '0.10.11';
+    this.version = '0.11.0';
     /**
     * Raycaster's scene
     *
@@ -160,7 +162,7 @@ export function Raycaster(options) {
                 let walls = options.scene.matter.world.walls;
 
                 if(walls.top !== null) {
-                    options.boundingBox = new Phaser.Geom.Rectangle(
+                    options.boundingBox = new Geom.Rectangle(
                         walls.top.vertices[3].x,
                         walls.top.vertices[3].y,
                         walls.bottom.vertices[1].x - walls.top.vertices[3].x,
@@ -244,16 +246,16 @@ Raycaster.prototype = {
     */
     setBoundingBox: function(x, y, width, height) {
         this.boundingBox = {
-            rectangle: new Phaser.Geom.Rectangle(x, y, width, height),
+            rectangle: new Geom.Rectangle(x, y, width, height),
             points: [],
             segments: []
         }
         //set points
         let points = [
-            new Phaser.Math.Vector2(this.boundingBox.rectangle.left, this.boundingBox.rectangle.top),
-            new Phaser.Math.Vector2(this.boundingBox.rectangle.right, this.boundingBox.rectangle.top),
-            new Phaser.Math.Vector2(this.boundingBox.rectangle.right, this.boundingBox.rectangle.bottom),
-            new Phaser.Math.Vector2(this.boundingBox.rectangle.left, this.boundingBox.rectangle.bottom)
+            new PhaserMath.Vector2(this.boundingBox.rectangle.left, this.boundingBox.rectangle.top),
+            new PhaserMath.Vector2(this.boundingBox.rectangle.right, this.boundingBox.rectangle.top),
+            new PhaserMath.Vector2(this.boundingBox.rectangle.right, this.boundingBox.rectangle.bottom),
+            new PhaserMath.Vector2(this.boundingBox.rectangle.left, this.boundingBox.rectangle.bottom)
         ];
 
         this.boundingBox.points = points;
@@ -261,9 +263,9 @@ Raycaster.prototype = {
         //set segments
         for(let i = 0, length = this.boundingBox.points.length; i < length; i++) {
             if(i+1 < length)
-            this.boundingBox.segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i+1].x, points[i+1].y));
+            this.boundingBox.segments.push(new Geom.Line(points[i].x, points[i].y, points[i+1].x, points[i+1].y));
             else
-            this.boundingBox.segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
+            this.boundingBox.segments.push(new Geom.Line(points[i].x, points[i].y, points[0].x, points[0].y));
         }
     },
 

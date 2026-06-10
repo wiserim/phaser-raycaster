@@ -1,3 +1,5 @@
+import { Geom } from 'phaser';
+
 /**
  * Get game objects overlaping field of view.
  *
@@ -12,7 +14,7 @@
  */
 export function overlap(objects) {
     let targets = [];
-    let overlapCircle = new Phaser.Geom.Circle(this.origin.x, this.origin.y, this.collisionRange);
+    let overlapCircle = new Geom.Circle(this.origin.x, this.origin.y, this.collisionRange);
 
     //matter physics
     if(this.bodyType === 'matter') {
@@ -62,10 +64,10 @@ export function overlap(objects) {
                 let hitbox;
                 //get physics body hitbox
                 if(body.isCircle) {
-                    hitbox = new Phaser.Geom.Circle(body.position.x + body.halfWidth, body.position.y + body.halfWidth, body.halfWidth);
+                    hitbox = new Geom.Circle(body.position.x + body.halfWidth, body.position.y + body.halfWidth, body.halfWidth);
                 }
                 else {
-                    hitbox = new Phaser.Geom.Rectangle(body.x, body.y, body.width, body.height);
+                    hitbox = new Geom.Rectangle(body.x, body.y, body.width, body.height);
                 }
 
                 if(this.testArcadeOverlap(hitbox))
@@ -81,13 +83,13 @@ export function overlap(objects) {
                 let hitbox;
                 //get physics body hitbox
                 if(object.body.isCircle) {
-                    hitbox = new Phaser.Geom.Circle(object.body.position.x + object.body.halfWidth, object.body.position.y + object.body.halfWidth, object.body.halfWidth);
-                    if(!Phaser.Geom.Intersects.CircleToCircle(overlapCircle, hitbox))
+                    hitbox = new Geom.Circle(object.body.position.x + object.body.halfWidth, object.body.position.y + object.body.halfWidth, object.body.halfWidth);
+                    if(!Geom.Intersects.CircleToCircle(overlapCircle, hitbox))
                         continue;
                 }
                 else {
-                    hitbox = new Phaser.Geom.Rectangle(object.body.x, object.body.y, object.body.width, object.body.height);
-                    if(!Phaser.Geom.Intersects.CircleToRectangle(overlapCircle, hitbox))
+                    hitbox = new Geom.Rectangle(object.body.x, object.body.y, object.body.width, object.body.height);
+                    if(!Geom.Intersects.CircleToRectangle(overlapCircle, hitbox))
                         continue;
                 }
 
@@ -155,11 +157,11 @@ export function testArcadeOverlap(hitbox) {
     for(let slice of this.slicedIntersections) {
         //if hitbox is a circle
         if(hitbox.type == 0) {
-            overlap = Phaser.Geom.Intersects.TriangleToCircle(slice, hitbox);
+            overlap = Geom.Intersects.TriangleToCircle(slice, hitbox);
         }
         //if hitbox is a rectangle
         else {
-            overlap = Phaser.Geom.Intersects.RectangleToTriangle(hitbox, slice);
+            overlap = Geom.Intersects.RectangleToTriangle(hitbox, slice);
         }
 
         if(overlap) {
@@ -201,16 +203,16 @@ export function testMatterOverlap(object) {
 
         for(let i = 1, length = part.vertices.length; i < length; i++) {
             let pointB = part.vertices[i];
-            let segment = new Phaser.Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
+            let segment = new Geom.Line(pointA.x, pointA.y, pointB.x, pointB.y);
 
             //iterate through field of view slices to check collisions with target
             for(let slice of this.slicedIntersections) {
-                let overlap = Phaser.Geom.Intersects.TriangleToLine(slice, segment);
+                let overlap = Geom.Intersects.TriangleToLine(slice, segment);
                 //additional checking if slice contain segment's points due to TriangleToLine bug.
                 if(!overlap)
-                    overlap = Phaser.Geom.Triangle.ContainsPoint(slice, segment.getPointA());
+                    overlap = Geom.Triangle.ContainsPoint(slice, segment.getPointA());
                 if(!overlap)
-                    overlap = Phaser.Geom.Triangle.ContainsPoint(slice, segment.getPointB());
+                    overlap = Geom.Triangle.ContainsPoint(slice, segment.getPointB());
 
                 if(overlap) {
                     return true;
@@ -220,10 +222,10 @@ export function testMatterOverlap(object) {
         }
 
         //closing segment
-        let segment = new Phaser.Geom.Line(part.vertices[part.vertices.length - 1].x, part.vertices[part.vertices.length - 1].y, part.vertices[0].x, part.vertices[0].y);
+        let segment = new Geom.Line(part.vertices[part.vertices.length - 1].x, part.vertices[part.vertices.length - 1].y, part.vertices[0].x, part.vertices[0].y);
          //iterate through field of view slices to check collisions with target
         for(let slice of this.slicedIntersections) {
-            let overlap = Phaser.Geom.Intersects.TriangleToLine(slice, segment);
+            let overlap = Geom.Intersects.TriangleToLine(slice, segment);
 
             if(overlap) {
                 return true;

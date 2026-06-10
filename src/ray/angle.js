@@ -1,3 +1,5 @@
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
  * Set ray's angle (direction) in radians.
  *
@@ -11,8 +13,8 @@
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function setAngle(angle = 0) {
-    this.angle = Phaser.Math.Angle.Normalize(angle);
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
+    this.angle = PhaserMath.Angle.Normalize(angle);
+    Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     return this;
 }
 
@@ -29,7 +31,7 @@ export function setAngle(angle = 0) {
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function setAngleDeg(angle = 0) {
-    this.angle = Phaser.Math.Angle.Normalize(Phaser.Math.DegToRad(angle));
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
+    this.angle = PhaserMath.Angle.Normalize(PhaserMath.DegToRad(angle));
+    Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     return this;
 }

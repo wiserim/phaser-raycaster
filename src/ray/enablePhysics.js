@@ -1,3 +1,5 @@
+import { Math as PhaserMath } from 'phaser';
+
 /**
  * Add to ray physics body. Body will be a circle with radius equal to {@link Raycaster.Ray#collisionRange Ray.collisionRange}. Physics body can be added only once.
  *
@@ -21,7 +23,7 @@ export function enablePhysics(type = 'arcade') {
     if(type === 'matter') {
         this.bodyType = 'matter';
 
-        if(this.collisionRange == Phaser.Math.MAX_SAFE_INTEGER) {
+        if(this.collisionRange == PhaserMath.MAX_SAFE_INTEGER) {
             let bounds = this._raycaster.boundingBox;
             this._raycaster.scene.matter.add.gameObject(this.collisionCircle, { shape: { type: 'rectangle', x:bounds.rectangle.centerX, y:bounds.rectangle.centerY, width:bounds.rectangle.width, height:bounds.rectangle.height }, label: 'phaser-raycaster-ray-body', isSensor: true, ignoreGravity:true });
         }

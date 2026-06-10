@@ -1,3 +1,5 @@
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
  * @classdesc
  *
@@ -40,7 +42,7 @@ export function Ray(options, raycaster) {
     * @type {Phaser.Math.Vector2}
     * @since 0.6.0
     */
-    this.origin = new Phaser.Math.Vector2();
+    this.origin = new PhaserMath.Vector2();
     /**
     * Ray's representation used to calculating intersections.
     *
@@ -49,7 +51,7 @@ export function Ray(options, raycaster) {
     * @private
     * @since 0.6.0
     */
-    this._ray = new Phaser.Geom.Line();
+    this._ray = new Geom.Line();
     /**
     * Ray's angle in radians.
     *
@@ -76,7 +78,7 @@ export function Ray(options, raycaster) {
     * @default Phaser.Math.MAX_SAFE_INTEGER
     * @since 0.6.0
     */
-    this.rayRange = Phaser.Math.MAX_SAFE_INTEGER;
+    this.rayRange = PhaserMath.MAX_SAFE_INTEGER;
     /**
     * Ray's maximum detection range. Objects outside detection range won't be tested.
     * Ray tests all objects when set to 0.
@@ -95,7 +97,7 @@ export function Ray(options, raycaster) {
     * @private
     * @since 0.6.0
     */
-    this.detectionRangeCircle = new Phaser.Geom.Circle();
+    this.detectionRangeCircle = new Geom.Circle();
     /**
     * Ray's maximum collision range of ray's field of view. Radius of {@link Raycaster.Ray#collisionRangeCircle Ray.body}.
     *
@@ -104,7 +106,7 @@ export function Ray(options, raycaster) {
     * @default Phaser.Math.MAX_SAFE_INTEGER
     * @since 0.8.0
     */
-    this.collisionRange = Phaser.Math.MAX_SAFE_INTEGER;
+    this.collisionRange = PhaserMath.MAX_SAFE_INTEGER;
     /**
     * If set true, ray returns false when it didn't hit anything. Otherwise returns ray's target position.
     *

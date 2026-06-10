@@ -1,4 +1,7 @@
 /*Map methods for circles*/
+
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
 * Get array of mapped circle's vertices used as rays targets.
 * If {@link Raycaster.Map#segmentCount Raycaster.Map#segmentCount} is set to 0, it'll calculatoe tangent points for passed ray.
@@ -21,35 +24,35 @@ export function getPoints(ray = false) {
         return this._points;
     
     let points = [];
-    let offset = new Phaser.Math.Vector2();
+    let offset = new PhaserMath.Vector2();
     offset.x = this.object.x - this.object.displayWidth * (this.object.originX - 0.5);
     offset.y = this.object.y - this.object.displayHeight * (this.object.originY - 0.5);
 
     //calculate tangent rays
     if(ray) {
-        let rayA = new Phaser.Geom.Line();
-        let rayB = new Phaser.Geom.Line();
+        let rayA = new Geom.Line();
+        let rayB = new Geom.Line();
         let c;
         
         let rotation = this.object.rotation;
         
         if(rotation !== 0) {
-            let vector = new Phaser.Geom.Line(this.object.x, this.object.y, offset.x, offset.y);
-            Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
+            let vector = new Geom.Line(this.object.x, this.object.y, offset.x, offset.y);
+            Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Geom.Line.Angle(vector) + rotation, Geom.Line.Length(vector));
             let cB = vector.getPointB();
-            c = new Phaser.Geom.Line(ray.origin.x, ray.origin.y, cB.x, cB.y);
+            c = new Geom.Line(ray.origin.x, ray.origin.y, cB.x, cB.y);
         }
         else { 
-            c = new Phaser.Geom.Line(ray.origin.x, ray.origin.y, offset.x, offset.y);
+            c = new Geom.Line(ray.origin.x, ray.origin.y, offset.x, offset.y);
         }
 
-        let rayLength = Math.sqrt(Math.pow(Phaser.Geom.Line.Length(c), 2) - Math.pow(this.object.radius * this.object.scaleX, 2));
+        let rayLength = Math.sqrt(Math.pow(Geom.Line.Length(c), 2) - Math.pow(this.object.radius * this.object.scaleX, 2));
 
         //ray angle
-        let angle = Phaser.Geom.Line.Angle(c);
-        let dAngle = Math.asin((this.object.radius * this.object.scaleX) / Phaser.Geom.Line.Length(c));
-        Phaser.Geom.Line.SetToAngle(rayA, ray.origin.x, ray.origin.y, angle - dAngle, rayLength);
-        Phaser.Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
+        let angle = Geom.Line.Angle(c);
+        let dAngle = Math.asin((this.object.radius * this.object.scaleX) / Geom.Line.Length(c));
+        Geom.Line.SetToAngle(rayA, ray.origin.x, ray.origin.y, angle - dAngle, rayLength);
+        Geom.Line.SetToAngle(rayB, ray.origin.x, ray.origin.y, angle + dAngle, rayLength);
 
         //add tangent points
         points.push(rayA.getPointB());
@@ -102,7 +105,7 @@ export function updateMap() {
     }
     
     //calculate offset based on object position and origin point
-    let offset = new Phaser.Math.Vector2();
+    let offset = new PhaserMath.Vector2();
     offset.x = this.object.x - this.object.displayWidth * this.object.originX + this.object.radius * this.object.scaleX;
     offset.y = this.object.y - this.object.displayHeight * this.object.originY + this.object.radius * this.object.scaleY;
 
@@ -116,8 +119,8 @@ export function updateMap() {
     if(rotation !== 0) {
         let newPoints = [];
         for(let point of points) {
-            let vector = new Phaser.Geom.Line(this.object.x, this.object.y, this.object.x + (point.x + this.object.radius) * this.object.scaleX, this.object.y + (point.y + this.object.radius) * this.object.scaleY);
-            Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
+            let vector = new Geom.Line(this.object.x, this.object.y, this.object.x + (point.x + this.object.radius) * this.object.scaleX, this.object.y + (point.y + this.object.radius) * this.object.scaleY);
+            Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Geom.Line.Angle(vector) + rotation, Geom.Line.Length(vector));
             newPoints.push(vector.getPointB());
         }
         points = newPoints;
@@ -135,7 +138,7 @@ export function updateMap() {
         let prevPoint = i > 0 ? points[i - 1] : points.slice(-1)[0],
             nextPoint = i < length - 1 ? points[i + 1] : points[0];
 
-        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+        segments.push(new Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
         
         points[i].neighbours = [
             prevPoint,

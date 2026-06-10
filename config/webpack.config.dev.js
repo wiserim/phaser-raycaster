@@ -9,9 +9,12 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "../dist"),
         filename: "[name].js",
-        library: 'PhaserRaycaster',
-        libraryTarget: 'umd',
-        umdNamedDefine: true
+        library: {
+            name: "PhaserRaycaster",
+            type: "umd",
+            umdNamedDefine: true,
+            export: 'default'
+        },
     },
     watch: false,
     mode: "development",
@@ -29,10 +32,16 @@ module.exports = {
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets: ["@babel/preset-env"]
+                        presets: [
+                            "@babel/preset-env"
+                        ]
                     }
                 }
             }
         ]
-    }
+    },
+    externalsType: "global",
+    externals: {
+        phaser: "Phaser",
+    },
 }

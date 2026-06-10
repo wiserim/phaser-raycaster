@@ -1,3 +1,5 @@
+import { Math as PhaserMath } from 'phaser';
+
 /**
  * Set ray's cone angle (width) in radians.
  *
@@ -28,6 +30,6 @@ export function setCone(cone = 0) {
  * @return {Raycaster.Ray} {@link Raycaster.Ray Raycaster.Ray} instance
  */
 export function setConeDeg(cone = 0) {
-    this.cone = Phaser.Math.DegToRad(cone);
+    this.cone = PhaserMath.DegToRad(cone);
     return this;
 }

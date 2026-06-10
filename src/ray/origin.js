@@ -1,3 +1,5 @@
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
  * Set ray's source position.
  *
@@ -13,10 +15,10 @@
  */
 export function setOrigin(x, y) {
     this.origin.setTo(x, y);
-    Phaser.Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
+    Geom.Line.SetToAngle(this._ray, this.origin.x, this.origin.y, this.angle, this.rayRange);
     this.detectionRangeCircle.setTo(this.origin.x, this.origin.y,this.detectionRange);
 
-    if(this.bodyType === 'matter' && this.collisionRange !== Phaser.Math.MAX_SAFE_INTEGER) {
+    if(this.bodyType === 'matter' && this.collisionRange !== PhaserMath.MAX_SAFE_INTEGER) {
         this.collisionCircle.x = x;
         this.collisionCircle.y = y;
     }

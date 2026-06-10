@@ -1,3 +1,5 @@
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
  * Cast ray to find closest intersection with tested mapped objects.
  *
@@ -32,12 +34,12 @@ export function cast(options = {}) {
     //if bounding box is defined check bounding box intersection
     if(this._raycaster && this._raycaster.boundingBox) {
         let intersections = [];
-        Phaser.Geom.Intersects.GetLineToRectangle(this._ray, this._raycaster.boundingBox.rectangle, intersections);
+        Geom.Intersects.GetLineToRectangle(this._ray, this._raycaster.boundingBox.rectangle, intersections);
         if(intersections.length === 1)
             closestIntersection = intersections[0];
         else if(intersections.length > 1) {
             for(let intersection of intersections) {
-                let distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, intersection.x, intersection.y);
+                let distance = PhaserMath.Distance.Between(this.origin.x, this.origin.y, intersection.x, intersection.y);
                 if(distance < closestDistance) {
                     closestDistance = distance;
                     closestIntersection = intersection;
@@ -46,7 +48,7 @@ export function cast(options = {}) {
         }
         //if ray target is declared
         else if(options.target){
-            let distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, options.target.x, options.target.y);
+            let distance = PhaserMath.Distance.Between(this.origin.x, this.origin.y, options.target.x, options.target.y);
             //if target is within ray range
             if(this.rayRange > distance) {
                 closestDistance = distance;
@@ -83,16 +85,16 @@ export function cast(options = {}) {
         }
 
         //check if object is intersected by ray
-        if(Phaser.Geom.Intersects.GetLineToRectangle(this._ray, boundingBox, boundingBoxIntersections).length === 0)
+        if(Geom.Intersects.GetLineToRectangle(this._ray, boundingBox, boundingBoxIntersections).length === 0)
             continue;
 
         //check if bounding box is closer than closest intersection
-        if(Phaser.Geom.Rectangle.ContainsPoint(boundingBox, this.origin)) {
+        if(Geom.Rectangle.ContainsPoint(boundingBox, this.origin)) {
             canTestMap = true;
         }
         else {
             for(let boundingBoxIntersection of boundingBoxIntersections) {
-                if(Phaser.Math.Distance.Between(this.origin.x, this.origin.y, boundingBoxIntersection.x, boundingBoxIntersection.y) < closestDistance) {
+                if(PhaserMath.Distance.Between(this.origin.x, this.origin.y, boundingBoxIntersection.x, boundingBoxIntersection.y) < closestDistance) {
                     canTestMap = true;
                     break;
                 }
@@ -117,15 +119,15 @@ export function cast(options = {}) {
                 ) {
                     intersection = options.target;
                 }
-                else if(!Phaser.Geom.Intersects.LineToLine(this._ray, segment, intersection))
+                else if(!Geom.Intersects.LineToLine(this._ray, segment, intersection))
                     continue;
             }
             //if no intersection continue
-            else if(!Phaser.Geom.Intersects.LineToLine(this._ray, segment, intersection))
+            else if(!Geom.Intersects.LineToLine(this._ray, segment, intersection))
               continue;
             
             //get closest intersection
-            let distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, intersection.x, intersection.y);
+            let distance = PhaserMath.Distance.Between(this.origin.x, this.origin.y, intersection.x, intersection.y);
             if(distance < closestDistance) {
                 closestDistance = distance;
                 closestIntersection = intersection;
@@ -148,7 +150,7 @@ export function cast(options = {}) {
                 for(let point of points) {
                     if(point.equals(options.target)) {
                         //get closest intersection
-                        let distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
+                        let distance = PhaserMath.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
 
                         if(distance < closestDistance) {
                             closestDistance = distance;
@@ -165,27 +167,27 @@ export function cast(options = {}) {
             }
 
             let circleIntersections = [];
-            let offset = new Phaser.Math.Vector2();
+            let offset = new PhaserMath.Vector2();
             offset.x = map.object.x - map.object.displayWidth * (map.object.originX - 0.5);
             offset.y = map.object.y - map.object.displayHeight * (map.object.originY - 0.5);
 
             //calculate circle's center after rotation
             let rotation = map.object.rotation;
             if(rotation !== 0) {
-                let vector = new Phaser.Geom.Line(map.object.x, map.object.y, offset.x, offset.y);
-                Phaser.Geom.Line.SetToAngle(vector, map.object.x, map.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
+                let vector = new Geom.Line(map.object.x, map.object.y, offset.x, offset.y);
+                Geom.Line.SetToAngle(vector, map.object.x, map.object.y, Geom.Line.Angle(vector) + rotation, Geom.Line.Length(vector));
                 let cB = vector.getPointB();
                 offset.x = cB.x;
                 offset.y = cB.y;
             }
 
             //create transformed circle
-            let circle = new Phaser.Geom.Circle(offset.x, offset.y, map.object.radius * map.object.scaleX);
+            let circle = new Geom.Circle(offset.x, offset.y, map.object.radius * map.object.scaleX);
 
-            if(Phaser.Geom.Intersects.GetLineToCircle(this._ray, circle, circleIntersections)) {
+            if(Geom.Intersects.GetLineToCircle(this._ray, circle, circleIntersections)) {
                 for(let intersection of circleIntersections) {
                     //get closest intersection
-                    let distance = Phaser.Math.Distance.Between(this._ray.x1, this._ray.y1, intersection.x, intersection.y);
+                    let distance = PhaserMath.Distance.Between(this._ray.x1, this._ray.y1, intersection.x, intersection.y);
 
                     if(distance < closestDistance) {
 
@@ -207,7 +209,7 @@ export function cast(options = {}) {
                     for(let point of circle.points) {
                         if(point.equals(options.target)) {
                             //get closest intersection
-                            let distance = Phaser.Math.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
+                            let distance = PhaserMath.Distance.Between(this.origin.x, this.origin.y, point.x, point.y);
 
                             if(distance < closestDistance) {
                                 closestDistance = distance;
@@ -225,10 +227,10 @@ export function cast(options = {}) {
 
                 let circleIntersections = [];
 
-                if(Phaser.Geom.Intersects.GetLineToCircle(this._ray, circle, circleIntersections)) {
+                if(Geom.Intersects.GetLineToCircle(this._ray, circle, circleIntersections)) {
                     for(let intersection of circleIntersections) {
                         //get closest intersection
-                        let distance = Phaser.Math.Distance.Between(this._ray.x1, this._ray.y1, intersection.x, intersection.y);
+                        let distance = PhaserMath.Distance.Between(this._ray.x1, this._ray.y1, intersection.x, intersection.y);
 
                         if(distance < closestDistance) {
                             closestDistance = distance;
@@ -261,7 +263,7 @@ export function cast(options = {}) {
         result = this._ray.getPointB();
     }
     else {
-        result = new Phaser.Math.Vector2(closestIntersection.x, closestIntersection.y);
+        result = new PhaserMath.Vector2(closestIntersection.x, closestIntersection.y);
         result.segment = closestSegment;
         result.object = closestObject;
     }

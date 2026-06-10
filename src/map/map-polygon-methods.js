@@ -1,4 +1,7 @@
 /*Map methods for polygons*/
+
+import { Geom, Math as PhaserMath } from 'phaser';
+
 /**
 * Get array of mapped polygon's vertices used as rays targets.
 *
@@ -54,7 +57,7 @@ export function updateMap() {
     let segments = [];
     
     //calculate offset based on object position and origin point
-    let offset = new Phaser.Math.Vector2();
+    let offset = new PhaserMath.Vector2();
     offset.x = this.object.x - this.object.displayWidth * this.object.originX;
     offset.y = this.object.y - this.object.displayHeight * this.object.originY;
     //set points
@@ -62,15 +65,15 @@ export function updateMap() {
     let rotation = this.object.rotation;
     if(rotation !== 0) {
         for(let point of this.object.geom.points) {
-            let vector = new Phaser.Geom.Line(this.object.x, this.object.y, point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y);
-            Phaser.Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Phaser.Geom.Line.Angle(vector) + rotation, Phaser.Geom.Line.Length(vector));
+            let vector = new Geom.Line(this.object.x, this.object.y, point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y);
+            Geom.Line.SetToAngle(vector, this.object.x, this.object.y, Geom.Line.Angle(vector) + rotation, Geom.Line.Length(vector));
             points.push(vector.getPointB());
         }
     }
     //if rotation === 0
     else {
         for(let point of this.object.geom.points) {
-            points.push(new Phaser.Math.Vector2(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y));
+            points.push(new PhaserMath.Vector2(point.x * this.object.scaleX + offset.x, point.y * this.object.scaleY + offset.y));
         }
     }
 
@@ -78,7 +81,7 @@ export function updateMap() {
         let prevPoint = i > 0 ? points[i - 1] : points.slice(-1)[0],
             nextPoint = i < length - 1 ? points[i + 1] : points[0];
 
-        segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
+        segments.push(new Geom.Line(points[i].x, points[i].y, nextPoint.x, nextPoint.y));
         
         points[i].neighbours = [
             prevPoint,
@@ -89,7 +92,7 @@ export function updateMap() {
     //set segments
     for(let i = 0, length = points.length; i < length; i++) {
         if(i+1 < length)
-            segments.push(new Phaser.Geom.Line(points[i].x, points[i].y, points[i+1].x, points[i+1].y));   
+            segments.push(new Geom.Line(points[i].x, points[i].y, points[i+1].x, points[i+1].y));   
     }
     //if polygon is not closed
     if(!this.object.closePath) {

@@ -4,12 +4,15 @@
 ### Updates
 
 * Updated dev dependencies.
+* Updated Webpack and Babel config.
+* Moved ESM exports to 'src/main-esm.js'.
 * Replaced `Phaser.Geom.Point` class with `Phaser.Math.Vector2`.
 * Replaced `Phaser.Geom.Point.Equals` static method with `Phaser.Math.Vector2.equals()` function in `Ray.cast`, `Ray.castCircle` and `Ray.castCone` methhods.
 
 ### Bug fixes
 
-* `Map.updateMap` method for tilemaps doesn't map corner points when tiles are in "checkerbox" pattern. 
+* `Map.updateMap` method for tilemaps doesn't map corner points when tiles are in "checkerbox" pattern.
+* Previous Webpack update caused misconfiguration and issues with ESM exports.
 
 ---
 
