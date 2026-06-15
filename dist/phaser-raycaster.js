@@ -4115,7 +4115,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 /**
 * @author       Marcin Walczak <contact@marcin-walczak.pl>
-* @copyright    2023 Marcin Walczak
+* @copyright    2026 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 
@@ -4876,7 +4876,7 @@ function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new T
 function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
 /**
 * @author       Marcin Walczak <contact@marcin-walczak.pl>
-* @copyright    2023 Marcin Walczak
+* @copyright    2026 Marcin Walczak
 * @license      {@link https://github.com/wiserim/phaser-raycaster/blob/master/LICENSE|MIT License}
 */
 

@@ -1,7 +1,7 @@
 {
   "name": "phaser-raycaster",
-  "version": "0.10.11",
-  "description": "Raycasting plugin for Phaser 3.",
+  "version": "0.11.0",
+  "description": "Raycasting plugin for Phaser 3 and 4.",
   "main": "dist/phaser-raycaster.min.js",
   "exports": "src/main-esm.js",
   "types": "types/types.d.ts",
