@@ -1,5 +1,5 @@
 # Change Log
-## Version 0.11.00 - WIP
+## Version 0.11.00 - 2026.06.15
 
 ### Updates
 
