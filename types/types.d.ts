@@ -86,7 +86,7 @@ declare namespace Raycaster {
          * @param [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
          * @returns Array of mapped object's vertices.
          */
-        getPoints(ray?: Raycaster.Ray): Phaser.Geom.Point[];
+        getPoints(ray?: Raycaster.Ray): Phaser.Math.Vector2[];
         /**
          * Get array of mapped object's segments used to test object's intersection with ray.
          * @param [ray] - {@link Raycaster.Ray Raycaster.Ray} object used in some some types of maps.
@@ -136,7 +136,7 @@ declare namespace Raycaster {
      */
     class Ray {
         constructor(options?: {
-            origin?: Phaser.Geom.Point | Point;
+            origin?: Phaser.Math.Vector2 | Point;
             angle?: number;
             angleDeg?: number;
             cone?: number;
@@ -171,9 +171,9 @@ declare namespace Raycaster {
          */
         cast(options?: {
             objects?: object[];
-            target?: Phaser.Geom.Point | Point;
+            target?: Phaser.Math.Vector2 | Point;
             internal?: boolean;
-        }): Phaser.Geom.Point | boolean;
+        }): Phaser.Math.Vector2 | boolean;
         /**
          * Cast ray in all directions to find closest intersections with tested mapped objects.
          * @param [options] - options that may include:
@@ -182,7 +182,7 @@ declare namespace Raycaster {
          */
         castCircle(options?: {
             objects?: object[];
-        }): Phaser.Geom.Point[];
+        }): Phaser.Math.Vector2[];
         /**
          * Cast ray in a cone to find closest intersections with tested mapped objects.
          * @param [options] - options that may include:
@@ -191,7 +191,7 @@ declare namespace Raycaster {
          */
         castCone(options?: {
             objects?: object[];
-        }): Phaser.Geom.Point[];
+        }): Phaser.Math.Vector2[];
         /**
          * Set ray's cone angle (width) in radians.
          * @param [cone = 0] - Ray's cone angle in radians.
@@ -222,7 +222,7 @@ declare namespace Raycaster {
          * @returns {@link Raycaster.Ray Raycaster.Ray} instance
          */
         config(options?: {
-            origin?: Phaser.Geom.Point | Point;
+            origin?: Phaser.Math.Vector2 | Point;
             angle?: number;
             angleDeg?: number;
             cone?: number;
@@ -356,7 +356,7 @@ declare namespace Raycaster {
         /**
          * Ray's source position.
          */
-        origin: Phaser.Geom.Point;
+        origin: Phaser.Math.Vector2;
         /**
          * Ray's angle in radians.
          */
@@ -570,7 +570,7 @@ declare class Raycaster {
      * @returns {@link Raycaster.Ray Raycaster.Ray} instance
      */
     createRay(options?: {
-        origin?: Phaser.Geom.Point | Point;
+        origin?: Phaser.Math.Vector2 | Point;
         angle?: number;
         angleDeg?: number;
         cone?: number;
