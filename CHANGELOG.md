@@ -2,7 +2,7 @@
 ## Version 0.11.00 - 2026.06.15
 
 ### Updates
-
+* Added compatibility with Phaser 4.
 * Updated dev dependencies.
 * Updated Webpack and Babel config.
 * Moved ESM exports to 'src/main-esm.js'.
