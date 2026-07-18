@@ -1,5 +1,11 @@
 # Change Log
-## Version 0.11.00 - 2026.06.15
+## Version 0.11.1 - 2026.07.18
+
+### Bug fixes
+* `Map.updateMap` method for tilemaps doesn't map corner points when tiles are in "checkerbox" pattern.
+* Missing `terser-webpack-plugin` dependency.
+
+## Version 0.11.0 - 2026.06.15
 
 ### Updates
 * Added compatibility with Phaser 4.

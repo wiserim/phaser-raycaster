@@ -139,7 +139,7 @@ export function castCone(options = {}) {
                     if(!Geom.Intersects.LineToLine(segmentA, segmentB, intersection))
                         continue;
                     let angle = PhaserMath.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y);
-                    let angleOffsetDeg = Math.Angle.ShortestBetween(PhaserMath.RadToDeg(angle), PhaserMath.RadToDeg(originalAngle));
+                    let angleOffsetDeg = PhaserMath.Angle.ShortestBetween(PhaserMath.RadToDeg(angle), PhaserMath.RadToDeg(originalAngle));
 
                     if(Math.abs(angleOffsetDeg) < PhaserMath.RadToDeg(cone / 2)) {
                         rayTargets.push({

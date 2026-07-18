@@ -206,12 +206,7 @@ export function updateMap() {
                 && this.collisionTiles.includes(higherRow[j - 1].index) != isCollisionHigherTile
             ) {
                 let midPoint = new PhaserMath.Vector2(x, y);
-                midPoint.neighbours = [lastPoint ? lastPoint : startPoint];
-                lastPoint = midPoint;
-
-                if(!startPoint.neighbours)
-                    startPoint.neighbours = [lastPoint];
-
+                midPoint.neighbours = [];
                 points.push(midPoint);
             }
     

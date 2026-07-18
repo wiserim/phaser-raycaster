@@ -1671,9 +1671,7 @@ function updateMap() {
       // check for checkerbox pattern
       if (startPoint && this.collisionTiles.includes(higherRow[j - 1].index) != isCollisionHigherTile) {
         var midPoint = new phaser__WEBPACK_IMPORTED_MODULE_0__.Math.Vector2(_x, _y2);
-        midPoint.neighbours = [lastPoint ? lastPoint : startPoint];
-        lastPoint = midPoint;
-        if (!startPoint.neighbours) startPoint.neighbours = [lastPoint];
+        midPoint.neighbours = [];
         points.push(midPoint);
       }
       if (!startPoint) {
@@ -2603,7 +2601,7 @@ function castCone() {
               var intersection = [];
               if (!phaser__WEBPACK_IMPORTED_MODULE_0__.Geom.Intersects.LineToLine(segmentA, segmentB, intersection)) continue;
               var _angle = phaser__WEBPACK_IMPORTED_MODULE_0__.Math.Angle.Between(this.origin.x, this.origin.y, intersection.x, intersection.y);
-              var _angleOffsetDeg = Math.Angle.ShortestBetween(phaser__WEBPACK_IMPORTED_MODULE_0__.Math.RadToDeg(_angle), phaser__WEBPACK_IMPORTED_MODULE_0__.Math.RadToDeg(originalAngle));
+              var _angleOffsetDeg = phaser__WEBPACK_IMPORTED_MODULE_0__.Math.Angle.ShortestBetween(phaser__WEBPACK_IMPORTED_MODULE_0__.Math.RadToDeg(_angle), phaser__WEBPACK_IMPORTED_MODULE_0__.Math.RadToDeg(originalAngle));
               if (Math.abs(_angleOffsetDeg) < phaser__WEBPACK_IMPORTED_MODULE_0__.Math.RadToDeg(cone / 2)) {
                 rayTargets.push({
                   point: new phaser__WEBPACK_IMPORTED_MODULE_0__.Math.Vector2(intersection.x, intersection.y),
@@ -4148,7 +4146,7 @@ function Raycaster(options) {
   * @readonly
   * @since 0.6.0
   */
-  this.version = '0.11.0';
+  this.version = '0.11.1';
   /**
   * Raycaster's scene
   *
@@ -4822,11 +4820,26 @@ module.exports = self["Phaser"];
 /******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	!function() {
-/******/ 		// define getter functions for harmony exports
+/******/ 		// define getter/value functions for harmony exports
 /******/ 		__webpack_require__.d = function(exports, definition) {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			if(Array.isArray(definition)) {
+/******/ 				var i = 0;
+/******/ 				while(i < definition.length) {
+/******/ 					var key = definition[i++];
+/******/ 					var binding = definition[i++];
+/******/ 					if(!__webpack_require__.o(exports, key)) {
+/******/ 						if(binding === 0) {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, value: definition[i++] });
+/******/ 						} else {
+/******/ 							Object.defineProperty(exports, key, { enumerable: true, get: binding });
+/******/ 						}
+/******/ 					} else if(binding === 0) { i++; }
+/******/ 				}
+/******/ 			} else {
+/******/ 				for(var key in definition) {
+/******/ 					if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 						Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 					}
 /******/ 				}
 /******/ 			}
 /******/ 		};
