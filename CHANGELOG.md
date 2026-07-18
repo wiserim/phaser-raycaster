@@ -3,6 +3,7 @@
 
 ### Bug fixes
 * `Map.updateMap` method for tilemaps doesn't map corner points when tiles are in "checkerbox" pattern.
+* Typo in `Ray.castCone`.
 * Missing `terser-webpack-plugin` dependency.
 
 ## Version 0.11.0 - 2026.06.15
